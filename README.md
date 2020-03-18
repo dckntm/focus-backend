@@ -2,10 +2,10 @@
 
 ## Description
 
-Please provide consistent description of your repository. Explain what you develop and why it's better than alternatives (if there are any)
+Backend for [focus](github.com/dckntm/focus) service for analyzing, distributing & aggregating reports
 
----
+Developed with ASP.NET Core using [Convey](https://convey-stack.github.io/), [RabbitMQ](https://www.rabbitmq.com/) & other technologies
 
-Place there anything that seems to be important about your repository - navigation links, quick introduction, contribution guidelines, FAQ, etc. 
+For further details on backend visit project [Wiki](https://github.com/dckntm/focus-backend/wiki)
 
-By default repository is provided with Apache License 2.0 https://www.apache.org/licenses/LICENSE-2.0
+For general project details visit dckntm/focus [Wiki](https://github.com/dckntm/focus/wiki)
