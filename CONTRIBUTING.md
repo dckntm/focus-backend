@@ -155,7 +155,25 @@ Documentation is important. Be sure that you prepared changes to documentation b
 
 To develop projects efficiently this strict style guides are provided. They are used for quicker code reviews & easy maintenance.
 
-> Provide code style guides for all languages used. If there is a perfect linter that fully utilizes your needs just reference it with packages for code editors
+- Use **PascalCase** for:
+  - Classes and interfaces (interfaces should have `I` prefix as general C# code convention suggests)
+  - Methods
+  - Static Fields
+  - Delegates
+    - with `EventHandler` suffix for delegates that are used in events
+    - with `Callback` suffix for delegates that are used as events
+  - Events with `On` prefix
+- Use **camelCase** with `-` prefix for private fields & without prefix for local variables and method arguments, if they overlap class fields than use `this.`
+- Each **brace** should be on it's **own line**
+- Use **tabs** for lining text
+- Do not make lines with more than 100 characters
+- Write summaries with `///` for classes and methods
+- Fields should be provided with one line comment (recommendation)
+- One line does one thing
+- Provide with comments only **blocks of code** not lines
+- **Align comments** for fields
+- When declaring classes we recommend **writing separated regions** for fields and methods or at least mark separation with comments
+- **Never use ALL CAPS**
 
 ### Repository Naming
 
