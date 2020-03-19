@@ -6,6 +6,11 @@
     <ProjectReference Include="..\Infrastructure\Focus.Service.ReportConstructor.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Convey.WebApi" Version="0.4.273" />
+    <PackageReference Include="Convey.WebApi.CQRS" Version="0.4.273" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
