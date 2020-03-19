@@ -1,40 +1,45 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Convey;
+using Convey.WebApi;
+using Convey.WebApi.CQRS;
+using Focus.Service.ReportConstructor.Application;
+using Focus.Service.ReportConstructor.Application.Commands;
+using Focus.Service.ReportConstructor.Application.Common.Dto;
+using Focus.Service.ReportConstructor.Application.Queries;
+using Focus.Service.ReportConstructor.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace Focus.Service.ReportConstructor.Api
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var builder = services
+                .AddConvey()
+                .AddWebApi()
+                .AddApplication()
+                .AddInfrastructure();
+
+            builder.Build();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
-            });
+            app.UseDispatcherEndpoints(endpoints => endpoints
+                .Post<CreateReportTemplate>("api/report/template",
+                    afterDispatch: (command, context) =>
+                        context.Response.Created($"api/report/template/{command.ReportId}", command.ReportId))
+                .Get<GetReportTemplateInfos, IEnumerable<ReportTemplateInfoDto>>("api/report/template/info")
+                .Get<GetReportTemplate, ReportTemplateDto>("api/report/template/{reportTemplateId}"));
+
         }
     }
 }
