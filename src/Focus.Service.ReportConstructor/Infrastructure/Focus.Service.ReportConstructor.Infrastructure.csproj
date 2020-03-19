@@ -5,6 +5,10 @@
     <ProjectReference Include="..\Application\Focus.Service.ReportConstructor.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Convey.Persistence.MongoDB" Version="0.4.273" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
