@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+  mongo:
+    image: mongo
+    container_name: rcs-mongo
+    restart: always
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    container_name: rcs-mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+
+  rcs:
+    build: .
+    restart: always
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    container_name: rcs
+    depends_on:
+      - mongo
