@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+
 using Focus.Service.ReportScheduler.Domain.Entities;
 
 namespace Focus.Service.ReportScheduler.Application.Common.Dto.Extensions
