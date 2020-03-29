@@ -1,28 +1,29 @@
 version: "3.1"
 
 services:
-  mongo:
+  rcs_storage:
     image: mongo
-    container_name: rcs-mongo
+    container_name: rcs_storage
     restart: always
     ports:
-      - 27017:27017
+      - "27017:27017"
 
-  mongo-express:
+  rcs_storage_gui:
     image: mongo-express
-    container_name: rcs-mongo-express
+    container_name: rcs_storage_gui
     restart: always
     ports:
-      - 8081:8081
+      - "8081:8081"
     depends_on:
-      - mongo
+      - rcs_storage
 
   rcs:
     build: .
     restart: always
     ports:
-      - "5000:5000"
-      - "5001:5001"
+      - "5000:80"
     container_name: rcs
     depends_on:
-      - mongo
+      - rcs_storage
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=dev
