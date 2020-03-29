@@ -1,0 +1,41 @@
+version: "3.1"
+
+
+services: 
+  
+  rcs_storage:
+    image: mongo
+    container_name: rcs_storage
+    restart: always
+    ports:
+      - "9000:27017"
+  
+  rss_storage:
+    image: mongo
+    container_name: rss_storage
+    restart: always
+    ports:
+      - "9100:27017"
+    
+  rcs:
+    build: ./Focus.Service.ReportConstructor/
+    restart: always
+    ports: 
+      - "5000:80"
+    container_name: rcs
+    depends_on: 
+      - rcs_storage
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=prod
+
+  rss:
+    build: ./Focus.Service.ReportScheduler/
+    restart: always
+    ports:
+      - "5100:80"
+    container_name: rss
+    depends_on: 
+      - rss_storage
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=prod
+
