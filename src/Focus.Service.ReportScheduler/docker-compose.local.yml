@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+  rss-mongo:
+    image: mongo
+    container_name: rss-mongo
+    restart: always
+    ports:
+      - "27018:27017"
+    networks: 
+      - rss-local-network
+  
+  rss-mongo-express:
+    image: mongo-express
+    container_name: rss-mongo-express
+    restart: always
+    ports:
+      - "8100:8081"
+    depends_on:
+      - rss-mongo
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=rss-mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+    networks: 
+      - rss-local-network
+
+networks: 
+  rss-local-network:
