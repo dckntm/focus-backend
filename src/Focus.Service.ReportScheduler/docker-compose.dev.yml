@@ -1,28 +1,24 @@
 version: "3.1"
 
 services:
-  rss-mongo:
+  rss_storage:
     image: mongo
-    container_name: rss-mongo
+    container_name: rss_storage
     restart: always
     ports:
       - "27018:27017"
-    networks:
-      - rss-dev-network
 
-  rss-mongo-express:
+  rss_storage_gui:
     image: mongo-express
-    container_name: rss-mongo-express
+    container_name: rss_storage_gui
     restart: always
     ports:
       - "8100:8081"
     depends_on:
-      - rss-mongo
+      - rss_storage
     environment:
-      - ME_CONFIG_MONGODB_SERVER=rss-mongo
+      - ME_CONFIG_MONGODB_SERVER=rss_storage
       - ME_CONFIG_MONGODB_PORT=27017
-    networks:
-      - rss-dev-network
 
   rss:
     build: .
@@ -32,8 +28,7 @@ services:
       - "5101:5001"
     container_name: rss
     depends_on:
-      - rss-mongo
-    networks:
-      - rss-dev-network
-networks:
-  rss-dev-network:
+      - rss_storage
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=dev
+
