@@ -59,8 +59,8 @@ module Router =
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
         choose
-            [ POST >=> route "/report/schedule" >=> createReportSchedulerHandler
+            [ POST >=> route "/api/report/schedule" >=> createReportSchedulerHandler
               GET >=> choose
-                          [ route "/report/schedule/info" >=> getReportScheduleInfo
-                            routef "/report/schedule/%s" getReportSchedule ]
+                          [ route "/api/report/schedule/info" >=> getReportScheduleInfo
+                            routef "/api/report/schedule/%s" getReportSchedule ]
               setStatusCode 404 >=> text "Not Found" ]
