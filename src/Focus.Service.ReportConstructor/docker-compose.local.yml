@@ -7,12 +7,15 @@ services:
     restart: always
     ports:
       - "27017:27017"
-
+  
   rcs_storage_gui:
     image: mongo-express
     container_name: rcs_storage_gui
     restart: always
-    ports: 
+    ports:
       - "8081:8081"
-    depends_on: 
+    depends_on:
       - rcs_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=rcs_storage
+      - ME_CONFIG_MONGODB_PORT=27017

@@ -16,14 +16,18 @@ services:
       - "8081:8081"
     depends_on:
       - rcs_storage
+    environment: 
+      - ME_CONFIG_MONGODB_SERVER=rcs_storage
+      - ME_CONFIG_MONGODB_PORT=27017
 
   rcs:
-    build: .
+    image: focus_constructor:latest
     restart: always
     ports:
-      - "5000:80"
+      - "5000:5000"
     container_name: rcs
     depends_on:
       - rcs_storage
     environment: 
       - ASPNETCORE_ENVIRONMENT=dev
+      - ASPNETCORE_URLS=http://*:5000
