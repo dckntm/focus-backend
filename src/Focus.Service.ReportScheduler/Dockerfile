@@ -1,9 +1,10 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+FROM focus_common AS build-env
 WORKDIR /app
 
-COPY . ./
-RUN dotnet restore Api
-RUN dotnet publish Api -c Release -o out
+RUN mkdir src
+COPY . ./src/
+RUN dotnet restore src/Api
+RUN dotnet publish src/Api -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 COPY --from=build-env /app/out .
