@@ -1,12 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Focus.Service.ReportScheduler.Domain.csproj" />
+    <ProjectReference Include="..\Core\Focus.Service.ReportScheduler.Core.csproj" />
     <ProjectReference Include="..\Application\Focus.Service.ReportScheduler.Application.csproj" />
+    <ProjectReference Include="..\..\Focus.Infrastructure.Common\Focus.Infrastructure.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Convey.Persistence.MongoDB" Version="0.4.281" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
   </ItemGroup>
 
   <PropertyGroup>
