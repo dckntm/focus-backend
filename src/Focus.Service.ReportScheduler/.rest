@@ -1,5 +1,5 @@
 @url = http://localhost:5000
-@id = 5e863558329959000196a1ea
+@id = 5e88d69c6907658f60530a19
 ###
 
 POST {{url}}/api/report/schedule HTTP/1.1
@@ -8,7 +8,15 @@ Content-Type: application/json
 {
     "id": "",
     "reportTemplate": "c19b4b52-bd4e-404e-8237-1317eb34859a",
-    "organizations": [],
+    "organizations": [
+        {
+            "organization" : "123",
+            "isDelegatedToCOA" : false,
+            "assignees" : [
+                {"user" : "hypnospinner", "role" : 1}
+            ]
+        }
+    ],
     "deadlinePeriod": "5.0.0",
     "emissionPeriod": "3.0.0",
     "emissionStart": "01.01.2020",
