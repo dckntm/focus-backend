@@ -20,7 +20,6 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Questionnaire
                 _order = value;
             }
         }
-
         public string QuestionText
         {
             get => _questionText;
@@ -33,7 +32,6 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Questionnaire
                 _questionText = value;
             }
         }
-
         public QuestionTemplate(
             string questionText,
             InputType inputType = InputType.ShortText,

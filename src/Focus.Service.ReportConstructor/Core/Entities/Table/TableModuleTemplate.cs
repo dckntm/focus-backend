@@ -5,12 +5,13 @@ using Focus.Service.ReportConstructor.Core.Exceptions;
 
 namespace Focus.Service.ReportConstructor.Core.Entities.Table
 {
-    public class TableModuleTemplate : IModuleTemplate
+    public class TableModuleTemplate : IModuleTemplate, ITitled, IOrderable
     {
         private int _rows;
         private int _columns;
         private string _title;
         private int _order;
+        private ICollection<CellTemplate> _cells;
 
         public string Title
         {
@@ -20,6 +21,8 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Table
                 if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException(
                         "DOMAIN EXCEPTION: Can't assign null, empty or whitespace Table Module Template Title");
+
+                _title = value;
             }
         }
         public int Order
@@ -34,7 +37,6 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Table
                 _order = value;
             }
         }
-        private readonly ICollection<CellTemplate> _cells;
 
         // TODO: auto calculation of rows & cols of table module in ctor 
         public TableModuleTemplate(
@@ -49,20 +51,15 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Table
 
             // TODO: fix validation of title & order without property assignment
 
-            Title = title;
-            Order = order;
+            _title = title;
+            _order = order;
             _cells = cells;
             _columns = columns;
             _rows = rows;
         }
 
-        // TODO: add domain rules for changin rows & cols
-
-        public int Rows
-        {
-            get => _rows;
-        }
-        public int Columns => _columns;
-        public ICollection<CellTemplate> Cells => _cells;
+        public int Rows { get => _rows; set => _rows = value; }
+        public ICollection<CellTemplate> Cells { get => _cells; set => _cells = value; }
+        public int Columns { get => _columns; set => _columns = value; }
     }
 }

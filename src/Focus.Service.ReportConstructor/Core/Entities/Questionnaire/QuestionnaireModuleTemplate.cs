@@ -4,7 +4,7 @@ using Focus.Service.ReportConstructor.Core.Abstract;
 
 namespace Focus.Service.ReportConstructor.Core.Entities.Questionnaire
 {
-    public class QuestionnaireModuleTemplate : ListContainer<SectionTemplate>, ITitled, IOrderable
+    public class QuestionnaireModuleTemplate : ListContainer<SectionTemplate>, ITitled, IOrderable, IModuleTemplate
     {
         private string _title;
         private int _order;
