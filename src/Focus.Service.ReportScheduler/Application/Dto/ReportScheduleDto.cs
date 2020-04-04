@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Focus.Core.Common.Abstract;
 using Focus.Service.ReportScheduler.Core.Entities;
 
@@ -10,7 +11,7 @@ namespace Focus.Service.ReportScheduler.Application.Dto
     {
         public string Id { get; set; }
         public string ReportTemplate { get; set; }
-        public ICollection<Assignment> Organizations { get; set; }
+        public Assignment[] Organizations { get; set; }
         // string in D.M.Y format
         public string DeadlinePeriod { get; set; }
         // string in D.M.Y format
@@ -45,15 +46,15 @@ namespace Focus.Service.ReportScheduler.Application.Dto
                 throw new ArgumentException($"Can't parse {dto.EmissionEnd}");
 
             return new ReportSchedule
-            {
-                Id = dto.Id,
-                ReportTemplate = dto.ReportTemplate,
-                Organizations = dto.Organizations,
-                DeadlinePeriod = dto.DeadlinePeriod.AsPeriod(),
-                EmissionPeriod = dto.EmissionPeriod.AsPeriod(),
-                EmissionStart = emissionStart.ToUniversalTime(),
-                EmissionEnd = emissionEnd.ToUniversalTime(),
-            };
+            (
+                dto.Id,
+                dto.ReportTemplate,
+                dto.Organizations.ToList(),
+                dto.DeadlinePeriod.AsPeriod(),
+                dto.EmissionPeriod.AsPeriod(),
+                emissionStart.ToUniversalTime(),
+                emissionEnd.ToUniversalTime()
+            );
         }
 
         public static ReportScheduleDto AsDto(this ReportSchedule entity)
@@ -61,7 +62,7 @@ namespace Focus.Service.ReportScheduler.Application.Dto
             {
                 Id = entity.Id,
                 ReportTemplate = entity.ReportTemplate,
-                Organizations = entity.Organizations,
+                Organizations = entity.Organizations.ToArray(),
                 DeadlinePeriod = entity.DeadlinePeriod.ToString(),
                 EmissionPeriod = entity.EmissionPeriod.ToString(),
                 EmissionStart = entity.EmissionStart.ToLocalTime().ToString("dd.MM.yyyy"),
@@ -76,9 +77,9 @@ namespace Focus.Service.ReportScheduler.Application.Dto
                 throw new InvalidOperationException($"Can't cast string {str} to Period object");
 
             var result = new Period(
-                days: Int32.Parse(subStrings[0]),
-                months: Int32.Parse(subStrings[1]),
-                years: Int32.Parse(subStrings[2]));
+                days: int.Parse(subStrings[0]),
+                months: int.Parse(subStrings[1]),
+                years: int.Parse(subStrings[2]));
 
             return result;
         }
