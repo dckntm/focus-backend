@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Focus.Service.ReportScheduler.Core.Entities;
 using MongoDB.Bson;
@@ -26,15 +27,15 @@ namespace Focus.Service.ReportScheduler.Infrastructure.Persistence
     {
         public static ReportSchedule AsEntity(this ReportScheduleDocument document)
             => new ReportSchedule
-            {
-                Id = document.Id.ToString(),
-                ReportTemplate = document.ReportTemplate,
-                Organizations = document.Organizations,
-                DeadlinePeriod = document.DeadlinePeriod,
-                EmissionPeriod = document.EmissionPeriod,
-                EmissionStart = document.EmissionStart,
-                EmissionEnd = document.EmissionEnd
-            };
+            (
+                document.Id.ToString(),
+                document.ReportTemplate,
+                document.Organizations.ToList(),
+                document.DeadlinePeriod,
+                document.EmissionPeriod,
+                document.EmissionStart,
+                document.EmissionEnd
+            );
 
         public static ReportScheduleDocument AsDocument(this ReportSchedule entity)
             => new ReportScheduleDocument

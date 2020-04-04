@@ -29,6 +29,7 @@ namespace Focus.Service.ReportScheduler.Infrastructure.Persistence
         {
             // when we convert entity -> document we guarantee the Id property is properly created
             var document = schedule.AsDocument();
+            
             var id = document.Id;
 
             await ReportSchedules.InsertOneAsync(document);

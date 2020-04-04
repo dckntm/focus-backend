@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Focus.Infrastructure.Common.Interfaces;
 using Focus.Infrastructure.Common.Persistence;
 using Focus.Service.ReportScheduler.Infrastructure.Persistence;
 using Focus.Service.ReportScheduler.Application.Services;
+using MongoDB.Bson.Serialization;
+using Focus.Service.ReportScheduler.Core.Entities;
 
 namespace Focus.Service.ReportScheduler.Infrastructure
 {
@@ -11,6 +12,21 @@ namespace Focus.Service.ReportScheduler.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            BsonClassMap.RegisterClassMap<MemberAssignment>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapCreator(x => new MemberAssignment(x.User, x.Role));
+            });
+
+            BsonClassMap.RegisterClassMap<Assignment>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapCreator(x => new Assignment(
+                    x.Organization,
+                    x.IsDelegatedToCOA,
+                    x.Assignees));
+            });
+
             return services
                 .AddScoped<IReportScheduleRepository, ReportScheduleRepository>();
         }
@@ -19,7 +35,7 @@ namespace Focus.Service.ReportScheduler.Infrastructure
         {
             var mongoConfig = configuration.GetMongoConfigurationFromSection("mongodb");
 
-            services.AddTransient<IMongoConfiguration>(_ => mongoConfig);
+            services.AddTransient(_ => mongoConfig);
         }
     }
 }
