@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": "Focus.Service.ReportConstructor\\Api"
+    },
+    {
+      "path": "Focus.Service.ReportConstructor\\Infrastructure"
+    },
+    {
+      "path": "Focus.Service.ReportConstructor\\Application"
+    },
+    {
+      "path": "Focus.Service.ReportConstructor\\Core"
+    }
+  ],
+  "settings": {}
+}
