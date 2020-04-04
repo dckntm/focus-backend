@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Focus.Application.Common.Abstract;
-using Focus.Service.ReportConstructor.Application.Common.Dto;
+using Focus.Service.ReportConstructor.Application.Dto;
 using Focus.Service.ReportConstructor.Application.Services;
 using MediatR;
 
