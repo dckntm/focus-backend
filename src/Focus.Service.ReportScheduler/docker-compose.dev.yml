@@ -6,14 +6,14 @@ services:
     container_name: rss_storage
     restart: always
     ports:
-      - "27018:27017"
+      - "27017:27017"
 
   rss_storage_gui:
     image: mongo-express
     container_name: rss_storage_gui
     restart: always
     ports:
-      - "8100:8081"
+      - "8081:8081"
     depends_on:
       - rss_storage
     environment:
@@ -21,14 +21,14 @@ services:
       - ME_CONFIG_MONGODB_PORT=27017
 
   rss:
-    build: .
+    image: focus_scheduler:latest
     restart: always
     ports:
-      - "5100:5000"
-      - "5101:5001"
+      - "5000:5000"
     container_name: rss
     depends_on:
       - rss_storage
     environment: 
       - ASPNETCORE_ENVIRONMENT=dev
+      - ASPNETCORE_URLS=http://*:5000
 

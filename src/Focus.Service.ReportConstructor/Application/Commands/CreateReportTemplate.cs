@@ -1,36 +1,42 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
-using Focus.Service.ReportConstructor.Application.Common.Dto;
-using Focus.Service.ReportConstructor.Application.Common.Dto.Extensions;
-using Focus.Service.ReportConstructor.Application.Common.Interface;
+using Focus.Application.Common.Abstract;
+using Focus.Service.ReportConstructor.Application.Dto;
+using Focus.Service.ReportConstructor.Application.Services;
+using MediatR;
 
 namespace Focus.Service.ReportConstructor.Application.Commands
 {
-    public class CreateReportTemplate : ICommand
+    public class CreateReportTemplate : IRequest<RequestResult<string>>
     {
-        // properties
-        public ReportTemplateDto ReportTemplate { get; }
-        public string ReportId { get; set; }
+        public CreateReportTemplate(ReportTemplateDto reportTemplate)
+            => ReportTemplate = reportTemplate;
+        public ReportTemplateDto ReportTemplate { get; private set; }
+    }
 
-        // ctors
-        public CreateReportTemplate(ReportTemplateDto report)
-            => ReportTemplate = report;
-
-        // handler
-        public class CreateReportTemplateHandler : ICommandHandler<CreateReportTemplate>
+    public class CreateReportTemplateHandler : IRequestHandler<CreateReportTemplate, RequestResult<string>>
+    {
+        private readonly IReportTemplateRepository _repository;
+        public CreateReportTemplateHandler(IReportTemplateRepository repository)
         {
-            // fields
-            private IReportTemplateRepository _repository;
+            _repository = repository;
+        }
 
-            // ctors
-            public CreateReportTemplateHandler(IReportTemplateRepository repository)
-                => _repository = repository;
-
-            // behavior
-            public async Task HandleAsync(CreateReportTemplate command)
+        public async Task<RequestResult<string>> Handle(CreateReportTemplate request, CancellationToken cancellationToken)
+        {
+            try
             {
-                command.ReportId = await _repository
-                    .CreateReportTemplateAsync(command.ReportTemplate.AsEntity());
+                var id = await _repository.CreateReportTemplateAsync(request.ReportTemplate.AsEntity());
+
+                return RequestResult<string>
+                    .Successfull(id);
+            }
+            catch (Exception e)
+            {
+                return RequestResult<string>
+                    .Failed()
+                    .WithException(e);
             }
         }
     }

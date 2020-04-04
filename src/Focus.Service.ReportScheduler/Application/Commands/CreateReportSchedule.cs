@@ -1,35 +1,44 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
-using Focus.Service.ReportScheduler.Application.Common.Dto;
-using Focus.Service.ReportScheduler.Application.Common.Dto.Extensions;
-using Focus.Service.ReportScheduler.Application.Common.Interface;
-using Focus.Service.ReportScheduler.Domain.Entities;
+using Focus.Application.Common.Abstract;
+using Focus.Service.ReportScheduler.Application.Dto;
+using Focus.Service.ReportScheduler.Application.Services;
+using MediatR;
 
 namespace Focus.Service.ReportScheduler.Application.Commands
 {
-    public class CreateReportSchedule : ICommand
+    // command
+    public class CreateReportSchedule : IRequest<RequestResult<string>>
     {
-        // properties
-        public ReportScheduleDto ReportSchedule { get; }
-        public string ScheduleId { get; set; }
+        public ReportScheduleDto Schedule { get; private set; }
 
-        // ctor
         public CreateReportSchedule(ReportScheduleDto schedule)
-            => ReportSchedule = schedule;
+            => Schedule = schedule;
+    }
 
-        // handler
-        public class CreateReportScheduleHandler : ICommandHandler<CreateReportSchedule>
+    // command handler
+    public class CreateReportScheduleHandler : IRequestHandler<CreateReportSchedule, RequestResult<string>>
+    {
+        private readonly IReportScheduleRepository _repository;
+        public CreateReportScheduleHandler(IReportScheduleRepository repository)
+            => _repository = repository;
+
+        public async Task<RequestResult<string>> Handle(CreateReportSchedule request, CancellationToken cancellationToken)
         {
-            // fifelds
-            private IReportScheduleRepository _repository;
+            try
+            {
+                string id = await _repository.CreateReportScheduleAsync(request.Schedule.AsEntity());
 
-            // ctor
-            public CreateReportScheduleHandler(IReportScheduleRepository repository)
-                => _repository = repository;
-
-            // beahvior
-            public async Task HandleAsync(CreateReportSchedule command)
-                => command.ScheduleId = await _repository.CreateReportScheduleAsync(command.ReportSchedule.AsEntity());
+                return RequestResult<string>
+                    .Successfull(id);
+            }
+            catch (Exception e)
+            {
+                return RequestResult<string>
+                    .Failed()
+                    .WithException(e);
+            }
         }
     }
 }

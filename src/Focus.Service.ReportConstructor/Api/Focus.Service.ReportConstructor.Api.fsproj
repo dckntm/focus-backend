@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Focus.Service.ReportConstructor.Core.csproj" />
+    <ProjectReference Include="..\Application\Focus.Service.ReportConstructor.Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\Focus.Service.ReportConstructor.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Router.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Giraffe" Version="4.0.1" />
+    <PackageReference Include="MediatR" Version="8.0.1" />
+  </ItemGroup>
+</Project>

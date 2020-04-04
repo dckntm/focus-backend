@@ -1,29 +1,42 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Queries;
-using Focus.Service.ReportScheduler.Application.Common.Dto;
-using Focus.Service.ReportScheduler.Application.Common.Dto.Extensions;
-using Focus.Service.ReportScheduler.Application.Common.Interface;
+using Focus.Application.Common.Abstract;
+using Focus.Service.ReportScheduler.Application.Dto;
+using Focus.Service.ReportScheduler.Application.Services;
+using MediatR;
 
 namespace Focus.Service.ReportScheduler.Application.Queries
 {
-    public class GetReportSchedule : IQuery<ReportScheduleDto>
+    public class GetReportSchedule : IRequest<RequestResult<ReportScheduleDto>>
     {
-        public string Id { get; set; }
+        public GetReportSchedule(string scheduleId)
+            => ScheduleId = scheduleId;
 
-        public GetReportSchedule(string id)
-            => Id = id;
+        public string ScheduleId { get; private set; }
+    }
 
-        public class GetReportScheduleHandler : IQueryHandler<GetReportSchedule, ReportScheduleDto>
+    public class GetReportScheduleHandler : IRequestHandler<GetReportSchedule, RequestResult<ReportScheduleDto>>
+    {
+        private readonly IReportScheduleRepository _repository;
+
+        public GetReportScheduleHandler(IReportScheduleRepository repository)
+            => _repository = repository;
+
+        public async Task<RequestResult<ReportScheduleDto>> Handle(GetReportSchedule request, CancellationToken cancellationToken)
         {
-            private IReportScheduleRepository _repository;
-
-            public GetReportScheduleHandler(IReportScheduleRepository repository)
-                => _repository = repository;
-            public async Task<ReportScheduleDto> HandleAsync(GetReportSchedule query)
+            try
             {
-                var schedule = await _repository.GetReportScheduleAsync(query.Id);
+                var schedule = await _repository.GetReportScheduleAsync(request.ScheduleId);
 
-                return schedule.AsDto();
+                return RequestResult<ReportScheduleDto>
+                    .Successfull(schedule.AsDto());
+            }
+            catch (Exception e)
+            {
+                return RequestResult<ReportScheduleDto>
+                    .Failed()
+                    .WithException(e);
             }
         }
     }

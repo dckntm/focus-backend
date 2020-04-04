@@ -1,12 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Focus.Service.ReportConstructor.Domain.csproj" />
+    <ProjectReference Include="..\Core\Focus.Service.ReportConstructor.Core.csproj" />
+    <ProjectReference Include="..\..\Focus.Application.Common\Focus.Application.Common.csproj" />
+    <ProjectReference Include="..\..\Focus.Core.Common\Focus.Core.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Convey.CQRS.Commands" Version="0.4.273" />
-    <PackageReference Include="Convey.CQRS.Queries" Version="0.4.273" />
+    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.dependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <PropertyGroup>

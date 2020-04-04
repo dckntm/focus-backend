@@ -1,37 +1,44 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Queries;
-using Focus.Service.ReportConstructor.Application.Common.Dto;
-using Focus.Service.ReportConstructor.Application.Common.Dto.Extensions;
-using Focus.Service.ReportConstructor.Application.Common.Interface;
+using Focus.Application.Common.Abstract;
+using Focus.Service.ReportConstructor.Application.Dto;
+using Focus.Service.ReportConstructor.Application.Services;
+using Focus.Service.ReportConstructor.Core.Entities;
+using MediatR;
 
 namespace Focus.Service.ReportConstructor.Application.Queries
 {
-    public class GetReportTemplateInfos : IQuery<IEnumerable<ReportTemplateInfoDto>>
+    public class GetReportTemplateInfos : IRequest<RequestResult<IEnumerable<ReportTemplateInfoDto>>> { }
+
+    public class GetReportTemplateInfosHandler
+        : IRequestHandler<GetReportTemplateInfos, RequestResult<IEnumerable<ReportTemplateInfoDto>>>
     {
-        // handler
-        public class GetReportTemplateInfosHandler
-            : IQueryHandler<GetReportTemplateInfos, IEnumerable<ReportTemplateInfoDto>>
+        private readonly IReportTemplateRepository _repository;
+
+        public GetReportTemplateInfosHandler(IReportTemplateRepository repository)
+            => _repository = repository;
+
+        public async Task<RequestResult<IEnumerable<ReportTemplateInfoDto>>> Handle(
+            GetReportTemplateInfos request,
+            CancellationToken cancellationToken)
         {
-            // fields
-            private IReportTemplateRepository _repository;
+            try
+            {
+                IQueryable<ReportTemplate> templates = await _repository.GetReportTemplatesAsync();
 
-            // ctors
-            public GetReportTemplateInfosHandler(IReportTemplateRepository repository)
-                => _repository = repository;
-
-            // behavior
-            public Task<IEnumerable<ReportTemplateInfoDto>> HandleAsync(GetReportTemplateInfos query)
-                => Task.Run(async () =>
-                {
-                    var reports = await _repository
-                                            .GetReportTemplatesAsync();
-
-                    return reports
+                return RequestResult
+                    .Successfull(templates
                         .Select(x => x.AsInfoDto())
-                        .AsEnumerable();
-                });
+                        .AsEnumerable());
+            }
+            catch (Exception e)
+            {
+                return RequestResult<IEnumerable<ReportTemplateInfoDto>>
+                    .Failed(e);
+            }
         }
     }
 }

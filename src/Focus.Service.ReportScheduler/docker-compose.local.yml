@@ -6,14 +6,14 @@ services:
     container_name: rss_storage
     restart: always
     ports:
-      - "27018:27017"
+      - "27017:27017"
   
   rss_storage_gui:
     image: mongo-express
     container_name: rss_storage_gui
     restart: always
     ports:
-      - "8100:8081"
+      - "8081:8081"
     depends_on:
       - rss_storage
     environment:
