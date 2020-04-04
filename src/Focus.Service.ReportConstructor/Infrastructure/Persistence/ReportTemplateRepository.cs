@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Focus.Infrastructure.Common.Interfaces;
+using Focus.Service.ReportConstructor.Application.Dto;
 using Focus.Service.ReportConstructor.Application.Services;
 using Focus.Service.ReportConstructor.Core.Entities;
-using Focus.Service.ReportConstructor.Core.Persistence;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -22,23 +22,26 @@ namespace Focus.Service.ReportConstructor.Infrastructure.Persistence
             _database = client.GetDatabase(_configuration.Database);
         }
 
-        private IMongoCollection<ReportTemplateDocument> ReportTemplates
-            => _database.GetCollection<ReportTemplateDocument>("report_templates");
+        private IMongoCollection<ReportTemplateDto> ReportTemplates
+            => _database.GetCollection<ReportTemplateDto>("report_templates");
 
         public async Task<string> CreateReportTemplateAsync(ReportTemplate reportTemplate)
         {
-            // to document mapping gaurantess that we generated some id 
-            var document = reportTemplate.AsDocument();
+            var document = reportTemplate.AsDto();
+
+            var id = ObjectId.GenerateNewId().ToString();
+
+            document.Id = id;
 
             await ReportTemplates.InsertOneAsync(document);
 
-            return document.Id.ToString();
+            return id;
         }
 
         public async Task<ReportTemplate> GetReportTemplateAsync(string reportId)
         {
             var document = await ReportTemplates
-                .Find(x => x.Id == new ObjectId(reportId))
+                .Find(x => x.Id == reportId)
                 .SingleAsync();
 
             return document.AsEntity();

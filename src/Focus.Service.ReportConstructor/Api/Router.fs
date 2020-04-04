@@ -7,7 +7,7 @@ open FSharp.Control.Tasks.V2.ContextInsensitive
 open Giraffe.ResponseWriters
 open Giraffe.ModelBinding
 open Giraffe.Routing
-open Focus.Service.ReportConstructor.Application.Common.Dto
+open Focus.Service.ReportConstructor.Application.Dto
 open Focus.Service.ReportConstructor.Application.Commands
 open Focus.Service.ReportConstructor.Application.Queries
 
