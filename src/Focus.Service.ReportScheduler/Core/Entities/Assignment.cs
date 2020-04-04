@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Focus.Core.Common.Abstract;
-using Focus.Service.ReportScheduler.Core.Enums;
 
 namespace Focus.Service.ReportScheduler.Core.Entities
 {
@@ -10,10 +9,20 @@ namespace Focus.Service.ReportScheduler.Core.Entities
         public bool IsDelegatedToCOA { get; set; }
         public ICollection<MemberAssignment> Assignees { get; set; }
 
-        private Assignment()
+        public Assignment(
+            string organization,
+            bool delegatedToCOA,
+            ICollection<MemberAssignment> assignees)
         {
-            IsDelegatedToCOA = false;
-            Assignees = new List<MemberAssignment>();
+            Organization = organization;
+            IsDelegatedToCOA = delegatedToCOA;
+            Assignees = assignees;
+        }
+
+        public Assignment()
+        {
+            // IsDelegatedToCOA = false;
+            // Assignees = new List<MemberAssignment>();
         }
 
         public static Assignment For(string organizationId)

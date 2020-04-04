@@ -2,7 +2,7 @@ using Focus.Service.ReportScheduler.Core.Enums;
 
 namespace Focus.Service.ReportScheduler.Core.Entities
 {
-    public struct MemberAssignment
+    public class MemberAssignment
     {
         public MemberAssignment(string user, ReportAccessRole role)
         {
@@ -10,7 +10,7 @@ namespace Focus.Service.ReportScheduler.Core.Entities
             Role = role;
         }
 
-        public string User { get; set; }
-        public ReportAccessRole Role { get; set; }
+        public string User { get; private set; }
+        public ReportAccessRole Role { get; private set; }
     }
 }
