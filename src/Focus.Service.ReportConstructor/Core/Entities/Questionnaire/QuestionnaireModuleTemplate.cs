@@ -1,38 +1,61 @@
+using System;
 using System.Collections.Generic;
 using Focus.Service.ReportConstructor.Core.Abstract;
 
 namespace Focus.Service.ReportConstructor.Core.Entities.Questionnaire
 {
-    public class QuestionnaireModuleTemplate : ModuleTemplate
+    public class QuestionnaireModuleTemplate : ListContainer<SectionTemplate>, ITitled, IOrderable
     {
-        private ICollection<SectionTemplate> _sections;
+        private string _title;
+        private int _order;
 
-        public QuestionnaireModuleTemplate() { }
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException(
+                        "DOMAIN EXCEPTION: Can't assign null, empty or whitespace Questionnaire Module Template Title");
+
+                _title = value;
+            }
+        }
+        public int Order
+        {
+            get => _order;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentException(
+                        $"DOMAIN EXCEPTION: Can't assign {value} to Questionnaire Module Template");
+
+                _order = value;
+            }
+        }
 
         public QuestionnaireModuleTemplate(
             string title,
-            int order,
-            ICollection<SectionTemplate> sections)
+            IList<SectionTemplate> sections,
+            int order = 0)
         {
+            if (sections is null || sections.Count < 1)
+                throw new ArgumentException(
+                    "DOMAIN EXCEPTION: Can't initialize Questionnaire Module Template with null or empty Section Template collection");
+
+            if (string.IsNullOrEmpty(title) || string.IsNullOrWhiteSpace(title))
+                throw new ArgumentException(
+                    "DOMAIN EXCEPTION: Can't initialize Questionnaire Module Template with null, empty or whitespace Title");
+
+            if (order < 0)
+                throw new ArgumentException(
+                    "DOMAIN EXCEPTION: Can't initialize Questionnaire Module Template with {order} Order");
+
             Title = title;
             Order = order;
+            _collection = sections;
 
-            // TODO: add validation for sections
-
-            _sections = sections;
-        }
-
-        public ICollection<SectionTemplate> Sections
-        {
-            get => _sections;
-            set => _sections = value;
-            // set
-            // {
-            //     if (value is null || value.Count < 1)
-            //         throw new InvalidStructureException("Questionnaire can't have no sections");
-
-            //     _sections = value;
-            // }
+            UpdateOrder();
         }
     }
 }

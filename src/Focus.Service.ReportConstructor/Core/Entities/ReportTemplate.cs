@@ -1,27 +1,43 @@
+using System;
 using System.Collections.Generic;
 using Focus.Service.ReportConstructor.Core.Abstract;
 using Focus.Service.ReportConstructor.Core.Exceptions;
 
 namespace Focus.Service.ReportConstructor.Core.Entities
 {
-    public class ReportTemplate
+    public class ReportTemplate : ListContainer<IModuleTemplate>, ITitled
     {
-        private ICollection<ModuleTemplate> _modules;
-
-        public ReportTemplate() { }
-
-        public ReportTemplate(ICollection<ModuleTemplate> modules, string id, string title)
-        {
-            if (modules is null || modules.Count < 1)
-                throw new InvalidStructureException("Report Template can't have no modules");
-
-            _modules = modules;
-            Id = id;
-            Title = title;
-        }
+        private string _title;
 
         public string Id { get; set; }
-        public string Title { get; set; }
-        public ICollection<ModuleTemplate> Modules { get => _modules; set => _modules = value; }
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException(
+                        "DOMAIN EXCEPTION: Can't assign null, empty or whitespace Section Template Title");
+
+                _title = value;
+            }
+        }
+        public ReportTemplate(
+            string id,
+            string title,
+            IList<IModuleTemplate> modules)
+        {
+            if (modules is null || modules.Count < 1)
+                throw new ArgumentException(
+                    "DOMAIN EXCEPTION: Can't instantiate Report Template with null or empty collection of Module Template");
+
+            if (string.IsNullOrEmpty(title) || string.IsNullOrWhiteSpace(title))
+                throw new ArgumentException(
+                    "DOMAIN EXCEPTION: Can't instantiate Report Template with null, empty or whitespace Title");
+
+            Id = id;
+            _title = title;
+            _collection = modules;
+        }
     }
 }
