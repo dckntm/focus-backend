@@ -38,7 +38,7 @@ Content-Type: application/json
 stringed ObjectId (MongoDB ID type)
 ```
 
-Creates Report Schedule entity in database based on report
+Creates `Report Schedule` entity in database based on report
 
 ---
 
@@ -52,7 +52,7 @@ where id : stringed ObjectId (MongoDB ID type)
 
 Content-Type: application/json
 {
-    "id"                        : string,   // empty ""
+    "id"                        : string,
     "reportTemplate"            : string,   // not empty stringed MongoDB ObjectId
     "organizations":            []OrganizationAccess
     {
@@ -76,7 +76,7 @@ Content-Type: application/json
 }
 ```
 
-Returns same dto model for report schedule
+Returns same dto model for `Report Schedule`
 
 ---
 
@@ -89,13 +89,13 @@ GET: /api/report/schedule/info
 
 Content-Type: application/json
 [
-  {
-    "id"                : string,       // stringed ObjectId
-    "reportTemplate"    : string,       // stringed ObjectId
-    "organizations"     : []string,     // list of stringed ObjectId
-    "emissionPeriod"    : string,       // "dd.MM.yyyy-dd.MM.yyyy"
-    "deadlinePeriod"    : string        // "days.months.years"
-  }
+    {
+        "id"                : string,       // stringed ObjectId
+        "reportTemplate"    : string,       // stringed ObjectId
+        "organizations"     : []string,     // list of stringed ObjectId
+        "emissionPeriod"    : string,       // "dd.MM.yyyy-dd.MM.yyyy"
+        "deadlinePeriod"    : string        // "days.months.years"
+    }
 ]
 ```
 
@@ -142,7 +142,7 @@ from service folder (`src/Focus.Service.ReportScheduler/` in our case).
 | `rss_storage`     | `rss_storage`     | 27017:27017 | MongoDB database where data is stored                             |
 | `rss_storage_gui` | `rss_storage_gui` | 8081:8081   | MongoDB GUI interface that allows us to observe MongoDB databases |
 
-In this case we run our service on our own via `docker run`
+In this case we run our service on our own via `dotnet run`
 
 ### Development build
 
