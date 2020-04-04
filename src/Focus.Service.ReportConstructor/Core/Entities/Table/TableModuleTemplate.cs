@@ -47,14 +47,14 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Table
             if (cells is null || cells.Count < 1)
                 throw new InvalidStructureException("Can't create table module without columns");
 
+            // TODO: fix validation of title & order without property assignment
+
             Title = title;
             Order = order;
             _cells = cells;
             _columns = columns;
             _rows = rows;
         }
-
-        public TableModuleTemplate() { }
 
         // TODO: add domain rules for changin rows & cols
 

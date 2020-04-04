@@ -13,8 +13,6 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Table
         private int _columnSpan;
         private string _defaultValue;
 
-        public CellTemplate() { }
-
         public CellTemplate(int row, int column, int rowSpan, int columnSpan, string defaultValue, InputType inputType)
         {
             // TODO: add validation for position & size of cell 
