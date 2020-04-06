@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Focus.Infrastructure.Common.Persistence;
+using Focus.Infrastructure.Common.MongoDB;
 using Focus.Service.ReportScheduler.Infrastructure.Persistence;
 using Focus.Service.ReportScheduler.Application.Services;
 using MongoDB.Bson.Serialization;

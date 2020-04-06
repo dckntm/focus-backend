@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Focus.Infrastructure.Common.Interfaces;
+using Focus.Infrastructure.Common.MongoDB;
 using Focus.Service.ReportConstructor.Application.Dto;
 using Focus.Service.ReportConstructor.Application.Services;
 using Focus.Service.ReportConstructor.Core.Entities;
