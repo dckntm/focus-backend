@@ -10,7 +10,7 @@ namespace Focus.Service.ReportScheduler.Infrastructure
 {
     public static class CompositionRoot
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             BsonClassMap.RegisterClassMap<MemberAssignment>(cm =>
             {
