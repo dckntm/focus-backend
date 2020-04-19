@@ -1,7 +1,6 @@
-using Focus.Infrastructure.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace Focus.Infrastructure.Common.Persistence
+namespace Focus.Infrastructure.Common.MongoDB
 {
     public class MongoConfiguration : IMongoConfiguration
     {

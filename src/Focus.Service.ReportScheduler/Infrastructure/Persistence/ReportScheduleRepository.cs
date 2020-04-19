@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Focus.Infrastructure.Common.Interfaces;
+using Focus.Infrastructure.Common.MongoDB;
 using Focus.Service.ReportScheduler.Application.Services;
 using Focus.Service.ReportScheduler.Core.Entities;
 using MongoDB.Bson;

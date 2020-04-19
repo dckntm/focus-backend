@@ -10,7 +10,7 @@ open Giraffe
 open Focus.Service.ReportScheduler.Infrastructure
 open Focus.Service.ReportScheduler.Application
 open Focus.Service.ReportSchduler.Api.Router
-open Focus.Service.ReportScheduler.Application.Commands
+open Focus.Infrastructure.Common.Messaging
 
 module Program =
     let exitCode = 0
@@ -23,7 +23,7 @@ module Program =
             .ConfigureAppConfiguration(
                 fun context config ->
                     let env = context.HostingEnvironment
-
+                    
                     config.AddJsonFile("appsettings.json", true, true)
                           .AddJsonFile((sprintf "appsettings.%s.json" env.EnvironmentName), true, true) |> ignore
 
@@ -41,10 +41,15 @@ module Program =
 
                     config.ConfigureServices(services) |> ignore
 
-                    services.AddGiraffe()
-                        |> CompositionRoot.AddApplication
-                        |> CompositionRoot.AddInfrastructure
-                        |> ignore)
+                    services
+                        .AddGiraffe()
+                        .AddApplication()
+                        .AddInfrastructure(config)
+                        .AddRabbitMQConsumers(config)
+                        |> ignore
+                    
+                    printfn "%s" (config.GetSection("rabbitmq_connection").Value)
+                        )
             .Configure(
                 fun app -> 
                     app.UseGiraffe Router.webApp

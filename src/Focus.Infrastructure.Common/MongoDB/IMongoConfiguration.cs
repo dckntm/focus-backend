@@ -1,4 +1,4 @@
-namespace Focus.Infrastructure.Common.Interfaces
+namespace Focus.Infrastructure.Common.MongoDB
 {
     public interface IMongoConfiguration
     {

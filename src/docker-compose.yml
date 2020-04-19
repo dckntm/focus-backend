@@ -13,36 +13,51 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-
+    
+  rcs_storage:
+    image: mongo
+    container_name: rcs_storage
+    restart: always
+    ports:
+      - "27017:27017"
+    
   rss_storage:
     image: mongo
     container_name: rss_storage
     restart: always
     ports:
-      - "27017:27017"
-
-  rss_storage_gui:
-    image: mongo-express
-    container_name: rss_storage_gui
+      - "27018:27017"
+  
+  rcs:
+    image: focus_constructor:latest
     restart: always
     ports:
-      - "8081:8081"
+      - "5000:5000"
+    container_name: rcs
     depends_on:
-      - rss_storage
+      - rcs_storage
     environment:
-      - ME_CONFIG_MONGODB_SERVER=rss_storage
-      - ME_CONFIG_MONGODB_PORT=27017
+      - ASPNETCORE_ENVIRONMENT=dev
+      - ASPNETCORE_URLS=http://*:5000
 
   rss:
     image: focus_scheduler:latest
     restart: always
     ports:
-      - "5000:5000"
+      - "5100:5000"
     container_name: rss
     depends_on:
       - rss_storage
       - rabbitmq
-    environment: 
+    environment:
       - ASPNETCORE_ENVIRONMENT=dev
       - ASPNETCORE_URLS=http://*:5000
 
+  daily:
+    image: focus_newdayemitter:latest
+    container_name: nde
+    restart: always
+    depends_on: 
+      - rabbitmq
+    environment: 
+      - DOTNET_ENVIRONMENT=dev
