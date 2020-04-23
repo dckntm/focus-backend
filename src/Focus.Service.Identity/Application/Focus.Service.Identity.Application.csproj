@@ -3,6 +3,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Focus.Service.Identity.Core.csproj" />
     <ProjectReference Include="..\..\Focus.Application.Common\Focus.Application.Common.csproj" />
+    <ProjectReference Include="..\..\Focus.Infrastructure.Common\Focus.Infrastructure.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <PropertyGroup>
