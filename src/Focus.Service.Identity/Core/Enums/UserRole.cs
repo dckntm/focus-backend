@@ -1,4 +1,4 @@
-namespace Focus.Service.Identity.Enums
+namespace Focus.Service.Identity.Core.Enums
 {
     public enum UserRole
     {
