@@ -15,6 +15,7 @@ open Focus.Service.ReportConstructor.Application
 open Giraffe
 open System.Reflection
 open Focus.Service.ReportScheduler.Api.ReportScheduler
+open Focus.Infrastructure.Common.MongoDB
 
 module Program =
     let exitCode = 0
@@ -43,11 +44,11 @@ module Program =
                 fun context services ->
                     let config = context.Configuration
 
-                    config.ConfigureServices(services) |> ignore
-
-                    services.AddGiraffe()
-                    |> CompositionRoot.AddApplication
-                    |> CompositionRoot.AddInfrastructure
+                    services
+                        .AddGiraffe()
+                        .AddMongoDB(config)
+                        .AddApplication()
+                        .AddInfrastructure()
                     |> ignore)
             .Configure(
                 fun app -> app.UseGiraffe Router.webApp)

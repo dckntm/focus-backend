@@ -6,6 +6,7 @@
     <ProjectReference Include="..\Core\Focus.Service.ReportConstructor.Core.csproj" />
     <ProjectReference Include="..\Application\Focus.Service.ReportConstructor.Application.csproj" />
     <ProjectReference Include="..\Infrastructure\Focus.Service.ReportConstructor.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Focus.Infrastructure.Common\Focus.Infrastructure.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Router.fs" />

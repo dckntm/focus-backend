@@ -13,7 +13,7 @@ namespace Focus.Service.Identity.Infrastructure
 {
     public static class CompositionRoot
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             return services
                 .AddScoped<IIdentityRepository, IdentityRepository>()
@@ -21,15 +21,7 @@ namespace Focus.Service.Identity.Infrastructure
                 .AddSingleton<ISecurityTokenGenerator, JwtSecurityTokenGenerator>();
         }
 
-        // TODO: move 2 common infrastructure classlib
-        public static void ConfigureServices(this IConfiguration configuration, IServiceCollection services)
-        {
-            var mongoConfig = configuration.GetMongoConfigurationFromSection("mongodb");
-
-            services.AddTransient(_ => mongoConfig);
-        }
-
-        public static async Task SeedAdministrator(this IApplicationBuilder app, string username, string password)
+        public static async void SeedAdministrator(this IApplicationBuilder app, string username, string password)
         {
             var repository = app.ApplicationServices.GetRequiredService<IIdentityRepository>();
 

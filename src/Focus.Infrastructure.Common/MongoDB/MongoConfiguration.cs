@@ -10,16 +10,4 @@ namespace Focus.Infrastructure.Common.MongoDB
         public string User { get; set; }
         public string Password { get; set; }
     }
-
-    public static class MongoConfigurationExtensions
-    {
-        public static IMongoConfiguration GetMongoConfigurationFromSection(this IConfiguration config, string section)
-        {
-            var mongoConfig = new MongoConfiguration();
-
-            config.Bind(section, mongoConfig);
-
-            return mongoConfig;
-        }
-    }
 }

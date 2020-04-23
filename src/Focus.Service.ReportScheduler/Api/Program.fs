@@ -11,6 +11,7 @@ open Focus.Service.ReportScheduler.Infrastructure
 open Focus.Service.ReportScheduler.Application
 open Focus.Service.ReportSchduler.Api.Router
 open Focus.Infrastructure.Common.Messaging
+open Focus.Infrastructure.Common.MongoDB
 
 module Program =
     let exitCode = 0
@@ -39,17 +40,13 @@ module Program =
                 fun context services ->
                     let config = context.Configuration
 
-                    config.ConfigureServices(services) |> ignore
-
                     services
+                        .AddMongoDB(config)
                         .AddGiraffe()
                         .AddApplication()
-                        .AddInfrastructure(config)
+                        // RabbitMQ DI always goes after Application as it needs IMediator to be injected
                         .AddRabbitMQConsumers(config)
-                        |> ignore
-                    
-                    printfn "%s" (config.GetSection("rabbitmq_connection").Value)
-                        )
+                        .AddInfrastructure() |> ignore)
             .Configure(
                 fun app -> 
                     app.UseGiraffe Router.webApp
