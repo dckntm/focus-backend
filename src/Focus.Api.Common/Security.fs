@@ -4,7 +4,6 @@ open Giraffe
 open Microsoft.AspNetCore.Authentication.JwtBearer
 open Microsoft.AspNetCore.Http
 open System.Security.Claims
-open System.IdentityModel.Tokens.Jwt
 open System
 open Microsoft.IdentityModel.Tokens
 open System.Text
@@ -16,32 +15,13 @@ open Microsoft.Extensions.DependencyInjection
 module Security =
 
     let accessDenied: HttpFunc -> HttpContext -> HttpFuncResult =
-        setStatusCode 401 >=> text "Secutiry: this user can't access service"
+        setStatusCode 401 >=> text "Security: this user can't access service"
 
     let authorize: HttpFunc -> HttpContext -> HttpFuncResult =
         requiresAuthentication (challenge JwtBearerDefaults.AuthenticationScheme)
 
     let mustBeAdmin: HttpFunc -> HttpContext -> HttpFuncResult =
-        authorize >=> authorizeUser (fun u -> u.HasClaim(ClaimTypes.Role, "admin")) accessDenied
-
-module Token =
-
-    let generate (role: string) =
-        let claims = [ Claim(ClaimTypes.Role, role) ]
-
-        let expires = Nullable()
-        let notBefore = Nullable()
-        let securityKey =
-            SymmetricSecurityKey
-                (Encoding.UTF8.GetBytes("x^w7a$NX?*3b'%V1v)YiQr?)4-*jliNTE2R?<JCXDmw}*'QJATR?@4oe{!n=kc%"))
-        let signingCredentials = SigningCredentials(key = securityKey, algorithm = SecurityAlgorithms.HmacSha256)
-
-        let token =
-            JwtSecurityToken
-                (issuer = "focus_issuer", audience = "focus_audience", claims = claims, expires = expires,
-                 notBefore = notBefore, signingCredentials = signingCredentials)
-
-        JwtSecurityTokenHandler().WriteToken(token)
+        authorize >=> authorizeUser (fun u -> u.HasClaim(ClaimTypes.Role, "HOA")) accessDenied
 
 module SecurityCompositionRoot =
 
@@ -61,7 +41,7 @@ module SecurityCompositionRoot =
             ValidateIssuerSigningKey = true,
             ValidAudience = "focus_audience",
             ValidIssuer = "focus_issuer",
-            IssuerSigningKey = SymmetricSecurityKey (Encoding.UTF8.GetBytes("x^w7a$NX?*3b'%V1v)YiQr?)4-*jliNTE2R?<JCXDmw}*'QJATR?@4oe{!n=kc%"))
+            IssuerSigningKey = SymmetricSecurityKey (Encoding.UTF8.GetBytes("Amr273YaMvDu4X5WEvG2jmwsdaJY3ADRT6hFeZvXHhMD7nt6Bd"))
         )
 
     let corsOptions (opt : CorsOptions) =
