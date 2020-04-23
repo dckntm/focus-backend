@@ -1,0 +1,64 @@
+@url = http://localhost:5000
+@adminAuth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJIT0EiLCJpc3MiOiJmb2N1c19pc3N1ZXIiLCJhdWQiOiJmb2N1c19hdWRpZW5jZSJ9.C6DJ2Y_lMXZ-DLZHDdVJrIAI0T5Nm_DovTMtRmGzu_8
+
+@orgid = 5ea1bdb7a0b3f798c0255f7a
+###
+
+# create new user
+
+POST {{url}}/api/identity/create HTTP/1.1
+Authorization: {{adminAuth}} 
+
+{
+    "Name" : "Inna",
+    "Surname" : "Katun",
+    "Patronymic" : "Ildarovna",
+    "OrganizationId" : "5ea1bdb7a0b3f798c0255f7a",
+    "UserRole" : "HOM"
+}
+
+###
+
+# login user
+
+POST http://localhost:5000/api/identity/login HTTP/1.1
+
+{
+    "username" : "admin",
+    "password" : "password"
+}
+
+###
+
+# create new organization (generally we need just title & members if they were preset)
+
+POST {{url}}/api/org/create HTTP/1.1
+Authorization: {{adminAuth}}
+
+{
+    "Id" : "",
+    "Title" : "Organization 1",
+    "IsHead" : false,
+    "Members" : [
+    ]
+}
+
+###
+
+GET {{url}}/api/org/{{orgid}} HTTP/1.1
+Authorization: {{adminAuth}}
+
+###
+
+GET {{url}}/api/identity/KatunII HTTP/1.1
+Authorization: {{adminAuth}}
+
+###
+
+GET {{url}}/api/org/info HTTP/1.1
+Authorization: {{adminAuth}}
+
+###
+
+GET {{url}}/api/identity/info HTTP/1.1
+Authorization: {{adminAuth}}
