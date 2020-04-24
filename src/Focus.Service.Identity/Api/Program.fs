@@ -2,6 +2,7 @@ namespace Focus.Service.Identity.Api
 
 open System.IO
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.Hosting
 open System.Reflection
@@ -9,7 +10,7 @@ open Giraffe
 open Focus.Service.Identity.Infrastructure
 open Focus.Service.Identity.Application
 open Focus.Service.Identity.Api.Router
-open Focus.Api.Common.Security
+open Focus.Api.Common
 open Focus.Infrastructure.Common.MongoDB
 
 module Program =
@@ -38,19 +39,21 @@ module Program =
                     if isNotNull args then config.AddCommandLine(args) |> ignore)
             .ConfigureServices(
                 fun context services ->
-                    SecurityCompositionRoot.configureServices(services)
                     let config = context.Configuration
 
-                    services
+                    (services |> Cors.AddCors)
                         .AddGiraffe()
                         .AddMongoDB(config)
                         .AddApplication()
-                        .AddInfrastructure() |> ignore)
+                        .AddInfrastructure() 
+                        |> Jwt.AddBearerSecurity 
+                        |> ignore)
             .Configure(
                 fun app -> 
-                    SecurityCompositionRoot
-                        .configureApp(app)
+                    (app |> Cors.UseCors)
+                        .UseAuthentication()
                         .UseGiraffe Router.wepApp
+
                     app.SeedAdministrator("admin", "password") |> ignore)
             .Build()
             .Run()

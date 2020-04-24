@@ -6,13 +6,14 @@
     <ProjectReference Include="..\Core\Focus.Service.ReportScheduler.Core.csproj" />
     <ProjectReference Include="..\Application\Focus.Service.ReportScheduler.Application.csproj" />
     <ProjectReference Include="..\Infrastructure\Focus.Service.ReportScheduler.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Focus.Api.Common\Focus.Api.Common.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Router.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Giraffe" Version="4.0.1" />
+    <PackageReference Include="Giraffe" Version="4.1.0" />
     <PackageReference Include="MediatR" Version="8.0.1" />
   </ItemGroup>
 </Project>

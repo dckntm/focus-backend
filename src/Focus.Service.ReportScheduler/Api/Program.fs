@@ -1,17 +1,20 @@
 namespace Focus.Service.ReportScheduler.Api
 
 open System.IO
+open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.Hosting
 open System.Reflection
 open Giraffe.Common
-open Giraffe
+open Giraffe.Middleware
 open Focus.Service.ReportScheduler.Infrastructure
 open Focus.Service.ReportScheduler.Application
 open Focus.Service.ReportSchduler.Api.Router
 open Focus.Infrastructure.Common.Messaging
 open Focus.Infrastructure.Common.MongoDB
+open Focus.Api.Common
+open Focus.Api.Common.Cors
 
 module Program =
     let exitCode = 0
@@ -40,16 +43,24 @@ module Program =
                 fun context services ->
                     let config = context.Configuration
 
-                    services
-                        .AddMongoDB(config)
+                    (services |>
+                        AddCors)
                         .AddGiraffe()
+                        .AddMongoDB(config)
                         .AddApplication()
                         // RabbitMQ DI always goes after Application as it needs IMediator to be injected
                         .AddRabbitMQConsumers(config)
-                        .AddInfrastructure() |> ignore)
+                        .AddInfrastructure()
+                        |> Jwt.AddBearerSecurity 
+                        |> ignore)
             .Configure(
                 fun app -> 
                     app.UseGiraffe Router.webApp
+
+                    app 
+                        |> AuthAppBuilderExtensions.UseAuthentication 
+                        |> UseCors 
+                        |> ignore
             )
             .Build()
             .Run()

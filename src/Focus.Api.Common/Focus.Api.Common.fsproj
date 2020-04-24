@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Security.fs" />
+    <Compile Include="AuthHandlers.fs" />
+    <Compile Include="Cors.fs" />
+    <Compile Include="Jwt.fs" />
   </ItemGroup>
 
   <ItemGroup>
