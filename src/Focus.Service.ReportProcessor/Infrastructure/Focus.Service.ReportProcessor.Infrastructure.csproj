@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Focus.Service.ReportProcessor.Core.csproj" />
+    <ProjectReference Include="..\Application\Focus.Service.ReportProcessor.Application.csproj" />
+    <ProjectReference Include="..\..\Focus.Application.Common\Focus.Application.Common.csproj" />
+    <ProjectReference Include="..\..\Focus.Infrastructure.Common\Focus.Infrastructure.Common.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+</Project>
