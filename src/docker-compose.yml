@@ -28,6 +28,13 @@ services:
     ports:
       - "27018:27017"
   
+  is_storage:
+    image: mongo
+    container_name: is_storage
+    restart: always
+    ports:
+      - "27019:27017"
+
   rcs:
     image: focus_constructor:latest
     restart: always
@@ -61,3 +68,15 @@ services:
       - rabbitmq
     environment: 
       - DOTNET_ENVIRONMENT=dev
+
+  is:
+    image: focus_identity:latest
+    restart: always
+    ports:
+      - "5200:5000"
+    container_name: is
+    depends_on: 
+      - is_storage
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=dev
+      - ASPNETCORE_URLS=http://*:5000
