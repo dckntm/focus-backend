@@ -7,7 +7,8 @@ Report Scheduler Service is responsible for acquiring & managing `Report Schedul
 ```
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-POST: /api/report/schedule/
+POST: /api/report/schedule
+Authorization: Bearer <token>
 Content-Type: application/json
 {
     "id"                        : string,   // empty ""
@@ -46,6 +47,7 @@ Creates `Report Schedule` entity in database based on report
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 GET: /api/report/schedule/{id}
+Authorization: Bearer <token>
 where id : stringed ObjectId (MongoDB ID type)
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -84,6 +86,7 @@ Returns same dto model for `Report Schedule`
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 GET: /api/report/schedule/info
+Authorization: Bearer <token>
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -122,7 +125,7 @@ being in `src` folder of repository
 From service directory (`src/Focus.Service.ReportScheduler/` in our case) run
 
 ```sh
-docker -t focus_scheduler .
+docker build -t focus_scheduler .
 ```
 
 ### Local build

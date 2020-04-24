@@ -9,7 +9,8 @@ Report Constructor Service is responsible for acquiring & managing `Report Templ
 ```
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-POST: /api/report/template/
+POST: /api/report/template
+Authorization: Bearer <token>
 Content-Type: application/json
 {
     "id"                            : string,   // empty ""
@@ -59,6 +60,7 @@ Creates `Report Template` entity in database
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 GET: /api/report/template/{id}
+Authorization: Bearer <token>
 where id : stringed ObjectId (MongoDB ID type)
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -108,6 +110,7 @@ Returns same dto model for `Report Template`
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 GET: /api/report/template/info
+Authorization: Bearer <token>
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -143,7 +146,7 @@ being in `src` folder of repository
 From service directory (`src/Focus.Service.ReportConstructor/` in our case) run
 
 ```sh
-docker -t focus_constructor .
+docker build -t focus_constructor .
 ```
 
 ### Local build
