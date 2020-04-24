@@ -5,11 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Security.fs" />
+    <Compile Include="AuthHandlers.fs" />
+    <Compile Include="HelperHandlers.fs" />
+    <Compile Include="Cors.fs" />
+    <Compile Include="Jwt.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Giraffe" Version="4.1.0" />
+    <PackageReference Include="MediatR" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
   </ItemGroup>
 

@@ -1,20 +1,18 @@
 namespace Focus.Service.ReportConstructor.Api
 
-open System
-open System.Collections.Generic
-open System.IO
-open System.Linq
-open System.Threading.Tasks
-open Microsoft.AspNetCore
-open Microsoft.AspNetCore.Hosting
-open Microsoft.Extensions.Configuration
-open Microsoft.Extensions.Hosting
-open Microsoft.Extensions.Logging
+open Focus.Service.ReportScheduler.Api.ReportScheduler
 open Focus.Service.ReportConstructor.Infrastructure
 open Focus.Service.ReportConstructor.Application
-open Giraffe
+open Focus.Infrastructure.Common.MongoDB
+open Microsoft.Extensions.Configuration
+open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Builder
+open Microsoft.Extensions.Hosting
+open Microsoft.AspNetCore
 open System.Reflection
-open Focus.Service.ReportScheduler.Api.ReportScheduler
+open Focus.Api.Common
+open System.IO
+open Giraffe
 
 module Program =
     let exitCode = 0
@@ -43,14 +41,20 @@ module Program =
                 fun context services ->
                     let config = context.Configuration
 
-                    config.ConfigureServices(services) |> ignore
-
-                    services.AddGiraffe()
-                    |> CompositionRoot.AddApplication
-                    |> CompositionRoot.AddInfrastructure
-                    |> ignore)
+                    (services |> Cors.AddCors)
+                        .AddGiraffe()
+                        .AddMongoDB(config)
+                        .AddApplication()
+                        .AddInfrastructure()
+                        |> Jwt.AddBearerSecurity
+                        |> ignore)
             .Configure(
-                fun app -> app.UseGiraffe Router.webApp)
+                fun app -> 
+                    (app 
+                        |> Cors.UseCors
+                        |> AuthAppBuilderExtensions.UseAuthentication)
+                        .UseGiraffe Router.webApp
+                    )
             .Build()
             .Run()
         

@@ -1,19 +1,20 @@
 namespace Focus.Service.ReportScheduler.Api.ReportScheduler
 
-open Giraffe.Core
-open Microsoft.AspNetCore.Http
-open MediatR
+open Focus.Service.ReportConstructor.Application.Commands
+open Focus.Service.ReportConstructor.Application.Queries
+open Focus.Service.ReportConstructor.Application.Dto
 open FSharp.Control.Tasks.V2.ContextInsensitive
+open Focus.Api.Common.AuthHandlers
+open Microsoft.AspNetCore.Http
 open Giraffe.ResponseWriters
 open Giraffe.ModelBinding
 open Giraffe.Routing
-open Focus.Service.ReportConstructor.Application.Dto
-open Focus.Service.ReportConstructor.Application.Commands
-open Focus.Service.ReportConstructor.Application.Queries
+open Giraffe.Core
+open MediatR
 
 module Router =
 
-    let createReportTemplateHandler: HttpHandler =
+    let createReportTemplateHandler (dto:ReportTemplateDto): HttpHandler =
         fun next ctx ->
             task {
                 let! reportTemplateDto = ctx.BindJsonAsync<ReportTemplateDto>()
@@ -57,8 +58,8 @@ module Router =
             }
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
-        choose
-            [ POST >=> choose [ routex "/api/report/template(/?)" >=> createReportTemplateHandler ]
+        mustBeAdmin >=> choose
+            [ POST >=> choose [ route "/api/report/template" >=> bindJson<ReportTemplateDto> createReportTemplateHandler ]
               GET >=> choose
                           [ route "/api/report/template/info" >=> getReportTemplateInfosHandler
                             routef "/api/report/template/%s" getReportTemplateHandler ]

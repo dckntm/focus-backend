@@ -1,25 +1,17 @@
 namespace Focus.Service.Identity.Api
 
-open System
-open System.Collections.Generic
 open System.IO
-open System.Linq
-open System.Threading.Tasks
-open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.Hosting
-open Microsoft.Extensions.Logging
 open System.Reflection
 open Giraffe
-open Giraffe.Common
 open Focus.Service.Identity.Infrastructure
 open Focus.Service.Identity.Application
-open Focus.Infrastructure.Common.Messaging
-open System.IdentityModel.Tokens.Jwt
-open System.Security.Claims
 open Focus.Service.Identity.Api.Router
-open Focus.Api.Common.Security
+open Focus.Api.Common
+open Focus.Infrastructure.Common.MongoDB
 
 module Program =
     let exitCode = 0
@@ -49,21 +41,19 @@ module Program =
                 fun context services ->
                     let config = context.Configuration
 
-                    config.ConfigureServices(services)
-
-                    SecurityCompositionRoot.configureServices(services)
-
-                    services
+                    (services |> Cors.AddCors)
                         .AddGiraffe()
+                        .AddMongoDB(config)
                         .AddApplication()
-                        .AddInfrastructure(config)
-                        |> ignore
-                    )
+                        .AddInfrastructure() 
+                        |> Jwt.AddBearerSecurity 
+                        |> ignore)
             .Configure(
                 fun app -> 
-                    SecurityCompositionRoot
-                        .configureApp(app)
+                    (app |> Cors.UseCors)
+                        .UseAuthentication()
                         .UseGiraffe Router.wepApp
+
                     app.SeedAdministrator("admin", "password") |> ignore)
             .Build()
             .Run()

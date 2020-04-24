@@ -1,13 +1,11 @@
-﻿using Focus.Infrastructure.Common.MongoDB;
-using Focus.Service.ReportConstructor.Application.Dto;
+﻿using Focus.Service.ReportConstructor.Infrastructure.Persistence;
 using Focus.Service.ReportConstructor.Application.Services;
-using Focus.Service.ReportConstructor.Infrastructure.Persistence;
-using Microsoft.Extensions.Configuration;
+using Focus.Service.ReportConstructor.Application.Dto;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
 
 namespace Focus.Service.ReportConstructor.Infrastructure
 {
@@ -25,13 +23,6 @@ namespace Focus.Service.ReportConstructor.Infrastructure
 
             return services
                 .AddScoped<IReportTemplateRepository, ReportTemplateRepository>();
-        }
-
-        public static void ConfigureServices(this IConfiguration configuration, IServiceCollection services)
-        {
-            var mongoConfig = configuration.GetMongoConfigurationFromSection("mongodb");
-
-            services.AddTransient(_ => mongoConfig);
         }
     }
 }

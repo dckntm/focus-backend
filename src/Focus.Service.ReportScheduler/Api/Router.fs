@@ -1,26 +1,25 @@
 namespace Focus.Service.ReportSchduler.Api.Router
 
-open Giraffe.Core
-open Microsoft.AspNetCore.Http
-open MediatR
-open FSharp.Control.Tasks.V2.ContextInsensitive
 open Focus.Service.ReportScheduler.Application.Commands
 open Focus.Service.ReportScheduler.Application.Queries
+open Focus.Service.ReportScheduler.Application.Dto
+open FSharp.Control.Tasks.V2.ContextInsensitive
+open Focus.Api.Common.AuthHandlers
+open Microsoft.AspNetCore.Http
 open Giraffe.ResponseWriters
 open Giraffe.ModelBinding
 open Giraffe.Routing
-open Focus.Service.ReportScheduler.Application.Dto
+open Giraffe.Core
+open MediatR
 
 module Router =
 
-    let createReportSchedulerHandler: HttpHandler =
+    let createReportSchedulerHandler (dto: ReportScheduleDto): HttpHandler =
         fun next ctx ->
             task {
-                let! reportScheduleDto = ctx.BindJsonAsync<ReportScheduleDto>()
-
                 let mediator = ctx.GetService<IMediator>()
 
-                let! result = mediator.Send(CreateReportSchedule(reportScheduleDto))
+                let! result = mediator.Send(CreateReportSchedule(dto))
 
                 match result with
                 | success when result.IsSuccessfull -> return! json success.Result next ctx
@@ -58,8 +57,8 @@ module Router =
             }
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
-        choose
-            [ POST >=> route "/api/report/schedule" >=> createReportSchedulerHandler
+        mustBeAdmin >=> choose
+            [ POST >=> route "/api/report/schedule" >=> bindJson<ReportScheduleDto> createReportSchedulerHandler
               GET >=> choose
                           [ route "/api/report/schedule/info" >=> getReportScheduleInfo
                             routef "/api/report/schedule/%s" getReportSchedule ]

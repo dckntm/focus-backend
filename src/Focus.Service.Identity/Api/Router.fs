@@ -1,14 +1,14 @@
 namespace Focus.Service.Identity.Api.Router
 
-open Giraffe
-open MediatR
-open Microsoft.AspNetCore.Http
+open Focus.Service.Identity.Application.Commands
+open Focus.Service.Identity.Application.Queries
 open FSharp.Control.Tasks.V2.ContextInsensitive
 open Focus.Service.Identity.Application.Dto
-open Focus.Service.Identity.Application.Commands
-open Focus.Api.Common.Security
 open Focus.Service.Identity.Core.Entities
-open Focus.Service.Identity.Application.Queries
+open Focus.Api.Common.AuthHandlers
+open Microsoft.AspNetCore.Http
+open MediatR
+open Giraffe
 
 module Router =
 
@@ -121,10 +121,10 @@ module Router =
         choose
             [ POST
               >=> choose
-                      [ route "/api/identity/create" >=> Security.mustBeAdmin >=> createUserHandler
+                      [ route "/api/identity/create" >=> mustBeAdmin >=> createUserHandler
                         route "/api/identity/login" >=> bindJson<User> loginUser
-                        route "/api/org/create" >=> Security.mustBeAdmin >=> bindJson<Organization> createOrganization ]
-              GET >=> Security.mustBeAdmin >=> choose
+                        route "/api/org/create" >=> mustBeAdmin >=> bindJson<Organization> createOrganization ]
+              GET >=> mustBeAdmin >=> choose
                                                    [ route "/api/org/info" >=> getOrganizationInfos
                                                      route "/api/identity/info" >=> getUsers
                                                      routef "/api/identity/%s" getUser
