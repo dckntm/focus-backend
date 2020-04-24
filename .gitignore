@@ -441,6 +441,7 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+*.code-workspace
 
 # <-- F Sharp VS Code Ionide package gitignore -->
 
