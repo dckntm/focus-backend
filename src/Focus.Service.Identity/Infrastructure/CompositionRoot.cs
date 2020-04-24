@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Focus.Infrastructure.Common.MongoDB;
@@ -25,23 +26,30 @@ namespace Focus.Service.Identity.Infrastructure
         {
             var repository = app.ApplicationServices.GetRequiredService<IIdentityRepository>();
 
-            var id = await repository.CreateNewOrganizationAsync(new Organization()
+            try
             {
-                TItle = "Head Organization",
-                IsHead = true,
-                Members = new List<string>(new[] {
+                var id = await repository.CreateNewOrganizationAsync(new Organization()
+                {
+                    TItle = "Head Organization",
+                    IsHead = true,
+                    Members = new List<string>(new[] {
                     username
                 })
-            });
+                });
 
-            await repository.CreateNewUserAsync(
-                "Admin",
-                "Admin",
-                "Admin",
-                username,
-                password,
-                "HOA",
-                id);
+                await repository.CreateNewUserAsync(
+                    "Admin",
+                    "Admin",
+                    "Admin",
+                    username,
+                    password,
+                    "HOA",
+                    id);
+            }
+            catch (Exception _)
+            {
+                return;
+            }
         }
     }
 }
