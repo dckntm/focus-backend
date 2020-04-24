@@ -1,0 +1,33 @@
+version: "3.1"
+
+services:
+  is_storage:
+    image: mongo
+    container_name: is_storage
+    restart: always
+    ports:
+      - "27017:27017"
+
+  is_storage_gui:
+    image: mongo-express
+    container_name: is_storage_gui
+    restart: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - is_storage
+    environment: 
+      - ME_CONFIG_MONGODB_SERVER=is_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+
+  is:
+    image: focus_identity:latest
+    restart: always
+    ports:
+      - "5000:5000"
+    container_name: is
+    depends_on:
+      - is_storage
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=dev
+      - ASPNETCORE_URLS=http://*:5000
