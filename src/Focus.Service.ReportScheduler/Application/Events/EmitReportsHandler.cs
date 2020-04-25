@@ -5,6 +5,7 @@ using MediatR;
 using Focus.Core.Common.Messages;
 using Focus.Service.ReportScheduler.Application.Services;
 using Microsoft.Extensions.Logging;
+using Focus.Application.Common.Services.Messaging;
 
 namespace Focus.Service.ReportScheduler.Application.Events
 {
@@ -12,6 +13,7 @@ namespace Focus.Service.ReportScheduler.Application.Events
     {
         private readonly IReportScheduleRepository _repository;
         private readonly ILogger<EmitReportsEventHandler> _logger;
+        private readonly IPublisher _publisher;
 
         public EmitReportsEventHandler(
             IReportScheduleRepository repository,
