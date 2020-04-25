@@ -1,10 +1,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Focus.Application.Common.Services.Messaging;
 using Focus.Core.Common.Messages;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Focus.Infrastructure.Common.Messaging.Publishing;
 
 namespace Focus.Service.NewDayEmitter
 {

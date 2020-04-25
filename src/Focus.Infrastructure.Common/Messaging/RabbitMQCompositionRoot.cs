@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Focus.Application.Common.Services.Messaging;
 using Focus.Infrastructure.Common.Messaging.Configuration;
 using Focus.Infrastructure.Common.Messaging.Consuming;
 using Focus.Infrastructure.Common.Messaging.Publishing;

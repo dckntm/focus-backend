@@ -3,7 +3,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Focus.Service.Identity.Core.csproj" />
     <ProjectReference Include="..\..\Focus.Application.Common\Focus.Application.Common.csproj" />
-    <ProjectReference Include="..\..\Focus.Infrastructure.Common\Focus.Infrastructure.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

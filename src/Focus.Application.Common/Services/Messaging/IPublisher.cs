@@ -1,4 +1,4 @@
-namespace Focus.Infrastructure.Common.Messaging.Publishing
+namespace Focus.Application.Common.Services.Messaging
 {
     public interface IPublisher
     {
