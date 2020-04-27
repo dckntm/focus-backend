@@ -13,18 +13,18 @@ using MediatR;
 
 namespace Focus.Service.ReportConstructor.Application.Events
 {
-    public class OnReportPublishingHandler : INotificationHandler<OnReportPublishing>
+    public class OnReportConstructingHandler : INotificationHandler<OnReportConstructing>
     {
         public readonly IPublisher _publisher;
         public readonly IReportTemplateRepository _repository;
 
-        public OnReportPublishingHandler(IPublisher publisher, IReportTemplateRepository repository)
+        public OnReportConstructingHandler(IPublisher publisher, IReportTemplateRepository repository)
         {
             _publisher = publisher;
             _repository = repository;
         }
 
-        public async Task Handle(OnReportPublishing notification, CancellationToken cancellationToken)
+        public async Task Handle(OnReportConstructing notification, CancellationToken cancellationToken)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace Focus.Service.ReportConstructor.Application.Events
 
                 var templates = await _repository.GetReportTemplatesAsync();
 
-                foreach (var templateSeed in notification.Reports)
+                foreach (var templateSeed in notification.NewReports)
                 {
                     ReportTemplate template = templates.FirstOrDefault(x => x.Id == templateSeed.ReportTemplateId);
 
