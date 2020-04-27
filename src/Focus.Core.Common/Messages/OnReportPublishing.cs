@@ -15,6 +15,7 @@ namespace Focus.Core.Common.Messages
         public IList<string> AssignedOrganizationIds { get; set; }
         public DateTime Deadline { get; set; }
         public IList<QuestionnaireModuleSeed> Questionnaires { get; set; }
+        public IList<TableModuleSeed> Tables { get; set; }
     }
 
     public class QuestionnaireModuleSeed
