@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using MediatR;
+using System;
 
 namespace Focus.Core.Common.Messages
 {
