@@ -1,8 +1,9 @@
 namespace Focus.Service.ReportConstructor.Api
 
-open Focus.Service.ReportScheduler.Api.ReportScheduler
 open Focus.Service.ReportConstructor.Infrastructure
 open Focus.Service.ReportConstructor.Application
+open Focus.Infrastructure.Common.Messaging
+open Focus.Service.ReportConstructor.Api
 open Focus.Infrastructure.Common.MongoDB
 open Microsoft.Extensions.Configuration
 open Microsoft.AspNetCore.Hosting
@@ -45,6 +46,8 @@ module Program =
                         .AddGiraffe()
                         .AddMongoDB(config)
                         .AddApplication()
+                        .AddRabbitMQConsumers(config)
+                        .AddRabbitMQPublisher(config, false)
                         .AddInfrastructure()
                         |> Jwt.AddBearerSecurity
                         |> ignore)

@@ -1,4 +1,4 @@
-namespace Focus.Service.ReportScheduler.Api.ReportScheduler
+namespace Focus.Service.ReportConstructor.Api
 
 open Focus.Service.ReportConstructor.Application.Commands
 open Focus.Service.ReportConstructor.Application.Queries
