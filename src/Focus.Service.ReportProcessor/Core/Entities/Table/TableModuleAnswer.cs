@@ -3,7 +3,7 @@ using Focus.Core.Common.Abstract;
 
 namespace Focus.Service.ReportProcessor.Entities.Table
 {
-    public class TableModuleAnswers : ValueObject
+    public class TableModuleAnswer : ValueObject
     {
         public int Order { get; set; }
         public IList<CellAnswer> CellAnswers { get; set; }

@@ -15,7 +15,7 @@ namespace Focus.Service.ReportProcessor.Entities
         public ReportStatus Status { get; set; }
         public DateTime Deadline { get; set; }
         public IList<QuestionnaireModuleAnswer> QuestionnaireAnswers { get; set; }
-        public IList<TableModuleAnswers> TableAnswers { get; set; }
+        public IList<TableModuleAnswer> TableAnswers { get; set; }
 
         protected override IEnumerable<object> GetAtomicValues()
         {
