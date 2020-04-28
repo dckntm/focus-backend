@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Focus.Application.Common.Abstract;
 using Focus.Service.ReportProcessor.Application.Dto;
 using Focus.Service.ReportProcessor.Application.Services;
-using Focus.Service.ReportProcessor.Entities;
 using Focus.Service.ReportProcessor.Enums;
 using MediatR;
 
@@ -14,6 +13,10 @@ namespace Focus.Service.ReportProcessor.Application.Queries
 {
     public class GetOrganizationReports : IRequest<RequestResult<IEnumerable<ReportInfoDto>>>
     {
+        public GetOrganizationReports(string organizationId)
+        {
+            OrganizationId = organizationId;
+        }
         public string OrganizationId { get; private set; }
     }
 

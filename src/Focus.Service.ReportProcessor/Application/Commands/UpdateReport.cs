@@ -8,10 +8,10 @@ namespace Focus.Service.ReportProcessor.Application.Commands
 {
     public class UpdateReport : IRequest
     {
-        public UpdateReport(ReportUpdateDto report, bool posted)
+        public UpdateReport(ReportUpdateDto report, bool passed)
         {
             Report = report;
-            Posted = posted;
+            Posted = passed;
         }
         public ReportUpdateDto Report { get; private set; }
         public bool Posted { get; private set; }
