@@ -1,27 +1,67 @@
 namespace Focus.Service.ReportProcessor.Api
 
-open System
-open System.Collections.Generic
-open System.IO
-open System.Linq
-open System.Threading.Tasks
-open Microsoft.AspNetCore
-open Microsoft.AspNetCore.Hosting
+open Focus.Service.ReportProcessor.Infrastructure
+open Focus.Service.ReportProcessor.Application
+open Focus.Service.ReportProcessor.Api.Router
+open Focus.Infrastructure.Common.Messaging
+open Focus.Infrastructure.Common.MongoDB
 open Microsoft.Extensions.Configuration
+open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Hosting
-open Microsoft.Extensions.Logging
+open Focus.Api.Common.Cors
+open System.Reflection
+open Focus.Api.Common
+open System.IO
+open Giraffe
 
 module Program =
     let exitCode = 0
 
-    let CreateHostBuilder args =
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(fun webBuilder ->
-                webBuilder.UseStartup<Startup>() |> ignore
-            )
-
     [<EntryPoint>]
     let main args =
-        CreateHostBuilder(args).Build().Run()
+        WebHostBuilder()
+            .UseKestrel()
+            .UseContentRoot(Directory.GetCurrentDirectory())
+            .ConfigureAppConfiguration(
+                fun context config ->
+                    let env = context.HostingEnvironment
+                    
+                    config.AddJsonFile("appsettings.json", true, true)
+                          .AddJsonFile((sprintf "appsettings.%s.json" env.EnvironmentName), true, true) |> ignore
+
+                    if env.IsDevelopment() then
+                        let appAssembly = Assembly.GetExecutingAssembly()
+
+                        if isNotNull appAssembly then config.AddUserSecrets(appAssembly, true) |> ignore
+
+                    config.AddEnvironmentVariables() |> ignore
+
+                    if isNotNull args then config.AddCommandLine(args) |> ignore)
+            .ConfigureServices(
+                fun context services ->
+                    let config = context.Configuration
+
+                    (services |>
+                        AddCors)
+                        .AddGiraffe()
+                        .AddMongoDB(config)
+                        .AddApplication()
+                        // RabbitMQ DI always goes after Application as it needs IMediator to be injected
+                        .AddRabbitMQConsumers(config)
+                        .AddInfrastructure()
+                        |> Jwt.AddBearerSecurity 
+                        |> ignore)
+            .Configure(
+                fun app -> 
+                    app.UseGiraffe Router.webApp
+
+                    app 
+                        |> AuthAppBuilderExtensions.UseAuthentication 
+                        |> UseCors 
+                        |> ignore
+            )
+            .Build()
+            .Run()
 
         exitCode
