@@ -93,7 +93,7 @@ namespace Focus.Service.ReportConstructor.Application.Events
                     message: published,
                     exchangeName: "focus",
                     exchangeType: "topic",
-                    routeKey: "focus.report.publishing"
+                    routeKey: "focus.event.report.publish"
                 );
             }
             catch (Exception ex)

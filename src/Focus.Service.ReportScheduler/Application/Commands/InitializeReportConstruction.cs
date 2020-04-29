@@ -51,7 +51,7 @@ namespace Focus.Service.ReportScheduler.Application.Commands
                 message: onReportConstructing,
                 exchangeName: "focus",
                 exchangeType: "topic",
-                routeKey: "focus.report.constructing");
+                routeKey: "focus.events.report.construct");
 
             return Unit.Task;
         }

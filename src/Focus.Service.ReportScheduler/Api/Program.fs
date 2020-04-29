@@ -56,12 +56,10 @@ module Program =
                         |> ignore)
             .Configure(
                 fun app -> 
-                    app.UseGiraffe Router.webApp
-
-                    app 
-                        |> AuthAppBuilderExtensions.UseAuthentication 
+                    (app 
                         |> UseCors 
-                        |> ignore
+                        |> AuthAppBuilderExtensions.UseAuthentication) 
+                        .UseGiraffe Router.webApp
             )
             .Build()
             .Run()
