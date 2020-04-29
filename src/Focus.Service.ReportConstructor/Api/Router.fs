@@ -17,10 +17,10 @@ module Router =
     let createReportTemplateHandler (dto:ReportTemplateDto): HttpHandler =
         fun next ctx ->
             task {
-                let! reportTemplateDto = ctx.BindJsonAsync<ReportTemplateDto>()
+                // let! reportTemplateDto = ctx.BindJsonAsync<ReportTemplateDto>()
                 let mediator = ctx.GetService<IMediator>()
 
-                let! result = mediator.Send(CreateReportTemplate(reportTemplateDto))
+                let! result = mediator.Send(CreateReportTemplate(dto))
 
                 if result.IsSuccessfull then
                     return! json result.Result next ctx

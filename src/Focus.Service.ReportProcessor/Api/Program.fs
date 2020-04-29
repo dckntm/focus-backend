@@ -59,8 +59,7 @@ module Program =
                     app 
                         |> AuthAppBuilderExtensions.UseAuthentication 
                         |> UseCors 
-                        |> ignore
-            )
+                        |> ignore   )
             .Build()
             .Run()
 
