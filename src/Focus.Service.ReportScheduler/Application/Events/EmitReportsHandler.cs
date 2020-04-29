@@ -17,10 +17,12 @@ namespace Focus.Service.ReportScheduler.Application.Events
 
         public EmitReportsEventHandler(
             IReportScheduleRepository repository,
-            IDateTimeService date)
+            IDateTimeService date, 
+            IPublisher publisher)
         {
             _repository = repository;
             _date = date;
+            _publisher = publisher;
         }
 
         public async Task Handle(NewDayEvent notification, CancellationToken cancellationToken)
