@@ -10,6 +10,7 @@ using System.Threading;
 using System.Linq;
 using MediatR;
 using System;
+using Focus.Application.Common.Services.Logging;
 
 namespace Focus.Service.ReportConstructor.Application.Events
 {
@@ -17,15 +18,19 @@ namespace Focus.Service.ReportConstructor.Application.Events
     {
         public readonly IPublisher _publisher;
         public readonly IReportTemplateRepository _repository;
+        public readonly ILog _logger;
 
-        public OnReportConstructingHandler(IPublisher publisher, IReportTemplateRepository repository)
+        public OnReportConstructingHandler(IPublisher publisher, IReportTemplateRepository repository, ILog logger)
         {
             _publisher = publisher;
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task Handle(OnReportConstructing notification, CancellationToken cancellationToken)
         {
+            _logger.LogApplication("Received request for constructing reports");
+
             try
             {
                 var published = new OnReportPublishing()
@@ -95,9 +100,13 @@ namespace Focus.Service.ReportConstructor.Application.Events
                     exchangeType: "topic",
                     routeKey: "focus.event.report.publish"
                 );
+
+                _logger.LogApplication("Successfully published new reports from Report Constructor");
             }
             catch (Exception ex)
             {
+                _logger.LogApplication($"Failed to construct reports due to: \n {ex.Message}");
+
                 throw ex;
             }
         }

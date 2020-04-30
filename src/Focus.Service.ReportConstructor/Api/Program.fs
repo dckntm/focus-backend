@@ -5,15 +5,19 @@ open Focus.Service.ReportConstructor.Application
 open Focus.Infrastructure.Common.Messaging
 open Focus.Service.ReportConstructor.Api
 open Focus.Infrastructure.Common.MongoDB
+open Focus.Infrastructure.Common.Logging
 open Microsoft.Extensions.Configuration
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Hosting
+open Microsoft.Extensions.Logging
+open Focus.Api.Common.Log
 open Microsoft.AspNetCore
 open System.Reflection
 open Focus.Api.Common
 open System.IO
 open Giraffe
+open System
 
 module Program =
     let exitCode = 0
@@ -49,6 +53,7 @@ module Program =
                         .AddRabbitMQConsumers(config)
                         .AddRabbitMQPublisher(config, false)
                         .AddInfrastructure()
+                        .AddLogging()
                         |> Jwt.AddBearerSecurity
                         |> ignore)
             .Configure(
@@ -58,6 +63,7 @@ module Program =
                         |> AuthAppBuilderExtensions.UseAuthentication)
                         .UseGiraffe Router.webApp
                     )
+            .ConfigureLogging(Action<ILoggingBuilder> ConfigureLogging)
             .Build()
             .Run()
         
