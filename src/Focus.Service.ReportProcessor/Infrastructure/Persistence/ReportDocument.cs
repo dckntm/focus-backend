@@ -43,7 +43,7 @@ namespace Focus.Service.ReportProcessor.Infrastructure.Persistence
         {
             return new ReportDocument()
             {
-                Id = new ObjectId(ent.Id),
+                Id = string.IsNullOrEmpty(ent.Id) ? ObjectId.GenerateNewId() : new ObjectId(ent.Id),
                 ReportTemplateId = ent.ReportTemplateId,
                 AssignedOrganizationId = ent.AssignedOrganizationId,
                 Status = ent.Status,

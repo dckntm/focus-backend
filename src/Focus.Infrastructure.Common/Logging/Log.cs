@@ -15,25 +15,25 @@ namespace Focus.Infrastructure.Common.Logging
         public void LogApi(string message)
         {
             _logger.LogInformation(
-               $"\n------------------------ API LOG ------------------------\n\n{message}\n\n---------------------------------------------------------");
+               $"API LOG {message}");
         }
 
         public void LogApplication(string message)
         {
             _logger.LogInformation(
-                $"\n-------------------- APPLICATION LOG --------------------\n\n{message}\n\n---------------------------------------------------------");
+                $"APPLICATION LOG {message}");
         }
 
         public void LogCore(string message)
         {
             _logger.LogInformation(
-                $"\n----------------------- CORE LOG ------------------------\n\n{message}\n\n---------------------------------------------------------");
+                $"CORE LOG {message}");
         }
 
         public void LogInfrastructure(string message)
         {
             _logger.LogInformation(
-                $"\n------------------- INFRASTRUCTURE LOG ------------------\n\n{message}\n\n---------------------------------------------------------");
+                $"INFRASTRUCTURE LOG {message}");
 
         }
     }

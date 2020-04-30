@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
 using System;
+using Focus.Application.Common.Services.Logging;
 
 namespace Focus.Service.ReportProcessor.Application.Queries
 {
@@ -21,10 +22,12 @@ namespace Focus.Service.ReportProcessor.Application.Queries
     public class GetReportHandler : IRequestHandler<GetReport, RequestResult<ReportUpdateDto>>
     {
         private readonly IReportRepository _repository;
+        private readonly ILog _logger;
 
-        public GetReportHandler(IReportRepository repository)
+        public GetReportHandler(IReportRepository repository, ILog logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<RequestResult<ReportUpdateDto>> Handle(GetReport request, CancellationToken cancellationToken)
@@ -36,6 +39,8 @@ namespace Focus.Service.ReportProcessor.Application.Queries
                 if (report is null)
                     throw new Exception($"APPLICATION No report with {request.ReportId} id");
 
+                _logger.LogApplication($"Successfully got report {request.ReportId}");
+
                 return RequestResult
                     .Successfull(new ReportUpdateDto()
                     {
@@ -46,6 +51,8 @@ namespace Focus.Service.ReportProcessor.Application.Queries
             }
             catch (Exception e)
             {
+                _logger.LogApplication($"Failed to get report {request.ReportId}");
+
                 return RequestResult<ReportUpdateDto>
                     .Failed(e);
             }

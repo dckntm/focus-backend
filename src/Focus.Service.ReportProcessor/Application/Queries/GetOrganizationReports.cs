@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Focus.Application.Common.Abstract;
+using Focus.Application.Common.Services.Logging;
 using Focus.Service.ReportProcessor.Application.Dto;
 using Focus.Service.ReportProcessor.Application.Services;
 using Focus.Service.ReportProcessor.Enums;
@@ -24,10 +25,12 @@ namespace Focus.Service.ReportProcessor.Application.Queries
         : IRequestHandler<GetOrganizationReports, RequestResult<IEnumerable<ReportInfoDto>>>
     {
         private readonly IReportRepository _repository;
+        private readonly ILog _logger;
 
-        public GetOrganizationReportsHandler(IReportRepository repository)
+        public GetOrganizationReportsHandler(IReportRepository repository, ILog logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<RequestResult<IEnumerable<ReportInfoDto>>> Handle(GetOrganizationReports request, CancellationToken cancellationToken)
@@ -35,6 +38,8 @@ namespace Focus.Service.ReportProcessor.Application.Queries
             try
             {
                 var reports = await _repository.GetOrganizationReportsAsync(request.OrganizationId);
+
+                _logger.LogApplication($"Successfully got {reports.Count()} of reports of {request.OrganizationId} organization");
 
                 return RequestResult
                     .Successfull(reports
@@ -56,6 +61,8 @@ namespace Focus.Service.ReportProcessor.Application.Queries
             }
             catch (Exception e)
             {
+                _logger.LogApplication($"Failed to get reports of {request.OrganizationId} organization");
+
                 return RequestResult<IEnumerable<ReportInfoDto>>
                     .Failed(e);
             }

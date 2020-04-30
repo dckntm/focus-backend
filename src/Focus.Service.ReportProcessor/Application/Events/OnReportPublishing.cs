@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Focus.Application.Common.Services.Logging;
 using Focus.Core.Common.Messages;
 using Focus.Service.ReportProcessor.Application.Services;
 using Focus.Service.ReportProcessor.Entities;
@@ -16,10 +17,12 @@ namespace Focus.Service.ReportProcessor.Application.Events
     public class OnReportPublishingHandler : INotificationHandler<OnReportPublishing>
     {
         private readonly IReportRepository _repository;
+        private readonly ILog _logger;
 
-        public OnReportPublishingHandler(IReportRepository repository)
+        public OnReportPublishingHandler(IReportRepository repository, ILog logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task Handle(OnReportPublishing notification, CancellationToken cancellationToken)
@@ -32,6 +35,8 @@ namespace Focus.Service.ReportProcessor.Application.Events
 
             // push reports to database
             await _repository.CreateReportsAsync(reports);
+
+            _logger.LogApplication($"Published {reports.Count()} of reports");
         }
 
         private IEnumerable<Report> BuildReportsFrom(ReportTemplateSeed seed)
@@ -49,7 +54,8 @@ namespace Focus.Service.ReportProcessor.Application.Events
                         {
                             Order = q.Order,
                             SectionAnswers = q.Sections
-                                .Select(s => new SectionAnswer(){
+                                .Select(s => new SectionAnswer()
+                                {
                                     Order = s.Order,
                                     Repeatable = s.Repeatable,
                                     QuestionAnswers = s.Questions
@@ -57,7 +63,8 @@ namespace Focus.Service.ReportProcessor.Application.Events
                                         {
                                             Answer = "",
                                             Order = a.Order,
-                                            AnswerType = a.AnswerType switch {
+                                            AnswerType = a.AnswerType switch
+                                            {
                                                 "ShortText" => InputType.ShortText,
                                                 "LongText" => InputType.LongText,
                                                 "Email" => InputType.Email,
@@ -74,7 +81,7 @@ namespace Focus.Service.ReportProcessor.Application.Events
                                         }).ToList()
                                 }).ToList()
                         }).ToList(),
-                        TableAnswers = new List<TableModuleAnswer>()
+                    TableAnswers = new List<TableModuleAnswer>()
                 });
         }
     }

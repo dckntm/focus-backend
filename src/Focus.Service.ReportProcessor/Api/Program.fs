@@ -5,15 +5,18 @@ open Focus.Service.ReportProcessor.Application
 open Focus.Service.ReportProcessor.Api.Router
 open Focus.Infrastructure.Common.Messaging
 open Focus.Infrastructure.Common.MongoDB
+open Focus.Infrastructure.Common.Logging
 open Microsoft.Extensions.Configuration
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Hosting
+open Microsoft.Extensions.Logging
 open Focus.Api.Common.Cors
 open System.Reflection
 open Focus.Api.Common
 open System.IO
 open Giraffe
+open System
 
 module Program =
     let exitCode = 0
@@ -50,6 +53,7 @@ module Program =
                         // RabbitMQ DI always goes after Application as it needs IMediator to be injected
                         .AddRabbitMQConsumers(config)
                         .AddInfrastructure()
+                        .AddLogging()
                         |> Jwt.AddBearerSecurity 
                         |> ignore)
             .Configure(
@@ -60,6 +64,7 @@ module Program =
                         |> AuthAppBuilderExtensions.UseAuthentication 
                         |> UseCors 
                         |> ignore   )
+            .ConfigureLogging(Action<ILoggingBuilder> Log.ConfigureLogging)
             .Build()
             .Run()
 
