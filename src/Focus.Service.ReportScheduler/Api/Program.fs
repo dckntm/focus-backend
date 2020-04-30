@@ -1,20 +1,24 @@
 namespace Focus.Service.ReportScheduler.Api
 
-open System.IO
-open Microsoft.AspNetCore.Builder
-open Microsoft.AspNetCore.Hosting
-open Microsoft.Extensions.Configuration
-open Microsoft.Extensions.Hosting
-open System.Reflection
-open Giraffe.Common
-open Giraffe.Middleware
 open Focus.Service.ReportScheduler.Infrastructure
 open Focus.Service.ReportScheduler.Application
 open Focus.Service.ReportSchduler.Api.Router
 open Focus.Infrastructure.Common.Messaging
 open Focus.Infrastructure.Common.MongoDB
-open Focus.Api.Common
+open Focus.Infrastructure.Common.Logging
+open Microsoft.Extensions.Configuration
+open Microsoft.AspNetCore.Hosting
+open Microsoft.Extensions.Logging
+open Microsoft.Extensions.Hosting
+open Microsoft.AspNetCore.Builder
 open Focus.Api.Common.Cors
+open Focus.Api.Common.Log
+open Giraffe.Middleware
+open System.Reflection
+open Focus.Api.Common
+open Giraffe.Common
+open System.IO
+open System
 
 module Program =
     let exitCode = 0
@@ -52,6 +56,7 @@ module Program =
                         .AddRabbitMQConsumers(config)
                         .AddRabbitMQPublisher(config, false)
                         .AddInfrastructure()
+                        .AddLogging()
                         |> Jwt.AddBearerSecurity 
                         |> ignore)
             .Configure(
@@ -59,8 +64,8 @@ module Program =
                     (app 
                         |> UseCors 
                         |> AuthAppBuilderExtensions.UseAuthentication) 
-                        .UseGiraffe Router.webApp
-            )
+                        .UseGiraffe Router.webApp)
+            .ConfigureLogging(Action<ILoggingBuilder> ConfigureLogging)
             .Build()
             .Run()
 

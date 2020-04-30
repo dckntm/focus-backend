@@ -7,6 +7,8 @@ using System.Threading;
 using System.Linq;
 using MediatR;
 using System;
+using Microsoft.Extensions.Logging;
+using Focus.Application.Common.Services.Logging;
 
 namespace Focus.Service.ReportScheduler.Application.Commands
 {
@@ -24,10 +26,14 @@ namespace Focus.Service.ReportScheduler.Application.Commands
         : IRequestHandler<InitializeReportConstruction>
     {
         private readonly IPublisher _publisher;
+        private readonly ILog _logger;
 
-        public InitializeReportConstructionHandler(IPublisher publisher)
+        public InitializeReportConstructionHandler(
+                IPublisher publisher,
+                ILog logger)
         {
             _publisher = publisher;
+            _logger = logger;
         }
 
         public Task<Unit> Handle(InitializeReportConstruction request, CancellationToken cancellationToken)
@@ -52,6 +58,8 @@ namespace Focus.Service.ReportScheduler.Application.Commands
                 exchangeName: "focus",
                 exchangeType: "topic",
                 routeKey: "focus.events.report.construct");
+
+            _logger.LogApplication("On Report Constructing published from Report Scheduler");
 
             return Unit.Task;
         }

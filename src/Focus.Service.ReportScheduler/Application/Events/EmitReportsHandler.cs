@@ -1,11 +1,13 @@
 ﻿using Focus.Service.ReportScheduler.Application.Services;
 using Focus.Application.Common.Services.Messaging;
 using Focus.Service.ReportScheduler.Core.Entities;
+using Microsoft.Extensions.Logging;
 using Focus.Core.Common.Messages;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
 using MediatR;
+using Focus.Application.Common.Services.Logging;
 
 namespace Focus.Service.ReportScheduler.Application.Events
 {
@@ -14,15 +16,18 @@ namespace Focus.Service.ReportScheduler.Application.Events
         private readonly IReportScheduleRepository _repository;
         private readonly IPublisher _publisher;
         private readonly IDateTimeService _date;
+        private readonly ILog _logger;
 
         public EmitReportsEventHandler(
             IReportScheduleRepository repository,
-            IDateTimeService date, 
-            IPublisher publisher)
+            IDateTimeService date,
+            IPublisher publisher, 
+            ILog logger)
         {
             _repository = repository;
             _date = date;
             _publisher = publisher;
+            _logger = logger;
         }
 
         public async Task Handle(NewDayEvent notification, CancellationToken cancellationToken)
@@ -50,6 +55,8 @@ namespace Focus.Service.ReportScheduler.Application.Events
                 exchangeName: "focus",
                 exchangeType: "topic",
                 routeKey: "focus.report.constructing");
+
+            _logger.LogApplication($"Published schedule for {today:dd.MM.YYYY} reports");
         }
 
         private bool ShouldBeEmittedToday(ReportSchedule schedule)
