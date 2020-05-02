@@ -9,7 +9,7 @@ namespace Focus.Infrastructure.Common.Client
         public static IServiceCollection AddServiceClient(this IServiceCollection services, IConfiguration configuration)
         {
             var clientConfiguration = new ClientConfiguration();
-            configuration.Bind("serviceClient", clientConfiguration);
+            configuration.Bind("service_client", clientConfiguration);
 
             return services
                 .AddHttpClient()

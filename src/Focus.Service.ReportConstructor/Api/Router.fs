@@ -1,5 +1,6 @@
 namespace Focus.Service.ReportConstructor.Api
 
+open Focus.Core.Common.Messages.Commands
 open Focus.Service.ReportConstructor.Application.Commands
 open Focus.Service.ReportConstructor.Application.Queries
 open Focus.Service.ReportConstructor.Application.Dto
@@ -17,7 +18,6 @@ module Router =
     let createReportTemplateHandler (dto:ReportTemplateDto): HttpHandler =
         fun next ctx ->
             task {
-                // let! reportTemplateDto = ctx.BindJsonAsync<ReportTemplateDto>()
                 let mediator = ctx.GetService<IMediator>()
 
                 let! result = mediator.Send(CreateReportTemplate(dto))
@@ -57,9 +57,20 @@ module Router =
                     return! json result.ErrorMessage next ctx
             }
 
+    let constructReports (command:ConstructReports) : HttpHandler =
+        fun next ctx ->
+            task {
+                let mediator = ctx.GetService<IMediator>()
+
+                let! _ = mediator.Send(command)
+
+                return! setStatusCode 200 next ctx
+            }
+
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
         mustBeAdmin >=> choose
-            [ POST >=> choose [ route "/api/report/template" >=> bindJson<ReportTemplateDto> createReportTemplateHandler ]
+            [ POST >=> choose [ route "/api/report/template" >=> bindJson<ReportTemplateDto> createReportTemplateHandler
+                                route "/api/cs/report/construct" >=> bindJson<ConstructReports> constructReports ]
               GET >=> choose
                           [ route "/api/report/template/info" >=> getReportTemplateInfosHandler
                             routef "/api/report/template/%s" getReportTemplateHandler ]

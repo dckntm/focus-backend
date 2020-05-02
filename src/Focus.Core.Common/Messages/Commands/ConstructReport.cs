@@ -6,7 +6,7 @@ namespace Focus.Core.Common.Messages.Commands
 {
     public class ConstructReports : IRequest
     {
-        public IList<ReportConstructionDescriptor> ReportConfigurations { get; set; }
+        public IList<ReportConstructionDescriptor> ReportDescriptors { get; set; }
     }
 
     public class ReportConstructionDescriptor
