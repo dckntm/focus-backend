@@ -10,6 +10,7 @@ namespace Focus.Service.ReportProcessor.Entities
     public class Report : ValueObject
     {
         public string Id { get; set; }
+        public string Title { get; set; }
         public string ReportTemplateId { get; set; }
         public string AssignedOrganizationId { get; set; }
         public ReportStatus Status { get; set; }

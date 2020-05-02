@@ -5,15 +5,16 @@ namespace Focus.Service.ReportProcessor.Entities.Questionnaire
 {
     public class SectionAnswer : ValueObject
     {
+        public string Title { get; set; }
         public int Order { get; set; }
-        public bool Repeatable { get; set; }
+        // public bool Repeatable { get; set; }
         public IList<QuestionAnswer> QuestionAnswers { get; set; }
 
         protected override IEnumerable<object> GetAtomicValues()
         {
             yield return Order;
-            yield return Repeatable;
-            
+            // yield return Repeatable;
+
             foreach (var q in QuestionAnswers)
                 yield return q;
         }

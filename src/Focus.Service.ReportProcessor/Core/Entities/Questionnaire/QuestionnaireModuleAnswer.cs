@@ -5,6 +5,7 @@ namespace Focus.Service.ReportProcessor.Entities.Questionnaire
 {
     public class QuestionnaireModuleAnswer : ValueObject
     {
+        public string Title { get; set; }
         public int Order { get; set; }
         public IList<SectionAnswer> SectionAnswers { get; set; }
 
@@ -13,7 +14,7 @@ namespace Focus.Service.ReportProcessor.Entities.Questionnaire
             yield return Order;
 
             foreach (var s in SectionAnswers)
-                yield return s; 
+                yield return s;
         }
     }
 }

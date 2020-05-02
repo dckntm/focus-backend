@@ -45,6 +45,7 @@ namespace Focus.Service.ReportProcessor.Application.Events
                 .Select(x => new Report()
                 {
                     Id = "",
+                    Title = seed.Title,
                     ReportTemplateId = seed.ReportTemplateId,
                     AssignedOrganizationId = x,
                     Status = ReportStatus.InProgress,
@@ -57,7 +58,7 @@ namespace Focus.Service.ReportProcessor.Application.Events
                                 .Select(s => new SectionAnswer()
                                 {
                                     Order = s.Order,
-                                    Repeatable = s.Repeatable,
+                                    // Repeatable = s.Repeatable,
                                     QuestionAnswers = s.Questions
                                         .Select(a => new QuestionAnswer()
                                         {

@@ -50,25 +50,29 @@ namespace Focus.Service.ReportConstructor.Application.Events
 
                     published.Reports.Add(new ReportTemplateSeed()
                     {
+                        Title = template.Title,
                         ReportTemplateId = templateSeed.ReportTemplateId,
                         AssignedOrganizationIds = templateSeed.AssignedOrganizationIds,
                         Deadline = templateSeed.Deadline,
                         // TODO: place this complex conversion to some extensions methods or separated method in handler class
                         Questionnaires = template.GetArray()
-                                                .Where(x => x is QuestionnaireModuleTemplate)
-                                                .Select(x => x as QuestionnaireModuleTemplate)
-                                                .Select(x => new QuestionnaireModuleSeed()
+                                                .Where(m => m is QuestionnaireModuleTemplate)
+                                                .Select(m => m as QuestionnaireModuleTemplate)
+                                                .Select(m => new QuestionnaireModuleSeed()
                                                 {
-                                                    Order = x.Order,
-                                                    Sections = x.GetArray()
-                                                        .Select(y => new SectionSeed()
+                                                    Title = m.Title,
+                                                    Order = m.Order,
+                                                    Sections = m.GetArray()
+                                                        .Select(s => new SectionSeed()
                                                         {
-                                                            Order = y.Order,
-                                                            Questions = y.GetArray()
-                                                                .Select(z => new QuestionSeed()
+                                                            Title = s.Title,
+                                                            Order = s.Order,
+                                                            Questions = s.GetArray()
+                                                                .Select(q => new QuestionSeed()
                                                                 {
-                                                                    Order = z.Order,
-                                                                    AnswerType = z.InputType switch
+                                                                    Title = q.QuestionText,
+                                                                    Order = q.Order,
+                                                                    AnswerType = q.InputType switch
                                                                     {
                                                                         InputType.ShortText => "ShortText",
                                                                         InputType.LongText => "LongText",

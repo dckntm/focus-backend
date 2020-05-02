@@ -6,6 +6,7 @@ namespace Focus.Service.ReportProcessor.Entities.Questionnaire
 {
     public class QuestionAnswer : ValueObject
     {
+        public string Title { get; set; }
         public int Order { get; set; }
         public string Answer { get; set; }
         public InputType AnswerType { get; set; }
