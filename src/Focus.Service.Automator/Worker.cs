@@ -1,12 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Focus.Application.Common.Services.Messaging;
-using Focus.Core.Common.Messages;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Focus.Service.NewDayEmitter
+namespace Focus.Service.Automator
 {
     public class Worker : BackgroundService
     {
@@ -28,10 +28,10 @@ namespace Focus.Service.NewDayEmitter
                 _logger.LogInformation("Published New Day Event at: {time}", DateTimeOffset.Now);
 
                 _publisher.Publish(
-                    message: new NewDayEvent(), 
+                    message: new NewDay(), 
                     exchangeName: "focus", 
                     exchangeType: "topic",
-                    routeKey: "focus.events.newday.schedule");
+                    routeKey: "focus.events.newday.*");
 
                 await Task.Delay(3000, stoppingToken);
             }

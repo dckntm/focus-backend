@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>dotnet-Focus.Service.Automator-02E4B2F0-A35B-4C87-BA43-59C0675EB30B</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Focus.Application.Common\Focus.Application.Common.csproj" />
+    <ProjectReference Include="..\Focus.Infrastructure.Common\Focus.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\Focus.Core.Common\Focus.Core.Common.csproj" />
+  </ItemGroup>
+</Project>

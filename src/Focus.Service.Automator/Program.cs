@@ -1,11 +1,11 @@
-using System.Reflection;
-using Focus.Infrastructure.Common.Messaging;
-using Focus.Infrastructure.Common.Messaging.Publishing;
-using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Focus.Service.NewDayEmitter
+namespace Focus.Service.Automator
 {
     public class Program
     {
