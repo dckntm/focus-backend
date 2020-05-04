@@ -12,6 +12,7 @@ open Giraffe.ModelBinding
 open Giraffe.Routing
 open Giraffe.Core
 open MediatR
+open Focus.Application.Common.Services.Logging
 
 module Router =
 
@@ -61,6 +62,9 @@ module Router =
         fun next ctx ->
             task {
                 let mediator = ctx.GetService<IMediator>()
+                let logger = ctx.GetService<ILog>()
+
+                logger.LogApi("Received construct reports request")
 
                 let! _ = mediator.Send(command)
 
@@ -68,7 +72,7 @@ module Router =
             }
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
-        mustBeAdmin >=> choose
+        choose
             [ POST >=> choose [ route "/api/report/template" >=> bindJson<ReportTemplateDto> createReportTemplateHandler
                                 route "/api/cs/report/construct" >=> bindJson<ConstructReports> constructReports ]
               GET >=> choose

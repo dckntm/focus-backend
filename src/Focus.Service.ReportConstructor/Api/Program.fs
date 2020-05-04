@@ -6,6 +6,7 @@ open Focus.Infrastructure.Common.Messaging
 open Focus.Service.ReportConstructor.Api
 open Focus.Infrastructure.Common.MongoDB
 open Focus.Infrastructure.Common.Logging
+open Focus.Infrastructure.Common.Client
 open Microsoft.Extensions.Configuration
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Builder
@@ -50,8 +51,9 @@ module Program =
                         .AddGiraffe()
                         .AddMongoDB(config)
                         .AddApplication()
-                        .AddRabbitMQConsumers(config)
-                        .AddRabbitMQPublisher(config, false)
+                        .AddServiceClient(config)
+                        // .AddRabbitMQConsumers(config)
+                        // .AddRabbitMQPublisher(config, false)
                         .AddInfrastructure()
                         .AddLogging()
                         |> Jwt.AddBearerSecurity

@@ -19,3 +19,16 @@ services:
     environment:
       - ME_CONFIG_MONGODB_SERVER=rcs_storage
       - ME_CONFIG_MONGODB_PORT=27017
+
+  rps_storage:
+    image: mongo
+    container_name: rps_storage
+    restart: always
+
+  rps:
+    image: focus.processor:latest
+    container_name: rps
+    restart: always
+    ports:
+      - "5200:5000"
+  
