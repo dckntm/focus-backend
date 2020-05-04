@@ -63,7 +63,7 @@ module Router =
                     return! setBodyFromString fail.ErrorMessage next ctx
             }
 
-    let publishReports (command: PublishReports) : HttpHandler = 
+    let publishReports (command: PublishReports): HttpHandler =
         fun next ctx ->
             task {
                 let mediator = ctx.GetService<IMediator>()
@@ -73,20 +73,43 @@ module Router =
                 return! setStatusCode 200 next ctx
             }
 
+    let getActualReports: HttpHandler =
+        fun next ctx ->
+            task {
+                let mediator = ctx.GetService<IMediator>()
+
+                let! result = mediator.Send(GetActualReports())
+
+                match result with
+                | success when result.IsSuccessfull -> return! json success.Result next ctx
+                | fail ->
+                    ctx.SetStatusCode 500
+                    return! setBodyFromString fail.ErrorMessage next ctx
+            }
+
     let passOrgId (f: string -> HttpHandler): HttpHandler =
         fun next ctx ->
-            let orgId = ctx.User.Claims |> Seq.find (fun claim -> claim.Type = "org")
+            let orgId =
+                ctx.User.Claims
+                |> Seq.find (fun claim -> claim.Type = "org")
+
             f orgId.Value next ctx
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
         choose
-                          [ POST
-                            >=> choose
-                                    [ route "/api/report/save" >=> bindJson<ReportUpdateDto> saveReport
-                                      >=> text "Successfully, saved"
-                                      route "/api/report/pass" >=> bindJson<ReportUpdateDto> passReport
-                                      >=> text "Successfully, passed"
-                                      route "/api/cs/report/publish" >=> bindJson<PublishReports> publishReports ]
-                            GET >=> choose
-                                        [ route "/api/report/org" >=> passOrgId getOrganizationReports
-                                          routef "/api/report/get/%s" getReport ] ]
+            [ POST
+              >=> choose
+                      [ route "/api/report/save"
+                        >=> bindJson<ReportUpdateDto> saveReport
+                        >=> text "Successfully, saved"
+                        route "/api/report/pass"
+                        >=> bindJson<ReportUpdateDto> passReport
+                        >=> text "Successfully, passed"
+                        route "/api/cs/report/publish"
+                        >=> bindJson<PublishReports> publishReports ]
+              GET
+              >=> choose
+                      [ route "/api/report/org"
+                        >=> passOrgId getOrganizationReports
+                        routef "/api/report/get/%s" getReport
+                        route "/api/report/info" >=> getActualReports ] ]

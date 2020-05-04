@@ -12,5 +12,6 @@ namespace Focus.Service.ReportProcessor.Application.Services
         Task<IEnumerable<Report>> GetOrganizationReportsAsync(string organizationId);
         Task SaveReport(ReportUpdateDto report);
         Task PassReport(ReportUpdateDto report);
+        Task<IEnumerable<Report>> GetReportsAsync();
     }
 }

@@ -62,4 +62,8 @@ Authorization: {{adminAuth}}
     "emissionEnd": "01.01.2021",
 }
 
-### get report
+### get reports
+
+GET http://localhost:5000/api/report/info HTTP/1.1
+
+###

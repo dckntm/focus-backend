@@ -83,5 +83,13 @@ namespace Focus.Service.ReportProcessor.Infrastructure.Persistence
                 filter: Builders<ReportDocument>.Filter.Eq(x => x.Id, doc.Id),
                 replacement: doc);
         }
+
+        public async Task<IEnumerable<Report>> GetReportsAsync()
+        {
+            return await Reports
+                .Find(_ => true)
+                .Project(x => x.AsEntity())
+                .ToListAsync();
+        }
     }
 }
