@@ -2,18 +2,20 @@ version: "3.1"
 
 services:
 
-  # rabbitmq:
-  #   image: rabbitmq:management
-  #   container_name: rabbitmq
-  #   hostname: "rabbitmq"
-  #   environment:
-  #     RABBITMQ_DEFAULT_USER: "guest"
-  #     RABBITMQ_DEFAULT_PASS: "guest"
-  #     RABBITMQ_DEFAULT_VHOST: "/"
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    hostname: "rabbitmq"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     
+# MongoDB databases
+
   constructor_storage:
     image: mongo
     container_name: constructor_storage
@@ -34,6 +36,8 @@ services:
     container_name: processor_storage
     restart: always
 
+# services
+
   constructor:
     image: focus.constructor:latest
     restart: always
@@ -43,7 +47,6 @@ services:
     container_name: constructor
     depends_on:
       - constructor_storage
-      - processor
     environment:
       - ASPNETCORE_ENVIRONMENT=dev
       - ASPNETCORE_URLS=http://*:5000
@@ -58,19 +61,18 @@ services:
     depends_on:
       - scheduler_storage
       - rabbitmq
-      - constructor
     environment:
       - ASPNETCORE_ENVIRONMENT=dev
       - ASPNETCORE_URLS=http://*:5000
 
-  # automator:
-  #   image: focus.automator:latest
-  #   container_name: automator
-  #   restart: always
-  #   depends_on: 
-  #     - rabbitmq
-  #   environment: 
-  #     - DOTNET_ENVIRONMENT=dev
+  automator:
+    image: focus.automator:latest
+    container_name: automator
+    restart: always
+    depends_on: 
+      - rabbitmq
+    environment: 
+      - DOTNET_ENVIRONMENT=dev
 
   identity:
     image: focus.identity:latest

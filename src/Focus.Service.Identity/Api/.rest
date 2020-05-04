@@ -1,7 +1,14 @@
-@url = http://localhost:5000
+@url = http://localhost:5200
 @adminAuth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJIT0EiLCJpc3MiOiJmb2N1c19pc3N1ZXIiLCJhdWQiOiJmb2N1c19hdWRpZW5jZSJ9.C6DJ2Y_lMXZ-DLZHDdVJrIAI0T5Nm_DovTMtRmGzu_8
 
-@orgid = 5ea1bdb7a0b3f798c0255f7a
+@userAuth = Bearer
+
+@orgid = 5eb0799876c69a0001b51001
+
+@username = KatunII
+
+@password = 31lbi72db6fu
+
 ###
 
 # create new user
@@ -13,15 +20,15 @@ Authorization: {{adminAuth}}
     "Name" : "Inna",
     "Surname" : "Katun",
     "Patronymic" : "Ildarovna",
-    "OrganizationId" : "5ea1bdb7a0b3f798c0255f7a",
-    "UserRole" : "HOM"
+    "OrganizationId" : "{{orgid}}",
+    "UserRole" : "COM"
 }
 
 ###
 
 # login user
 
-POST http://localhost:5000/api/identity/login HTTP/1.1
+POST {{url}}/api/identity/login HTTP/1.1
 
 {
     "username" : "admin",
@@ -37,7 +44,7 @@ Authorization: {{adminAuth}}
 
 {
     "Id" : "",
-    "Title" : "Organization 1",
+    "Title" : "Some Child Organization",
     "IsHead" : false,
     "Members" : [
     ]
