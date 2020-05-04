@@ -13,7 +13,8 @@ namespace Focus.Infrastructure.Common.Client
 
             return services
                 .AddHttpClient()
-                .AddSingleton(clientConfiguration);
+                .AddSingleton(clientConfiguration)
+                .AddTransient<IServiceClient, ServiceClient>();
         }
     }
 }

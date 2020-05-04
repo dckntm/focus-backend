@@ -5,6 +5,11 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Linq;
 using System;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Logging;
 
 namespace Focus.Infrastructure.Common.Client
 {
@@ -12,11 +17,15 @@ namespace Focus.Infrastructure.Common.Client
     {
         private readonly ClientConfiguration _configuration;
         private readonly IHttpClientFactory _clientFactory;
+        private readonly ILogger<IServiceClient> _logger;
 
-        public ServiceClient(ClientConfiguration configuration, IHttpClientFactory clientFactory)
+        public ServiceClient(ClientConfiguration configuration, IHttpClientFactory clientFactory, ILogger<IServiceClient> logger)
         {
             _configuration = configuration;
             _clientFactory = clientFactory;
+            _logger = logger;
+
+            _logger.LogInformation($"Client Factory is null: {_clientFactory is null}");
         }
 
         public async Task CommandAsync(string service, string route)
@@ -25,10 +34,15 @@ namespace Focus.Infrastructure.Common.Client
             var uri = BuildRoute(serviceConfiguration, route);
             var client = _clientFactory.CreateClient();
 
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", GenerateToken());
+
             var request = new HttpRequestMessage(
                 method: HttpMethod.Post,
                 requestUri: uri
             );
+
+            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri.AbsolutePath}");
 
             var response = await client.SendAsync(request);
 
@@ -44,12 +58,17 @@ namespace Focus.Infrastructure.Common.Client
             var client = _clientFactory.CreateClient();
             var content = JsonConvert.SerializeObject(body);
 
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", GenerateToken());
+
             var request = new HttpRequestMessage(
                 method: HttpMethod.Post,
                 requestUri: uri);
 
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             request.Content = new StringContent(content);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri.AbsolutePath}");
 
             var response = await client.SendAsync(request);
 
@@ -64,10 +83,15 @@ namespace Focus.Infrastructure.Common.Client
             var uri = BuildRoute(serviceConfiguration, route);
             var client = _clientFactory.CreateClient();
 
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", GenerateToken());
+
             var request = new HttpRequestMessage(
                 method: HttpMethod.Get,
                 requestUri: uri
             );
+
+            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri.AbsolutePath}");
 
             var response = await client.SendAsync(request);
 
@@ -90,13 +114,18 @@ namespace Focus.Infrastructure.Common.Client
             var client = _clientFactory.CreateClient();
             var content = JsonConvert.SerializeObject(body);
 
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", GenerateToken());
+
             var request = new HttpRequestMessage(
                 method: HttpMethod.Get,
                 requestUri: uri
             );
 
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             request.Content = new StringContent(content);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri.AbsolutePath}");
 
             var response = await client.SendAsync(request);
 
@@ -120,6 +149,26 @@ namespace Focus.Infrastructure.Common.Client
             return _configuration.RequiredServices
                 .FirstOrDefault(s => s.Service == service) ??
                 throw new Exception($"INFRASTRUCTURE No {service} was registered for Http Client");
+        }
+
+        private string GenerateToken()
+        {
+            var claims = new[] {
+                new Claim(ClaimTypes.Name, "service"),
+            };
+
+            var securityKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes("Amr273YaMvDu4X5WEvG2jmwsdaJY3ADRT6hFeZvXHhMD7nt6Bd"));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: "focus_issuer",
+                audience: "focus_audience",
+                claims: claims,
+                signingCredentials: signingCredentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
