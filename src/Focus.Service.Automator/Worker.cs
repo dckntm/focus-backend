@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Focus.Application.Common.Services.Messaging;
+using Focus.Core.Common.Messages.Events;
 
 namespace Focus.Service.Automator
 {
@@ -28,10 +30,10 @@ namespace Focus.Service.Automator
                 _logger.LogInformation("Published New Day Event at: {time}", DateTimeOffset.Now);
 
                 _publisher.Publish(
-                    message: new NewDay(), 
-                    exchangeName: "focus", 
+                    message: new NewDay(),
+                    exchangeName: "focus",
                     exchangeType: "topic",
-                    routeKey: "focus.events.newday.*");
+                    routeKey: "focus.events.newday.schedule");
 
                 await Task.Delay(3000, stoppingToken);
             }
