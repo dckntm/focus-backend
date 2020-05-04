@@ -11,6 +11,7 @@ open Giraffe.ModelBinding
 open Giraffe.Routing
 open Giraffe.Core
 open MediatR
+open Focus.Core.Common.Messages.Commands
 
 module Router =
 
@@ -62,19 +63,30 @@ module Router =
                     return! setBodyFromString fail.ErrorMessage next ctx
             }
 
+    let publishReports (command: PublishReports) : HttpHandler = 
+        fun next ctx ->
+            task {
+                let mediator = ctx.GetService<IMediator>()
+
+                let! _ = mediator.Send(command)
+
+                return! setStatusCode 200 next ctx
+            }
+
     let passOrgId (f: string -> HttpHandler): HttpHandler =
         fun next ctx ->
             let orgId = ctx.User.Claims |> Seq.find (fun claim -> claim.Type = "org")
             f orgId.Value next ctx
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
-        authorize >=> choose
+        choose
                           [ POST
                             >=> choose
                                     [ route "/api/report/save" >=> bindJson<ReportUpdateDto> saveReport
                                       >=> text "Successfully, saved"
                                       route "/api/report/pass" >=> bindJson<ReportUpdateDto> passReport
-                                      >=> text "Successfully, passed" ]
+                                      >=> text "Successfully, passed"
+                                      route "/api/cs/report/publish" >=> bindJson<PublishReports> publishReports ]
                             GET >=> choose
                                         [ route "/api/report/org" >=> passOrgId getOrganizationReports
                                           routef "/api/report/get/%s" getReport ] ]

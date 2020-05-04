@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Focus.Application.Common.Services.Logging;
 using Focus.Core.Common.Messages.Commands;
 using Focus.Service.ReportProcessor.Application.Services;
 using Focus.Service.ReportProcessor.Entities;
@@ -16,10 +17,14 @@ namespace Focus.Service.ReportProcessor.Application.Commands
     public class PublishReportsHandler : IRequestHandler<PublishReports>
     {
         private readonly IReportRepository _repository;
+        private readonly ILog _logger;
 
-        public PublishReportsHandler(IReportRepository repository)
+        public PublishReportsHandler(
+            IReportRepository repository,
+            ILog logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(PublishReports request, CancellationToken cancellationToken)
@@ -28,6 +33,8 @@ namespace Focus.Service.ReportProcessor.Application.Commands
                 .SelectMany(d => BuildReports(d));
 
             await _repository.CreateReportsAsync(reports);
+
+            _logger.LogApplication("Successfully published reports");
 
             return Unit.Value;
         }

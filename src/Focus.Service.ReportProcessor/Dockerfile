@@ -1,4 +1,4 @@
-FROM focus_common:latest AS build-env
+FROM focus.common:latest AS build-env
 WORKDIR /app
 
 RUN mkdir src

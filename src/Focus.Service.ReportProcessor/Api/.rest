@@ -1,7 +1,7 @@
-@rss = http://localhost:5200
-@rcs = http://localhost:5100
-@rps = http://localhost:5000
-@reportTemplateId = 5eaaf8b5bcd21b0001c5566b
+@rss = http://localhost:5100
+@rcs = http://localhost:5000
+@rps = http://localhost:5300
+@reportTemplateId = 5eaee7ea40cf550001bf5b5f
 @reportId =
 @adminAuth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJIT0EiLCJpc3MiOiJmb2N1c19pc3N1ZXIiLCJhdWQiOiJmb2N1c19hdWRpZW5jZSJ9.C6DJ2Y_lMXZ-DLZHDdVJrIAI0T5Nm_DovTMtRmGzu_8
 
@@ -33,6 +33,10 @@ Authorization: {{adminAuth}}
     ],
     "tables": []
 }
+
+###
+
+GET {{rcs}}/api/report/template/info HTTP/1.1
 
 ### create JIT report schedule for report template
 
