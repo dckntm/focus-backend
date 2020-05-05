@@ -16,7 +16,7 @@ services:
 
   scheduler_storage:
     image: mongo
-    container_name: rss_storage
+    container_name: scheduler_storage
     restart: always
     ports:
       - "27017:27017"
