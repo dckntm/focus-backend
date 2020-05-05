@@ -37,7 +37,7 @@ namespace Focus.Service.Identity.Application.Commands
 
                 if (!(user is null) && user.Password == request.Password)
                 {
-                    var token = _token.Generate(user.Username, user.Role);
+                    var token = _token.Generate(user.Username, user.Role, user.Organization);
 
                     return RequestResult
                         .Successfull(token);

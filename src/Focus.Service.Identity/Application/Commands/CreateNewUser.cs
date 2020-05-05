@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Focus.Application.Common.Abstract;
-using Focus.Core.Common.Messages;
-using Focus.Infrastructure.Common.Messaging.Publishing;
 using Focus.Service.Identity.Application.Dto;
 using Focus.Service.Identity.Application.Services;
 using MediatR;

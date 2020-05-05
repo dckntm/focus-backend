@@ -10,11 +10,12 @@ namespace Focus.Service.Identity.Infrastructure.Security
     public class JwtSecurityTokenGenerator : ISecurityTokenGenerator
     {
         // TODO: think of injecting key via env variable
-        public string Generate(string username, UserRole role)
+        public string Generate(string username, UserRole role, string orgId)
         {
             var claims = new[] {
                 new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, role.Value())
+                new Claim(ClaimTypes.Role, role.Value()),
+                new Claim("org", orgId)
             };
 
             var securityKey = new SymmetricSecurityKey(

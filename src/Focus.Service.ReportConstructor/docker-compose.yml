@@ -1,0 +1,22 @@
+version: "3.1"
+
+services:
+  constructor_storage:
+    image: mongo
+    container_name: rcs_storage
+    restart: always
+    ports:
+      - "27017:27017"
+  
+  constructor_storage_gui:
+    image: mongo-express
+    container_name: constructor_storage_gui
+    restart: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - constructor_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=constructor_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+  

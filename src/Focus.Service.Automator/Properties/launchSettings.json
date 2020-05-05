@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "Focus.Service.Automator": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

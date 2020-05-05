@@ -9,7 +9,7 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Questionnaire
     {
         private int _order;
         private string _title;
-        public bool Repeatable { get; set; }
+        // public bool Repeatable { get; set; }
         public string Title
         {
             get => _title;
@@ -37,7 +37,7 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Questionnaire
 
         public SectionTemplate(
             string title,
-            bool repeatable,
+            // bool repeatable,
             IList<QuestionTemplate> questions,
             int order = 0)
         {
@@ -55,7 +55,7 @@ namespace Focus.Service.ReportConstructor.Core.Entities.Questionnaire
 
             Title = title;
             Order = order;
-            Repeatable = repeatable;
+            // Repeatable = repeatable;
             _collection = questions;
 
             UpdateOrder();

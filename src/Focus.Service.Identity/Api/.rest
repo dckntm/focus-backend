@@ -1,7 +1,18 @@
-@url = http://localhost:5000
-@adminAuth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJIT0EiLCJpc3MiOiJmb2N1c19pc3N1ZXIiLCJhdWQiOiJmb2N1c19hdWRpZW5jZSJ9.C6DJ2Y_lMXZ-DLZHDdVJrIAI0T5Nm_DovTMtRmGzu_8
+@url = http://localhost:5200
+@adminAuth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJIT0EiLCJvcmciOiI1ZWIwNzhmYTc2YzY5YTAwMDFiNTBmZmYiLCJpc3MiOiJmb2N1c19pc3N1ZXIiLCJhdWQiOiJmb2N1c19hdWRpZW5jZSJ9.5llJAhAe0W3boinH7EH4ixc08hLiOeZ4rO6Is5VFfy8
 
-@orgid = 5ea1bdb7a0b3f798c0255f7a
+@userAuth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiS2F0dW5JSSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkNPTSIsIm9yZyI6IjVlYjA3OTk4NzZjNjlhMDAwMWI1MTAwMSIsImlzcyI6ImZvY3VzX2lzc3VlciIsImF1ZCI6ImZvY3VzX2F1ZGllbmNlIn0.gWTPv5CJIoRYyczl2cg2Qn-LKtztuuwwaSl0rDWf6rM
+
+@orgid = 5eb0799876c69a0001b51001
+
+@username = KatunII
+
+@password = 31lbi72db6fu
+
+@admin = admin
+
+@adminPassword = password
+
 ###
 
 # create new user
@@ -13,19 +24,19 @@ Authorization: {{adminAuth}}
     "Name" : "Inna",
     "Surname" : "Katun",
     "Patronymic" : "Ildarovna",
-    "OrganizationId" : "5ea1bdb7a0b3f798c0255f7a",
-    "UserRole" : "HOM"
+    "OrganizationId" : "{{orgid}}",
+    "UserRole" : "COM"
 }
 
 ###
 
 # login user
 
-POST http://localhost:5000/api/identity/login HTTP/1.1
+POST {{url}}/api/identity/login HTTP/1.1
 
 {
-    "username" : "admin",
-    "password" : "password"
+    "username" : "{{username}}",
+    "password" : "{{password}}"
 }
 
 ###
@@ -37,7 +48,7 @@ Authorization: {{adminAuth}}
 
 {
     "Id" : "",
-    "Title" : "Organization 1",
+    "Title" : "Some Child Organization",
     "IsHead" : false,
     "Members" : [
     ]

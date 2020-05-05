@@ -1,0 +1,61 @@
+@url = http://localhost:5000
+@id = 5eab0137a7d88c0001f5f19b
+@adminAuth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJIT0EiLCJpc3MiOiJmb2N1c19pc3N1ZXIiLCJhdWQiOiJmb2N1c19hdWRpZW5jZSJ9.C6DJ2Y_lMXZ-DLZHDdVJrIAI0T5Nm_DovTMtRmGzu_8
+
+###
+
+POST {{url}}/api/report/schedule HTTP/1.1
+Content-Type: application/json
+Authorization: {{adminAuth}}
+
+{
+    "id": "",
+    "reportTemplate": "5eaaf8b5bcd21b0001c5566b",
+    "organizations": [
+        {
+            "organization" : "123",
+            "isDelegatedToCOA" : false,
+            "assignees" : [
+                {"user" : "hypnospinner", "role" : 1}
+            ]
+        }
+    ],
+    "deadlinePeriod": "8.0.0",
+    "emissionPeriod": "7.0.0",
+    "emissionStart": "15.05.2020",
+    "emissionEnd": "01.06.2021",
+}
+
+###
+
+GET {{url}}/api/report/schedule/info HTTP/1.1
+Authorization: {{adminAuth}}
+
+###
+
+GET {{url}}/api/report/schedule/{{id}} HTTP/1.1
+Authorization: {{adminAuth}}
+
+###
+
+POST {{url}}/api/report/schedule/construct HTTP/1.1
+Content-Type: application/json
+Authorization: {{adminAuth}}
+
+{
+    "id": "",
+    "reportTemplate": "5ea9de3303fb9f3c04f0520c",
+    "organizations": [
+        {
+            "organization" : "123",
+            "isDelegatedToCOA" : false,
+            "assignees" : [
+                {"user" : "hypnospinner", "role" : 1}
+            ]
+        }
+    ],
+    "deadlinePeriod": "5.0.0",
+    "emissionPeriod": "3.0.0",
+    "emissionStart": "01.01.2020",
+    "emissionEnd": "01.01.2021",
+}

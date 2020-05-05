@@ -9,14 +9,14 @@ namespace Focus.Service.ReportConstructor.Application.Dto
     {
         public string Title { get; set; }
         public int Order { get; set; }
-        public bool Repeatable { get; set; }
+        // public bool Repeatable { get; set; }
         public QuestionTemplateDto[] Questions { get; set; }
 
         protected override IEnumerable<object> GetAtomicValues()
         {
             yield return Title;
             yield return Order;
-            yield return Repeatable;
+            // yield return Repeatable;
 
             foreach (var q in Questions)
                 yield return q;
@@ -29,7 +29,7 @@ namespace Focus.Service.ReportConstructor.Application.Dto
         {
             return new SectionTemplate(
                 title: dto.Title,
-                repeatable: dto.Repeatable,
+                // repeatable: dto.Repeatable,
                 questions: dto.Questions
                     .Select(x => x.AsEntity())
                     .ToList(),
@@ -42,7 +42,7 @@ namespace Focus.Service.ReportConstructor.Application.Dto
             {
                 Title = entity.Title,
                 Order = entity.Order,
-                Repeatable = entity.Repeatable,
+                // Repeatable = entity.Repeatable,
                 Questions = entity
                     .GetArray()
                     .Select(x => x.AsDto())

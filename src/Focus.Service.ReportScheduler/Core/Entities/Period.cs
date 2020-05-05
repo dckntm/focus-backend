@@ -41,5 +41,24 @@ namespace Focus.Service.ReportScheduler.Core.Entities
                 left.Days - right.Days,
                 left.Months - right.Months,
                 left.Years - right.Years);
+
+        public static Period operator *(int n, Period p)
+            => new Period(
+                p.Days * n,
+                p.Months * n,
+                p.Years * n
+            );
+
+        public static DateTime operator +(DateTime date, Period p)
+            => date
+                .AddDays(p.Days)
+                .AddMonths(p.Months)
+                .AddYears(p.Years);
+
+        public static DateTime operator -(DateTime date, Period p)
+            => date
+                .AddDays(-p.Days)
+                .AddMonths(-p.Months)
+                .AddYears(-p.Years);
     }
 }

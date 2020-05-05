@@ -121,10 +121,10 @@ module Router =
         choose
             [ POST
               >=> choose
-                      [ route "/api/identity/create" >=> mustBeAdmin >=> createUserHandler
+                      [ route "/api/identity/create" >=> createUserHandler
                         route "/api/identity/login" >=> bindJson<User> loginUser
-                        route "/api/org/create" >=> mustBeAdmin >=> bindJson<Organization> createOrganization ]
-              GET >=> mustBeAdmin >=> choose
+                        route "/api/org/create" >=> bindJson<Organization> createOrganization ]
+              GET >=> choose
                                                    [ route "/api/org/info" >=> getOrganizationInfos
                                                      route "/api/identity/info" >=> getUsers
                                                      routef "/api/identity/%s" getUser

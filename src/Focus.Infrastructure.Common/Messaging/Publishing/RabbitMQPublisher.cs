@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Focus.Application.Common.Services.Messaging;
 using Focus.Infrastructure.Common.Messaging.Configuration;
 using Newtonsoft.Json;
 using RabbitMQ.Client;

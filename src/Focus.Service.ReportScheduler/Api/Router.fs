@@ -56,9 +56,24 @@ module Router =
                     return! setBodyFromString result.ErrorMessage next ctx
             }
 
+    let constructReportScheduleHandler (dto: ReportScheduleDto): HttpHandler =
+        fun next ctx ->
+            task {
+                let mediator = ctx.GetService<IMediator>()
+
+                let! _ = mediator.Send(InitializeReportConstruction(dto))
+
+                return! setStatusCode 200 next ctx
+            }
+
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
-        mustBeAdmin >=> choose
-            [ POST >=> route "/api/report/schedule" >=> bindJson<ReportScheduleDto> createReportSchedulerHandler
+        choose
+            [ POST
+              >=> choose
+                      [ route "/api/report/schedule"
+                        >=> bindJson<ReportScheduleDto> createReportSchedulerHandler
+                        route "/api/report/schedule/construct"
+                        >=> bindJson<ReportScheduleDto> constructReportScheduleHandler ]
               GET >=> choose
                           [ route "/api/report/schedule/info" >=> getReportScheduleInfo
                             routef "/api/report/schedule/%s" getReportSchedule ]
