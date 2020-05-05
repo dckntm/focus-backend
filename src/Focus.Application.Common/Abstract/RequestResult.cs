@@ -2,12 +2,9 @@ using System;
 
 namespace Focus.Application.Common.Abstract
 {
-    public class RequestResult<T>
+    public class RequestResult<T> : RequestResult
     {
         public T Result { get; set; }
-        public bool IsSuccessfull { get; set; }
-        public string ErrorMessage { get; set; }
-        public Exception ThrownException { get; set; }
         public RequestResult() { }
 
         public static RequestResult<T> Successfull(T result)
@@ -28,6 +25,10 @@ namespace Focus.Application.Common.Abstract
 
     public class RequestResult
     {
+        public bool IsSuccessfull { get; set; }
+        public string ErrorMessage { get; set; }
+        public Exception ThrownException { get; set; }
+
         public static RequestResult<T> Successfull<T>(T Result)
             => new RequestResult<T>()
             {
