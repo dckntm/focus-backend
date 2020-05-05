@@ -10,12 +10,10 @@ using MediatR;
 
 namespace Focus.Service.Identity.Application.Queries
 {
-    public class GetOrganizationInfos : IRequest<RequestResult<IEnumerable<OrganizationInfoDto>>>
-    {
-    }
+    public class GetOrganizationInfos : IRequest<Result> { }
 
     public class GetOrganizationInfosHandler :
-        IRequestHandler<GetOrganizationInfos, RequestResult<IEnumerable<OrganizationInfoDto>>>
+        IRequestHandler<GetOrganizationInfos, Result>
     {
         private readonly IIdentityRepository _repository;
 
@@ -24,14 +22,14 @@ namespace Focus.Service.Identity.Application.Queries
             _repository = repository;
         }
 
-        public async Task<RequestResult<IEnumerable<OrganizationInfoDto>>> Handle(GetOrganizationInfos request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetOrganizationInfos request, CancellationToken cancellationToken)
         {
             try
             {
                 var orgs = await _repository.GetOrganizationsAsync();
 
-                return RequestResult
-                    .Successfull(orgs.Select(x => new OrganizationInfoDto()
+                return Result.Success(orgs
+                    .Select(x => new OrganizationInfoDto()
                     {
                         Id = x.Id,
                         Title = x.TItle,
@@ -40,8 +38,7 @@ namespace Focus.Service.Identity.Application.Queries
             }
             catch (Exception ex)
             {
-                return RequestResult<IEnumerable<OrganizationInfoDto>>
-                    .Failed(ex);
+                return Result.Fail(ex);
             }
         }
     }

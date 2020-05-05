@@ -53,7 +53,7 @@ module Program =
                     (app |> Cors.UseCors)
                         .UseAuthentication()
                         .UseGiraffe Router.wepApp
-
+                    // TODO inject admin username & password from ENV variables 
                     app.SeedAdministrator("admin", "password") |> ignore)
             .Build()
             .Run()

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Focus.Service.Identity.Application.Commands
 {
-    public class LoginUser : IRequest<RequestResult<string>>
+    public class LoginUser : IRequest<Result>
     {
         public string Username { get; private set; }
         public string Password { get; private set; }
@@ -18,7 +18,7 @@ namespace Focus.Service.Identity.Application.Commands
         }
     }
 
-    public class LoginUserHandler : IRequestHandler<LoginUser, RequestResult<string>>
+    public class LoginUserHandler : IRequestHandler<LoginUser, Result>
     {
         private readonly IIdentityRepository _repository;
         private readonly ISecurityTokenGenerator _token;
@@ -29,7 +29,7 @@ namespace Focus.Service.Identity.Application.Commands
             _token = token;
         }
 
-        public async Task<RequestResult<string>> Handle(LoginUser request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(LoginUser request, CancellationToken cancellationToken)
         {
             try
             {
@@ -39,20 +39,14 @@ namespace Focus.Service.Identity.Application.Commands
                 {
                     var token = _token.Generate(user.Username, user.Role, user.Organization);
 
-                    return RequestResult
-                        .Successfull(token);
+                    return Result.Success(token);
                 }
 
-                return RequestResult<string>
-                    .Failed()
-                    .WithMessage("APPLICATION: Can't generate token for invalid (username, password) pair");
-
-
+                return Result.Fail(message: $"APPLICATION: Can't generate token for invalid ({request.Username}, {request.Password}) pair");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return RequestResult<string>
-                    .Failed(ex);
+                return Result.Fail(e);
             }
         }
     }

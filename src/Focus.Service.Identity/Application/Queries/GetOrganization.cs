@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Focus.Service.Identity.Application.Queries
 {
-    public class GetOrganization : IRequest<RequestResult<Organization>>
+    public class GetOrganization : IRequest<Result>
     {
         public GetOrganization(string id)
         {
@@ -18,7 +18,7 @@ namespace Focus.Service.Identity.Application.Queries
         public string Id { get; private set; }
     }
 
-    public class GetOrganizationHandler : IRequestHandler<GetOrganization, RequestResult<Organization>>
+    public class GetOrganizationHandler : IRequestHandler<GetOrganization, Result>
     {
         private readonly IIdentityRepository _repository;
 
@@ -27,19 +27,17 @@ namespace Focus.Service.Identity.Application.Queries
             _repository = repository;
         }
 
-        public async Task<RequestResult<Organization>> Handle(GetOrganization request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetOrganization request, CancellationToken cancellationToken)
         {
             try
             {
                 var organization = await _repository.GetOrganizationAsync(request.Id);
 
-                return RequestResult
-                    .Successfull(organization);
+                return Result.Success(organization);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return RequestResult<Organization>
-                    .Failed(ex);
+                return Result.Fail(e);
             }
         }
     }

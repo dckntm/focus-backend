@@ -3,12 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Focus.Application.Common.Abstract;
 using Focus.Service.Identity.Application.Services;
-using Focus.Service.Identity.Core.Entities;
 using MediatR;
 
 namespace Focus.Service.Identity.Application.Queries
 {
-    public class GetUser : IRequest<RequestResult<User>>
+    public class GetUser : IRequest<Result>
     {
         public GetUser(string username)
         {
@@ -18,7 +17,7 @@ namespace Focus.Service.Identity.Application.Queries
         public string Username { get; private set; }
     }
 
-    public class GetUserHandler : IRequestHandler<GetUser, RequestResult<User>>
+    public class GetUserHandler : IRequestHandler<GetUser, Result>
     {
         private readonly IIdentityRepository _repository;
 
@@ -27,19 +26,17 @@ namespace Focus.Service.Identity.Application.Queries
             _repository = repository;
         }
 
-        public async Task<RequestResult<User>> Handle(GetUser request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetUser request, CancellationToken cancellationToken)
         {
             try
             {
                 var user = await _repository.GetUserAsync(request.Username);
 
-                return RequestResult
-                    .Successfull(user);
+                return Result.Success(user);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return RequestResult<User>
-                    .Failed(ex);
+                return Result.Fail(e);
             }
         }
     }

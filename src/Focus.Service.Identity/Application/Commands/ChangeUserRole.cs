@@ -10,7 +10,7 @@ using MediatR;
 
 namespace Focus.Service.Identity.Application.Commands
 {
-    public class ChangeUserRole : IRequest<RequestResult<string>>
+    public class ChangeUserRole : IRequest<Result>
     {
         public string Username { get; private set; }
         public string NewRole { get; set; }
@@ -22,7 +22,7 @@ namespace Focus.Service.Identity.Application.Commands
         }
     }
 
-    public class ChangeUserRoleHandler : IRequestHandler<ChangeUserRole, RequestResult<string>>
+    public class ChangeUserRoleHandler : IRequestHandler<ChangeUserRole, Result>
     {
         private readonly IIdentityRepository _repository;
 
@@ -31,7 +31,7 @@ namespace Focus.Service.Identity.Application.Commands
             _repository = repository;
         }
 
-        public async Task<RequestResult<string>> Handle(ChangeUserRole request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(ChangeUserRole request, CancellationToken cancellationToken)
         {
             try
             {
@@ -65,17 +65,14 @@ namespace Focus.Service.Identity.Application.Commands
 
                     await _repository.ChangeUserRole(user.Username, request.NewRole);
 
-                    return RequestResult
-                        .Successfull($"Switched to role {request.NewRole}");
+                    return Result.Success($"Switched to role {request.NewRole}");
                 }
 
-                return RequestResult
-                    .Successfull($"User already has {request.NewRole}");
+                return Result.Success($"User already has {request.NewRole}");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return RequestResult<string>
-                    .Failed(ex);
+                return Result.Fail(e);
             }
         }
     }
