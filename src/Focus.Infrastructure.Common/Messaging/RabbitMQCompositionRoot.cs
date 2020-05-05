@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Focus.Application.Common.Services.Messaging;
+using Focus.Core.Common.Messages.Events;
 using Focus.Infrastructure.Common.Messaging.Configuration;
 using Focus.Infrastructure.Common.Messaging.Consuming;
 using Focus.Infrastructure.Common.Messaging.Publishing;
@@ -38,7 +40,15 @@ namespace Focus.Infrastructure.Common.Messaging
 
             foreach (var consumer in consumers)
             {
-                var type = Type.GetType(consumer.ConsumedType);
+                // All types that are used in cross-service messaging are placed to Focus.Core.Common Assembly
+                // We pick a short name of the type from configuration & find it knowing the assembly
+
+                var coreAssembly = typeof(NewDay).Assembly;
+
+                var type = coreAssembly
+                    .GetTypes()
+                    .FirstOrDefault(t => t.Name == consumer.ConsumedType) ?? 
+                    throw new Exception($"INFRASTRUCTURE: can't get type {consumer.ConsumedType} from {coreAssembly.GetName()}");
 
                 services.AddHostedService(provider =>
                 {

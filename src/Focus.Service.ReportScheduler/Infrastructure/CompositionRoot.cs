@@ -3,6 +3,7 @@ using Focus.Service.ReportScheduler.Application.Services;
 using Focus.Service.ReportScheduler.Core.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
+using Focus.Service.ReportScheduler.Infrastructure.Services;
 
 namespace Focus.Service.ReportScheduler.Infrastructure
 {
@@ -26,7 +27,8 @@ namespace Focus.Service.ReportScheduler.Infrastructure
             });
 
             return services
-                .AddScoped<IReportScheduleRepository, ReportScheduleRepository>();
+                .AddScoped<IReportScheduleRepository, ReportScheduleRepository>()
+                .AddTransient<IDateTimeService, DateTimeService>();
         }
     }
 }

@@ -55,8 +55,7 @@ module Program =
                         .AddServiceClient(config)
                         .AddApplication()
                         // RabbitMQ DI always goes after Application as it needs IMediator to be injected
-                        // .AddRabbitMQConsumers(config)
-                        .AddRabbitMQPublisher(config)
+                        .AddRabbitMQConsumers(config)
                         .AddInfrastructure()
                         .AddLogging()
                         |> Jwt.AddBearerSecurity 
