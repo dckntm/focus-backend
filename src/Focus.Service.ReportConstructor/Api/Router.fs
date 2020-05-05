@@ -12,22 +12,18 @@ open Giraffe.ModelBinding
 open Giraffe.Routing
 open Giraffe.Core
 open MediatR
-open Focus.Application.Common.Services.Logging
+open Focus.Api.Common.HelperHandlers
 
 module Router =
 
-    let createReportTemplateHandler (dto:ReportTemplateDto): HttpHandler =
+    let createReportTemplateHandler (dto: ReportTemplateDto): HttpHandler =
         fun next ctx ->
             task {
                 let mediator = ctx.GetService<IMediator>()
 
                 let! result = mediator.Send(CreateReportTemplate(dto))
 
-                if result.IsSuccessfull then
-                    return! json result.Result next ctx
-                else
-                    ctx.SetStatusCode 500
-                    return! json result.ErrorMessage next ctx
+                return! handleResult result next ctx
             }
 
     let getReportTemplateHandler (reportId: string): HttpHandler =
@@ -37,11 +33,7 @@ module Router =
 
                 let! result = mediator.Send(GetReportTemplate(reportId))
 
-                if result.IsSuccessfull then
-                    return! json result.Result next ctx
-                else
-                    ctx.SetStatusCode 500
-                    return! json result.ErrorMessage next ctx
+                return! handleResult result next ctx
             }
 
     let getReportTemplateInfosHandler: HttpHandler =
@@ -51,31 +43,30 @@ module Router =
 
                 let! result = mediator.Send(GetReportTemplateInfos())
 
-                if result.IsSuccessfull then
-                    return! json result.Result next ctx
-                else
-                    ctx.SetStatusCode 500
-                    return! json result.ErrorMessage next ctx
+                return! handleResult result next ctx
             }
 
-    let constructReports (command:ConstructReports) : HttpHandler =
+    let constructReports (command: ConstructReports): HttpHandler =
         fun next ctx ->
             task {
                 let mediator = ctx.GetService<IMediator>()
-                let logger = ctx.GetService<ILog>()
 
-                logger.LogApi("Received construct reports request")
+                let! result = mediator.Send(command)
 
-                let! _ = mediator.Send(command)
-
-                return! setStatusCode 200 next ctx
+                return! handleResult result next ctx
             }
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
         choose
-            [ POST >=> choose [ route "/api/report/template" >=> bindJson<ReportTemplateDto> createReportTemplateHandler
-                                route "/api/cs/report/construct" >=> bindJson<ConstructReports> constructReports ]
-              GET >=> choose
-                          [ route "/api/report/template/info" >=> getReportTemplateInfosHandler
-                            routef "/api/report/template/%s" getReportTemplateHandler ]
+            [ POST
+              >=> choose
+                      [ route "/api/report/template"
+                        >=> bindJson<ReportTemplateDto> createReportTemplateHandler
+                        route "/api/cs/report/construct"
+                        >=> bindJson<ConstructReports> constructReports ]
+              GET
+              >=> choose
+                      [ route "/api/report/template/info"
+                        >=> getReportTemplateInfosHandler
+                        routef "/api/report/template/%s" getReportTemplateHandler ]
               setStatusCode 404 >=> text "Not found" ]

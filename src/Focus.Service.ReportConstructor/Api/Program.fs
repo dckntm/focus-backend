@@ -51,8 +51,6 @@ module Program =
                         .AddMongoDB(config)
                         .AddApplication()
                         .AddServiceClient(config)
-                        // .AddRabbitMQConsumers(config)
-                        // .AddRabbitMQPublisher(config, false)
                         .AddInfrastructure()
                         |> Jwt.AddBearerSecurity
                         |> ignore)

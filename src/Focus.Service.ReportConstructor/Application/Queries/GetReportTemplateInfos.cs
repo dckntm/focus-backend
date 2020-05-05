@@ -11,10 +11,10 @@ using MediatR;
 
 namespace Focus.Service.ReportConstructor.Application.Queries
 {
-    public class GetReportTemplateInfos : IRequest<RequestResult<IEnumerable<ReportTemplateInfoDto>>> { }
+    public class GetReportTemplateInfos : IRequest<Result> { }
 
     public class GetReportTemplateInfosHandler
-        : IRequestHandler<GetReportTemplateInfos, RequestResult<IEnumerable<ReportTemplateInfoDto>>>
+        : IRequestHandler<GetReportTemplateInfos, Result>
     {
         private readonly IReportTemplateRepository _repository;
         public GetReportTemplateInfosHandler(IReportTemplateRepository repository)
@@ -22,7 +22,7 @@ namespace Focus.Service.ReportConstructor.Application.Queries
             _repository = repository;
         }
 
-        public async Task<RequestResult<IEnumerable<ReportTemplateInfoDto>>> Handle(
+        public async Task<Result> Handle(
             GetReportTemplateInfos request,
             CancellationToken cancellationToken)
         {
@@ -30,15 +30,15 @@ namespace Focus.Service.ReportConstructor.Application.Queries
             {
                 IQueryable<ReportTemplate> templates = await _repository.GetReportTemplatesAsync();
 
-                return RequestResult
-                    .Successfull(templates
+                return Result
+                    .Success(templates
                         .Select(x => x.AsInfoDto())
                         .AsEnumerable());
             }
             catch (Exception e)
             {
-                return RequestResult<IEnumerable<ReportTemplateInfoDto>>
-                    .Failed(e);
+                return Result
+                    .Fail(e);
             }
         }
     }

@@ -10,10 +10,11 @@ using Focus.Core.Common.Messages.Commands;
 using Focus.Service.ReportConstructor.Application.Services;
 using MediatR;
 using Focus.Service.ReportConstructor.Core.Enums;
+using Focus.Application.Common.Abstract;
 
 namespace Focus.Service.ReportConstructor.Application.Commands
 {
-    public class ConstructReportsHandler : IRequestHandler<ConstructReports>
+    public class ConstructReportsHandler : IRequestHandler<ConstructReports, Result>
     {
         public readonly IServiceClient _service;
         public readonly IReportTemplateRepository _repository;
@@ -26,7 +27,7 @@ namespace Focus.Service.ReportConstructor.Application.Commands
             _service = service;
         }
 
-        public async Task<Unit> Handle(ConstructReports request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(ConstructReports request, CancellationToken cancellationToken)
         {
             try
             {
@@ -95,10 +96,10 @@ namespace Focus.Service.ReportConstructor.Application.Commands
             }
             catch (Exception e)
             {
-                throw e;
+                return Result.Fail(e);
             }
 
-            return Unit.Value;
+            return Result.Success();
         }
     }
 }

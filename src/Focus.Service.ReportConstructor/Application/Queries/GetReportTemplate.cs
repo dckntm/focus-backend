@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Focus.Service.ReportConstructor.Application.Queries
 {
-    public class GetReportTemplate : IRequest<RequestResult<ReportTemplateDto>>
+    public class GetReportTemplate : IRequest<Result>
     {
         public GetReportTemplate(string reportId)
             => ReportId = reportId;
@@ -16,7 +16,7 @@ namespace Focus.Service.ReportConstructor.Application.Queries
         public string ReportId { get; private set; }
     }
 
-    public class GetReportTemplateHandler : IRequestHandler<GetReportTemplate, RequestResult<ReportTemplateDto>>
+    public class GetReportTemplateHandler : IRequestHandler<GetReportTemplate, Result>
     {
         private readonly IReportTemplateRepository _repository;
 
@@ -25,19 +25,17 @@ namespace Focus.Service.ReportConstructor.Application.Queries
             _repository = repository;
         }
 
-        public async Task<RequestResult<ReportTemplateDto>> Handle(GetReportTemplate request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetReportTemplate request, CancellationToken cancellationToken)
         {
             try
             {
                 var template = await _repository.GetReportTemplateAsync(request.ReportId);
 
-                return RequestResult
-                    .Successfull(template.AsDto());
+                return Result.Success(template.AsDto());
             }
             catch (Exception e)
             {
-                return RequestResult<ReportTemplateDto>
-                    .Failed(e);
+                return Result.Fail(e);
             }
         }
     }
