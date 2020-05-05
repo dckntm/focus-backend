@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Focus.Service.ReportScheduler.Application.Commands
 {
-    public class CreateReportSchedule : IRequest<RequestResult<string>>
+    public class CreateReportSchedule : IRequest<Result>
     {
         public ReportScheduleDto Schedule { get; private set; }
 
@@ -16,31 +16,25 @@ namespace Focus.Service.ReportScheduler.Application.Commands
             => Schedule = schedule;
     }
 
-    public class CreateReportScheduleHandler : IRequestHandler<CreateReportSchedule, RequestResult<string>>
+    public class CreateReportScheduleHandler : IRequestHandler<CreateReportSchedule, Result>
     {
         private readonly IReportScheduleRepository _repository;
-        public CreateReportScheduleHandler(
-            IReportScheduleRepository repository)
+        public CreateReportScheduleHandler(IReportScheduleRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<RequestResult<string>> Handle(CreateReportSchedule request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateReportSchedule request, CancellationToken cancellationToken)
         {
             try
             {
                 string id = await _repository.CreateReportScheduleAsync(request.Schedule.AsEntity());
 
-
-                return RequestResult<string>
-                    .Successfull(id);
+                return Result.Success(id);
             }
             catch (Exception e)
             {
-
-                return RequestResult<string>
-                    .Failed()
-                    .WithException(e);
+                return Result.Fail(e);
             }
         }
     }

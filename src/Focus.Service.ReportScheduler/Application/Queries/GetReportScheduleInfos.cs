@@ -10,32 +10,29 @@ using MediatR;
 
 namespace Focus.Service.ReportScheduler.Application.Queries
 {
-    public class GetReportScheduleInfos : IRequest<RequestResult<IEnumerable<ReportScheduleInfoDto>>> { }
+    public class GetReportScheduleInfos : IRequest<Result> { }
 
     public class GetReportScheduleInfosHandler
-        : IRequestHandler<GetReportScheduleInfos, RequestResult<IEnumerable<ReportScheduleInfoDto>>>
+        : IRequestHandler<GetReportScheduleInfos, Result>
     {
         private readonly IReportScheduleRepository _repository;
         public GetReportScheduleInfosHandler(IReportScheduleRepository repository)
         {
             _repository = repository;
         }
-        public async Task<RequestResult<IEnumerable<ReportScheduleInfoDto>>> Handle(GetReportScheduleInfos request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetReportScheduleInfos request, CancellationToken cancellationToken)
         {
             try
             {
                 var schedules = await _repository.GetReportSchedulesAsync();
 
-                return RequestResult<IEnumerable<ReportScheduleInfoDto>>
-                    .Successfull(schedules
+                return Result.Success(schedules
                         .ToList()
                         .Select(x => x.AsInfoDto()));
             }
             catch (Exception e)
             {
-                return RequestResult<IEnumerable<ReportScheduleInfoDto>>
-                    .Failed()
-                    .WithException(e);
+                return Result.Fail(e);
             }
 
 

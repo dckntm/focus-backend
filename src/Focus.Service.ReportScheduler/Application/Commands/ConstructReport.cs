@@ -7,10 +7,11 @@ using MediatR;
 using System;
 using Focus.Application.Common.Services.Client;
 using Focus.Core.Common.Messages.Commands;
+using Focus.Application.Common.Abstract;
 
 namespace Focus.Service.ReportScheduler.Application.Commands
 {
-    public class ConstructReport : IRequest
+    public class ConstructReport : IRequest<Result>
     {
         public ConstructReport(ReportScheduleDto schedule)
         {
@@ -20,7 +21,7 @@ namespace Focus.Service.ReportScheduler.Application.Commands
     }
 
     public class ConstructReportHandler
-        : IRequestHandler<ConstructReport>
+        : IRequestHandler<ConstructReport, Result>
     {
         private readonly IServiceClient _service;
 
@@ -30,13 +31,15 @@ namespace Focus.Service.ReportScheduler.Application.Commands
             _service = service;
         }
 
-        public async Task<Unit> Handle(ConstructReport request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(ConstructReport request, CancellationToken cancellationToken)
         {
-            var schedule = request.Schedule.AsEntity();
-
-            var command = new ConstructReports()
+            try
             {
-                ReportDescriptors = new List<ReportConstructionDescriptor>()
+                var schedule = request.Schedule.AsEntity();
+
+                var command = new ConstructReports()
+                {
+                    ReportDescriptors = new List<ReportConstructionDescriptor>()
                 {
                     new ReportConstructionDescriptor()
                     {
@@ -47,11 +50,17 @@ namespace Focus.Service.ReportScheduler.Application.Commands
                         DeadlineDate = DateTime.Now.ToUniversalTime() + schedule.DeadlinePeriod
                     }
                 }
-            };
+                };
 
-            await _service.CommandAsync(command, "constructor", "api/cs/report/construct");
+                await _service.CommandAsync(command, "constructor", "api/cs/report/construct");
 
-            return Unit.Value;
+                return Result.Success();
+            }
+            catch (Exception e)
+            {
+                return Result.Fail();
+
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ open Focus.Service.ReportScheduler.Application.Commands
 open Focus.Service.ReportScheduler.Application.Queries
 open Focus.Service.ReportScheduler.Application.Dto
 open FSharp.Control.Tasks.V2.ContextInsensitive
-open Focus.Api.Common.AuthHandlers
+open Focus.Api.Common.HelperHandlers
 open Microsoft.AspNetCore.Http
 open Giraffe.ResponseWriters
 open Giraffe.ModelBinding
@@ -21,11 +21,7 @@ module Router =
 
                 let! result = mediator.Send(CreateReportSchedule(dto))
 
-                match result with
-                | success when result.IsSuccessfull -> return! json success.Result next ctx
-                | fail ->
-                    ctx.SetStatusCode 500
-                    return! setBodyFromString fail.ErrorMessage next ctx
+                return! handleResult result next ctx
             }
 
     let getReportScheduleInfo: HttpHandler =
@@ -35,11 +31,7 @@ module Router =
 
                 let! result = mediator.Send(GetReportScheduleInfos())
 
-                if result.IsSuccessfull then
-                    return! json result.Result next ctx
-                else
-                    ctx.SetStatusCode 500
-                    return! setBodyFromString result.ErrorMessage next ctx
+                return! handleResult result next ctx
             }
 
     let getReportSchedule (scheduleId: string) =
@@ -49,11 +41,7 @@ module Router =
 
                 let! result = mediator.Send(GetReportSchedule(scheduleId))
 
-                if result.IsSuccessfull then
-                    return! json result.Result next ctx
-                else
-                    ctx.SetStatusCode 500
-                    return! setBodyFromString result.ErrorMessage next ctx
+                return! handleResult result next ctx
             }
 
     let constructReportScheduleHandler (dto: ReportScheduleDto): HttpHandler =
@@ -61,9 +49,9 @@ module Router =
             task {
                 let mediator = ctx.GetService<IMediator>()
 
-                let! _ = mediator.Send(ConstructReport(dto))
+                let! result = mediator.Send(ConstructReport(dto))
 
-                return! setStatusCode 200 next ctx
+                return! handleResult result next ctx
             }
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
@@ -74,7 +62,9 @@ module Router =
                         >=> bindJson<ReportScheduleDto> createReportSchedulerHandler
                         route "/api/report/schedule/construct"
                         >=> bindJson<ReportScheduleDto> constructReportScheduleHandler ]
-              GET >=> choose
-                          [ route "/api/report/schedule/info" >=> getReportScheduleInfo
-                            routef "/api/report/schedule/%s" getReportSchedule ]
+              GET
+              >=> choose
+                      [ route "/api/report/schedule/info"
+                        >=> getReportScheduleInfo
+                        routef "/api/report/schedule/%s" getReportSchedule ]
               setStatusCode 404 >=> text "Not Found" ]
