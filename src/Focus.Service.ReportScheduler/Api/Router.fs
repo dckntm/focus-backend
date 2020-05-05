@@ -61,7 +61,7 @@ module Router =
             task {
                 let mediator = ctx.GetService<IMediator>()
 
-                let! _ = mediator.Send(InitializeReportConstruction(dto))
+                let! _ = mediator.Send(ConstructReport(dto))
 
                 return! setStatusCode 200 next ctx
             }

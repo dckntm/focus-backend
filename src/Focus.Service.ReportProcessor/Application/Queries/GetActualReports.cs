@@ -8,7 +8,6 @@ using Focus.Service.ReportProcessor.Application.Dto;
 using Focus.Service.ReportProcessor.Application.Services;
 using Focus.Service.ReportProcessor.Enums;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Focus.Service.ReportProcessor.Application.Queries
 {
@@ -20,20 +19,15 @@ namespace Focus.Service.ReportProcessor.Application.Queries
     public class GetActualReportsHandler : IRequestHandler<GetActualReports, RequestResult<IEnumerable<ReportInfoDto>>>
     {
         private readonly IReportRepository _repository;
-        private readonly ILogger<GetActualReportsHandler> _logger;
 
         public GetActualReportsHandler(
-            IReportRepository repository,
-            ILogger<GetActualReportsHandler> logger)
+            IReportRepository repository)
         {
             _repository = repository;
-            _logger = logger;
         }
 
         public async Task<RequestResult<IEnumerable<ReportInfoDto>>> Handle(GetActualReports request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Handling request for actual reports");
-
             try
             {
                 var reports = await _repository.GetReportsAsync();
@@ -57,8 +51,6 @@ namespace Focus.Service.ReportProcessor.Application.Queries
             }
             catch (Exception e)
             {
-                _logger.LogError("Failed to get actual reports");
-
                 return RequestResult<IEnumerable<ReportInfoDto>>
                     .Failed(e);
             }

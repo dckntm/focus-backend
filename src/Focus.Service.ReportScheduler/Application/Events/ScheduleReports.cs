@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Focus.Application.Common.Services.Client;
-using Focus.Application.Common.Services.Logging;
 using Focus.Core.Common.Messages.Commands;
 using Focus.Core.Common.Messages.Events;
 using Focus.Service.ReportScheduler.Application.Services;
@@ -17,18 +16,15 @@ namespace Focus.Service.ReportScheduler.Application.Events
         public readonly IServiceClient _service;
         private readonly IDateTimeService _date;
         private readonly IReportScheduleRepository _repository;
-        private readonly ILog _logger;
 
         public ScheduleReports(
             IServiceClient service,
             IDateTimeService date,
-            IReportScheduleRepository repository,
-            ILog logger)
+            IReportScheduleRepository repository)
         {
             _service = service;
             _date = date;
             _repository = repository;
-            _logger = logger;
         }
 
         public async Task Handle(NewDay notification, CancellationToken cancellationToken)
@@ -37,8 +33,6 @@ namespace Focus.Service.ReportScheduler.Application.Events
 
             try
             {
-                _logger.LogApplication("Received new Day notification => starting reports scheduling");
-
                 var schedules = await _repository.GetReportSchedulesAsync();
 
                 var reportConstructConfigurations = schedules
@@ -60,12 +54,9 @@ namespace Focus.Service.ReportScheduler.Application.Events
                 };
 
                 await _service.CommandAsync(command, "constructor", "api/cs/report/construct");
-
-                _logger.LogApplication("Send construct reports command");
             }
             catch (Exception e)
             {
-                _logger.LogApplication("Failed to schedule reports");
                 throw e;
             }
         }

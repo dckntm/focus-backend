@@ -5,7 +5,6 @@ open Focus.Service.ReportScheduler.Application
 open Focus.Service.ReportSchduler.Api.Router
 open Focus.Infrastructure.Common.Messaging
 open Focus.Infrastructure.Common.MongoDB
-open Focus.Infrastructure.Common.Logging
 open Focus.Infrastructure.Common.Client
 open Microsoft.Extensions.Configuration
 open Microsoft.AspNetCore.Hosting
@@ -57,7 +56,6 @@ module Program =
                         // RabbitMQ DI always goes after Application as it needs IMediator to be injected
                         .AddRabbitMQConsumers(config)
                         .AddInfrastructure()
-                        .AddLogging()
                         |> Jwt.AddBearerSecurity 
                         |> ignore)
             .Configure(
