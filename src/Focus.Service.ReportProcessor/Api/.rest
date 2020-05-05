@@ -1,8 +1,8 @@
 @rss = http://localhost:5100
 @rcs = http://localhost:5000
-@rps = http://localhost:5300
-@reportTemplateId = 5eaee7ea40cf550001bf5b5f
-@reportId =
+@processor = http://localhost:5300
+@reportTemplateId = 5eb07fdfd3d1540001795e5f
+@reportId = 5eb08026f71f1e0001e16f6c
 @adminAuth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJIT0EiLCJpc3MiOiJmb2N1c19pc3N1ZXIiLCJhdWQiOiJmb2N1c19hdWRpZW5jZSJ9.C6DJ2Y_lMXZ-DLZHDdVJrIAI0T5Nm_DovTMtRmGzu_8
 
 ### create report template
@@ -20,7 +20,6 @@ Authorization: {{adminAuth}}
           {
             "title": "Section Title",
             "order": 0,
-            "repeatable": false,
             "questions": [
               { "questionText": "question 1", "inputType": 6 },
               { "questionText": "question 2", "inputType": 10 }
@@ -64,6 +63,44 @@ Authorization: {{adminAuth}}
 
 ### get reports
 
-GET http://localhost:5000/api/report/info HTTP/1.1
+GET {{processor}}/api/report/info HTTP/1.1
 
 ###
+
+GET {{processor}}/api/report/get/{{reportId}} HTTP/1.1
+
+###
+
+POST {{processor}}/api/report/pass HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": "5eb08026f71f1e0001e16f6c",
+  "questionnaireAnswers": [
+    {
+      "title": "Module Title",
+      "order": 0,
+      "sectionAnswers": [
+        {
+          "title": "Section Title",
+          "order": 0,
+          "questionAnswers": [
+            {
+              "title": "question 1",
+              "order": 0,
+              "answer": "answer for question 1",
+              "answerType": 6
+            },
+            {
+              "title": "question 2",
+              "order": 1,
+              "answer": "answer for question 2",
+              "answerType": 10
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tableAnswers": []
+}

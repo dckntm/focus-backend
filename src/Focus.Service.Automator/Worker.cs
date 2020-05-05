@@ -27,13 +27,13 @@ namespace Focus.Service.Automator
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Published New Day Event at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("[NO] Published New Day Event at: {time}", DateTimeOffset.Now);
 
-                _publisher.Publish(
-                    message: new NewDay(),
-                    exchangeName: "focus",
-                    exchangeType: "topic",
-                    routeKey: "focus.events.newday.schedule");
+                // _publisher.Publish(
+                //     message: new NewDay(),
+                //     exchangeName: "focus",
+                //     exchangeType: "topic",
+                //     routeKey: "focus.events.newday.schedule");
 
                 await Task.Delay(3000, stoppingToken);
             }
