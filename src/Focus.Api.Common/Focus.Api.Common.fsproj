@@ -14,4 +14,7 @@
     <PackageReference Include="MediatR" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Focus.Application.Common\Focus.Application.Common.csproj" />
+  </ItemGroup>
 </Project>

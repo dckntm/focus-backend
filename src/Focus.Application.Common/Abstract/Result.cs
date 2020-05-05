@@ -4,22 +4,24 @@ namespace Focus.Application.Common.Abstract
 {
     public abstract class Result
     {
-        public static Successfull Success() => new Successfull();
-        public static Successfull<T> Success<T>(T value) => new Successfull<T>() { Value = value };
-        public static Failed Fail(string message = "", Exception exception = null) 
-            => new Failed 
-            { 
+        public static Successful Success() => new Successful();
+        public static Successful<T> Success<T>(T value) => new Successful<T>() { Value = value };
+        public static Failed Fail(Exception exception = null, string message = "")
+            => new Failed
+            {
                 Message = exception?.Message ?? message,
-                ThrownException = exception  
+                ThrownException = exception
             };
     }
 
-    public class Successfull<T> : Result
+    public abstract class Result<T> : Result { }
+
+    public class Successful<T> : Result<T>
     {
         public T Value { get; set; }
     }
 
-    public class Successfull : Result { }
+    public class Successful : Result { }
 
     public class Failed : Result
     {

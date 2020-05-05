@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Focus.Application.Common.Abstract;
 using MediatR;
 
 namespace Focus.Core.Common.Messages.Commands
 {
-    public class ConstructReports : IRequest
+    public class ConstructReports : IRequest<Result>
     {
         public IList<ReportConstructionDescriptor> ReportDescriptors { get; set; }
     }
