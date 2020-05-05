@@ -10,7 +10,6 @@ using Focus.Core.Common.Messages.Commands;
 using Focus.Service.ReportConstructor.Application.Services;
 using MediatR;
 using Focus.Service.ReportConstructor.Core.Enums;
-using Focus.Application.Common.Services.Logging;
 
 namespace Focus.Service.ReportConstructor.Application.Commands
 {
@@ -18,22 +17,17 @@ namespace Focus.Service.ReportConstructor.Application.Commands
     {
         public readonly IServiceClient _service;
         public readonly IReportTemplateRepository _repository;
-        public readonly ILog _logger;
 
         public ConstructReportsHandler(
             IReportTemplateRepository repository,
-            IServiceClient service,
-            ILog logger)
+            IServiceClient service)
         {
             _repository = repository;
             _service = service;
-            _logger = logger;
         }
 
         public async Task<Unit> Handle(ConstructReports request, CancellationToken cancellationToken)
         {
-            _logger.LogApplication("Received Construct Reports Command");
-
             try
             {
                 var command = new PublishReports()
@@ -98,13 +92,9 @@ namespace Focus.Service.ReportConstructor.Application.Commands
                 }
 
                 await _service.CommandAsync(command, "processor", "api/cs/report/publish");
-
-                _logger.LogApplication("Successfully send report publish command");
             }
             catch (Exception e)
             {
-                _logger.LogApplication("Failed to construct reports");
-
                 throw e;
             }
 

@@ -5,7 +5,6 @@ open Focus.Service.ReportScheduler.Application
 open Focus.Service.ReportSchduler.Api.Router
 open Focus.Infrastructure.Common.Messaging
 open Focus.Infrastructure.Common.MongoDB
-open Focus.Infrastructure.Common.Logging
 open Focus.Infrastructure.Common.Client
 open Microsoft.Extensions.Configuration
 open Microsoft.AspNetCore.Hosting
@@ -58,7 +57,6 @@ module Program =
                         // .AddRabbitMQConsumers(config)
                         .AddRabbitMQPublisher(config)
                         .AddInfrastructure()
-                        .AddLogging()
                         |> Jwt.AddBearerSecurity 
                         |> ignore)
             .Configure(

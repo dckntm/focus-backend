@@ -3,7 +3,6 @@ namespace Focus.Service.ReportProcessor.Api
 open Focus.Service.ReportProcessor.Infrastructure
 open Focus.Service.ReportProcessor.Application
 open Focus.Service.ReportProcessor.Api.Router
-open Focus.Infrastructure.Common.Logging    
 open Focus.Infrastructure.Common.MongoDB
 open Focus.Infrastructure.Common.Client
 open Microsoft.Extensions.Configuration
@@ -52,7 +51,6 @@ module Program =
                         .AddServiceClient(config)
                         .AddApplication()
                         .AddInfrastructure()
-                        .AddLogging()
                         |> Jwt.AddBearerSecurity 
                         |> ignore)
             .Configure(
