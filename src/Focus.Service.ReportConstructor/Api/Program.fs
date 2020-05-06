@@ -18,6 +18,7 @@ open Focus.Api.Common
 open System.IO
 open Giraffe
 open System
+open Focus.Api.Common.HelperHandlers
 
 module Program =
     let exitCode = 0
@@ -59,6 +60,7 @@ module Program =
                     (app 
                         |> Cors.UseCors
                         |> AuthAppBuilderExtensions.UseAuthentication)
+                        .UseGiraffeErrorHandler(errorHandler)
                         .UseGiraffe Router.webApp
                     )
             .ConfigureLogging(Action<ILoggingBuilder> ConfigureLogging)

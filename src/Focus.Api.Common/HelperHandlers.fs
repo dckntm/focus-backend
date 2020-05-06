@@ -2,6 +2,8 @@ namespace Focus.Api.Common
 
 open Giraffe
 open Focus.Application.Common.Abstract
+open System
+open Microsoft.Extensions.Logging
 
 module HelperHandlers =
 
@@ -29,3 +31,9 @@ module HelperHandlers =
                     ctx.SetStatusCode 500
                     text fail.Message next ctx
                 | _ -> text "API Failed to handle result" next ctx
+
+    // TODO [blocked] add exception layer tag to response
+    // Simple Giraffe error handler
+    let errorHandler (ex : Exception) (logger : ILogger) =
+        logger.LogError(EventId(), ex, "An unhandled exception has occurred while executing the request.")
+        clearResponse >=> setStatusCode 500 >=> text ex.Message
