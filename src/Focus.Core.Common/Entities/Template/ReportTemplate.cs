@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Focus.Core.Common.Entities.Template
 {
+    // TODO rename by adding 'dto' suffix (no type name interference)
     public class ReportTemplate
     {
         public string Title { get; set; }

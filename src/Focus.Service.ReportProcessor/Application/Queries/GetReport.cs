@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
 using System;
-using Focus.Application.Common.Services.Logging;
 
 namespace Focus.Service.ReportProcessor.Application.Queries
 {
-    public class GetReport : IRequest<RequestResult<ReportUpdateDto>>
+    public class GetReport : IRequest<Result>
     {
         public GetReport(string reportId)
         {
@@ -19,7 +18,7 @@ namespace Focus.Service.ReportProcessor.Application.Queries
         public string ReportId { get; private set; }
     }
 
-    public class GetReportHandler : IRequestHandler<GetReport, RequestResult<ReportUpdateDto>>
+    public class GetReportHandler : IRequestHandler<GetReport, Result>
     {
         private readonly IReportRepository _repository;
 
@@ -28,7 +27,7 @@ namespace Focus.Service.ReportProcessor.Application.Queries
             _repository = repository;
         }
 
-        public async Task<RequestResult<ReportUpdateDto>> Handle(GetReport request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetReport request, CancellationToken cancellationToken)
         {
             try
             {
@@ -37,8 +36,7 @@ namespace Focus.Service.ReportProcessor.Application.Queries
                 if (report is null)
                     throw new Exception($"APPLICATION No report with {request.ReportId} id");
 
-                return RequestResult
-                    .Successfull(new ReportUpdateDto()
+                return Result.Success(new ReportUpdateDto()
                     {
                         Id = report.Id,
                         QuestionnaireAnswers = report.QuestionnaireAnswers,
@@ -47,8 +45,7 @@ namespace Focus.Service.ReportProcessor.Application.Queries
             }
             catch (Exception e)
             {
-                return RequestResult<ReportUpdateDto>
-                    .Failed(e);
+                return Result.Fail(e);
             }
         }
     }

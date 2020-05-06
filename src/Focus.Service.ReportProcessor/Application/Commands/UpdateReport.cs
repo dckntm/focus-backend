@@ -1,12 +1,14 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Focus.Application.Common.Abstract;
 using Focus.Service.ReportProcessor.Application.Dto;
 using Focus.Service.ReportProcessor.Application.Services;
 using MediatR;
 
 namespace Focus.Service.ReportProcessor.Application.Commands
 {
-    public class UpdateReport : IRequest
+    public class UpdateReport : IRequest<Result>
     {
         public UpdateReport(ReportUpdateDto report, bool passed)
         {
@@ -17,7 +19,7 @@ namespace Focus.Service.ReportProcessor.Application.Commands
         public bool Posted { get; private set; }
     }
 
-    public class UpdateReportHandler : IRequestHandler<UpdateReport>
+    public class UpdateReportHandler : IRequestHandler<UpdateReport, Result>
     {
         private readonly IReportRepository _repository;
         public UpdateReportHandler(IReportRepository repository)
@@ -25,13 +27,20 @@ namespace Focus.Service.ReportProcessor.Application.Commands
             _repository = repository;
         }
 
-        public async Task<Unit> Handle(UpdateReport request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(UpdateReport request, CancellationToken cancellationToken)
         {
-            if (request.Posted)
-                await _repository.PassReport(request.Report);
-            else await _repository.SaveReport(request.Report);
+            try
+            {
+                if (request.Posted)
+                    await _repository.PassReport(request.Report);
+                else await _repository.SaveReport(request.Report);
 
-            return Unit.Value;
+                return Result.Success();
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e);
+            }
         }
     }
 }

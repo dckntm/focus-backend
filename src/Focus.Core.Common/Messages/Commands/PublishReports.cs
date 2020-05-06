@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using Focus.Application.Common.Abstract;
 using Focus.Core.Common.Entities.Template;
 using MediatR;
 
 namespace Focus.Core.Common.Messages.Commands
 {
-    public class PublishReports : IRequest
+    public class PublishReports : IRequest<Result>
     {
         public IList<ReportPublishDescriptor> ReportDescriptors { get; set; }
     }
