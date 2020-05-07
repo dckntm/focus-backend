@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Focus.Application.Common.Services.Client;
-using Focus.Service.ReportConstructor.Core.Entities.Questionnaire;
-using Common = Focus.Core.Common.Entities.Template;
-using Focus.Core.Common.Messages.Commands;
 using Focus.Service.ReportConstructor.Application.Services;
 using MediatR;
 using Focus.Service.ReportConstructor.Core.Enums;
 using Focus.Application.Common.Abstract;
+using Focus.Application.Common.Messages.Commands;
+using Focus.Core.Common.Entities.Template;
+using Focus.Service.ReportConstructor.Core.Entities.Questionnaire;
 
 namespace Focus.Service.ReportConstructor.Application.Commands
 {
@@ -49,23 +49,23 @@ namespace Focus.Service.ReportConstructor.Application.Commands
                     command.ReportDescriptors.Add(new ReportPublishDescriptor()
                     {
                         ConstructionDescriptor = descriptor,
-                        Template = new Common.ReportTemplate()
+                        Template = new ReportTemplateDto()
                         {
                             Title = template.Title,
                             Questionnaires = template.GetArray()
                                 .Where(m => m is QuestionnaireModuleTemplate)
                                 .Select(m => m as QuestionnaireModuleTemplate)
-                                .Select(m => new Common.QuestionnaireModuleTemplate()
+                                .Select(m => new QuestionnaireModuleTemplateDto()
                                 {
                                     Title = m.Title,
                                     Order = m.Order,
                                     Sections = m.GetArray()
-                                        .Select(s => new Common.SectionTemplate()
+                                        .Select(s => new SectionTemplateDto()
                                         {
                                             Title = s.Title,
                                             Order = s.Order,
                                             Questions = s.GetArray()
-                                                .Select(q => new Common.QuestionTemplate()
+                                                .Select(q => new QuestionTemplateDto()
                                                 {
                                                     Title = q.QuestionText,
                                                     Order = q.Order,
@@ -87,7 +87,7 @@ namespace Focus.Service.ReportConstructor.Application.Commands
                                                 }).ToList()
                                         }).ToList()
                                 }).ToList(),
-                            Tables = new List<Common.TableModuleTemplate>()
+                            Tables = new List<TableModuleTemplateDto>()
                         }
                     });
                 }

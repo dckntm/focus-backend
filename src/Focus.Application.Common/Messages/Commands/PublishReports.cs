@@ -3,7 +3,7 @@ using Focus.Application.Common.Abstract;
 using Focus.Core.Common.Entities.Template;
 using MediatR;
 
-namespace Focus.Core.Common.Messages.Commands
+namespace Focus.Application.Common.Messages.Commands
 {
     public class PublishReports : IRequest<Result>
     {
@@ -13,7 +13,7 @@ namespace Focus.Core.Common.Messages.Commands
     public class ReportPublishDescriptor
     {
         public ReportConstructionDescriptor ConstructionDescriptor { get; set; }
-        public ReportTemplate Template { get; set; }
+        public ReportTemplateDto Template { get; set; }
 
     }
 }

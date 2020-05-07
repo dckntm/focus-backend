@@ -1,6 +1,5 @@
 namespace Focus.Service.ReportConstructor.Api
 
-open Focus.Core.Common.Messages.Commands
 open Focus.Service.ReportConstructor.Application.Commands
 open Focus.Service.ReportConstructor.Application.Queries
 open Focus.Service.ReportConstructor.Application.Dto
@@ -13,6 +12,7 @@ open Giraffe.Routing
 open Giraffe.Core
 open MediatR
 open Focus.Api.Common.HelperHandlers
+open Focus.Application.Common.Messages.Commands
 
 module Router =
 

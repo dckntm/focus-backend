@@ -6,7 +6,7 @@ using System.Linq;
 using MediatR;
 using System;
 using Focus.Application.Common.Services.Client;
-using Focus.Core.Common.Messages.Commands;
+using Focus.Application.Common.Messages.Commands;
 using Focus.Application.Common.Abstract;
 
 namespace Focus.Service.ReportScheduler.Application.Commands
@@ -58,7 +58,7 @@ namespace Focus.Service.ReportScheduler.Application.Commands
             }
             catch (Exception e)
             {
-                return Result.Fail();
+                return Result.Fail(e);
 
             }
         }

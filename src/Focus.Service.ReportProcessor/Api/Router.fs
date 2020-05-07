@@ -11,7 +11,7 @@ open Giraffe.ModelBinding
 open Giraffe.Routing
 open Giraffe.Core
 open MediatR
-open Focus.Core.Common.Messages.Commands
+open Focus.Application.Common.Messages.Commands
 open Focus.Api.Common.HelperHandlers
 
 module Router =

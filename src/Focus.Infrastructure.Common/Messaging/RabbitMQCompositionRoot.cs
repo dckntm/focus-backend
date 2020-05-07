@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Focus.Application.Common.Messages.Events;
 using Focus.Application.Common.Services.Messaging;
-using Focus.Core.Common.Messages.Events;
 using Focus.Infrastructure.Common.Messaging.Configuration;
 using Focus.Infrastructure.Common.Messaging.Consuming;
 using Focus.Infrastructure.Common.Messaging.Publishing;

@@ -3,21 +3,21 @@ using System.Collections.Generic;
 namespace Focus.Core.Common.Entities.Template
 {
     // TODO rename by adding 'dto' suffix (no type name interference)
-    public class ReportTemplate
+    public class ReportTemplateDto
     {
         public string Title { get; set; }
-        public IList<QuestionnaireModuleTemplate> Questionnaires { get; set; }
-        public IList<TableModuleTemplate> Tables { get; set; }
+        public IList<QuestionnaireModuleTemplateDto> Questionnaires { get; set; }
+        public IList<TableModuleTemplateDto> Tables { get; set; }
     }
 
-    public class TableModuleTemplate
+    public class TableModuleTemplateDto
     {
         public string Title { get; set; }
         public int Order { get; set; }
-        public IList<CellTemplate> Cells { get; set; }
+        public IList<CellTemplateDto> Cells { get; set; }
     }
 
-    public class CellTemplate
+    public class CellTemplateDto
     {
         // if input type can be converted to input type, that we will build input cell
         // if it's not than we will build static header cell with static info
@@ -28,22 +28,22 @@ namespace Focus.Core.Common.Entities.Template
         public string ColumnSpan { get; set; }
     }
 
-    public class QuestionnaireModuleTemplate
+    public class QuestionnaireModuleTemplateDto
     {
         public string Title { get; set; }
         public int Order { get; set; }
-        public IList<SectionTemplate> Sections { get; set; }
+        public IList<SectionTemplateDto> Sections { get; set; }
 
     }
 
-    public class SectionTemplate
+    public class SectionTemplateDto
     {
         public string Title { get; set; }
         public int Order { get; set; }
-        public IList<QuestionTemplate> Questions { get; set; }
+        public IList<QuestionTemplateDto> Questions { get; set; }
     }
 
-    public class QuestionTemplate
+    public class QuestionTemplateDto
     {
         public string Title { get; set; }
         public int Order { get; set; }

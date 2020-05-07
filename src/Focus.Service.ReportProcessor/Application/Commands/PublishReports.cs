@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Focus.Application.Common.Abstract;
-using Focus.Core.Common.Messages.Commands;
+using Focus.Application.Common.Messages.Commands;
 using Focus.Service.ReportProcessor.Application.Services;
 using Focus.Service.ReportProcessor.Entities;
 using Focus.Service.ReportProcessor.Entities.Questionnaire;
