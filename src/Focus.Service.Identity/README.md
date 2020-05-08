@@ -123,7 +123,7 @@ Returns `User` data including password (as this endpoint is accessible only by t
 ```
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-GET /api/org/info
+GET /api/identity/info
 Authorization: Bearer <token>
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -155,7 +155,7 @@ Returns full information about all `User`s.
 ```
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-GET /api/identity/info
+GET /api/org/info
 Authorization: Bearer <token>
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -168,7 +168,6 @@ Content-Type: application/json
         "isHead"        : bool
     }
 ]
-
 ```
 
 Returns short information about all `Organization`s registered in the service.
