@@ -28,6 +28,25 @@ namespace Focus.Service.ReportConstructor.Application.Commands
 
         public async Task<Result> Handle(CreateReportTemplate request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"template: {request.ReportTemplate}");
+            _logger.LogInformation($"template: {request.ReportTemplate?.Title}");
+            _logger.LogInformation($"template: {request.ReportTemplate?.Questionnaires}");
+
+            foreach (var q in request.ReportTemplate?.Questionnaires)
+            {
+                _logger.LogInformation($"{q.Order}. {q.Title} : {q.Sections}");
+
+                foreach (var s in q.Sections)
+                {
+                    _logger.LogInformation($"{s.Order}. {s.Title} : {s.Questions}");
+
+                    foreach (var qq in s.Questions)
+                        _logger.LogInformation($"{qq.Order}. {qq.QuestionText} : {qq.InputType}");
+                }
+            }
+
+            _logger.LogInformation($"template: {request.ReportTemplate?.Tables}");
+
             try
             {
                 var id = await _repository.CreateReportTemplateAsync(request.ReportTemplate.AsEntity());

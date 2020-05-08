@@ -36,6 +36,56 @@ services:
     container_name: processor_storage
     restart: always
 
+# mongo-express
+
+  identity_storage_gui:
+    image: mongo-express
+    container_name: identity_storage_gui
+    restart: always
+    ports:
+      - "8281:8081"
+    depends_on:
+      - identity_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=identity_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+
+  constructor_storage_gui:
+    image: mongo-express
+    container_name: constructor_storage_gui
+    restart: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - constructor_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=constructor_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+
+  scheduler_storage_gui:
+    image: mongo-express
+    container_name: scheduler_storage_gui
+    restart: always
+    ports:
+      - "8481:8081"
+    depends_on:
+      - scheduler_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=scheduler_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+
+  processor_storage_gui:
+    image: mongo-express
+    container_name: processor_storage_gui
+    restart: always
+    ports:
+      - "8381:8081"
+    depends_on:
+      - processor_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=processor_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+
 # services
 
   constructor:
@@ -56,7 +106,7 @@ services:
     restart: always
     hostname: "scheduler"
     ports:
-      - "5100:5000"
+      - "5400:5000"
     container_name: scheduler
     depends_on:
       - scheduler_storage

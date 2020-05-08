@@ -49,7 +49,6 @@ module Program =
                         AddCors)
                         .AddGiraffe()
                         .AddMongoDB(config)
-                        .AddServiceClient(config)
                         .AddApplication()
                         .AddInfrastructure()
                         |> Jwt.AddBearerSecurity 
