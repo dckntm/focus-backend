@@ -28,24 +28,26 @@ namespace Focus.Service.ReportConstructor.Application.Commands
 
         public async Task<Result> Handle(CreateReportTemplate request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"template: {request.ReportTemplate}");
-            _logger.LogInformation($"template: {request.ReportTemplate?.Title}");
-            _logger.LogInformation($"template: {request.ReportTemplate?.Questionnaires}");
+            // _logger.LogInformation($"{JsonConvert.SerializeObject(request.)}")
 
-            foreach (var q in request.ReportTemplate?.Questionnaires)
-            {
-                _logger.LogInformation($"{q.Order}. {q.Title} : {q.Sections}");
+            _logger.LogInformation($"template: {request.ReportTemplate is null}");
+            _logger.LogInformation($"title: {request.ReportTemplate.Title is null}");
+            _logger.LogInformation($"questionnaires: {request.ReportTemplate.Questionnaires is null}");
 
-                foreach (var s in q.Sections)
-                {
-                    _logger.LogInformation($"{s.Order}. {s.Title} : {s.Questions}");
+            // foreach (var q in request.ReportTemplate?.Questionnaires)
+            // {
+            //     _logger.LogInformation($"{q.Order}. {q.Title} : {q.Sections}");
 
-                    foreach (var qq in s.Questions)
-                        _logger.LogInformation($"{qq.Order}. {qq.QuestionText} : {qq.InputType}");
-                }
-            }
+            //     foreach (var s in q.Sections)
+            //     {
+            //         _logger.LogInformation($"{s.Order}. {s.Title} : {s.Questions}");
 
-            _logger.LogInformation($"template: {request.ReportTemplate?.Tables}");
+            //         foreach (var qq in s.Questions)
+            //             _logger.LogInformation($"{qq.Order}. {qq.QuestionText} : {qq.InputType}");
+            //     }
+            // }
+
+            _logger.LogInformation($"tables: {request.ReportTemplate.Tables is null}");
 
             try
             {

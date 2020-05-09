@@ -32,7 +32,7 @@ namespace Focus.Service.Identity.Application.Queries
                     .Select(x => new OrganizationInfoDto()
                     {
                         Id = x.Id,
-                        Title = x.TItle,
+                        Title = x.Title,
                         IsHead = x.IsHead
                     }));
             }

@@ -115,7 +115,7 @@ Application is deployed with Docker based on `focus_common` image which should b
 Build common image by running
 
 ```sh
-docker build -t focus_common .
+docker build -t focus.common .
 ```
 
 being in `src` folder of repository
@@ -125,7 +125,7 @@ being in `src` folder of repository
 From service directory (`src/Focus.Service.ReportScheduler/` in our case) run
 
 ```sh
-docker build -t focus_scheduler .
+docker build -t focus.scheduler .
 ```
 
 ### Local build
@@ -135,7 +135,7 @@ docker build -t focus_scheduler .
 When building locally it's considered that we run this service individually & no other services were deployed on the same machine at the same time. To deploy locally we run
 
 ```sh
-docker-compose -f docker-compose.local.yml up
+docker-compose up
 ```
 
 from service folder (`src/Focus.Service.ReportScheduler/` in our case).
@@ -154,7 +154,7 @@ In this case we run our service on our own via `dotnet run`
 When building for development we also consider that services are ran individually. Go to the service folder & run
 
 ```sh
-docker-compose -f docker-compose.dev.yml up
+docker-compose up
 ```
 
 | Container Name    | Host              | Port        | Description                                                       |

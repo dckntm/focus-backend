@@ -39,7 +39,7 @@ namespace Focus.Service.Identity.Infrastructure
 
                 var id = await repository.CreateNewOrganizationAsync(new Organization()
                 {
-                    TItle = "Head Organization",
+                    Title = "Head Organization",
                     IsHead = true,
                     Members = new List<string>(new[] {
                     username

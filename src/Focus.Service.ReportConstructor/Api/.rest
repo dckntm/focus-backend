@@ -10,26 +10,40 @@ Content-Type: application/json
 Authorization: {{adminAuth}}
 
 {
-    "id": "",
-    "title": "Title",
-    "questionnaires": [
-      {
-        "sections": [
-          {
-            "title": "Section Title",
-            "order": 0,
-            "questions": [
-              { "questionText": "question 1", "inputType": 6 },
-              { "questionText": "question 2", "inputType": 10 }
-            ]
-          }
-        ],
-        "title": "Module Title",
-        "order": 0
-      }
-    ],
-    "tables": []
+  "id": "",
+  "title": "report title",
+  "questionnaires": [
+    {
+      "title": "Модуль 1",
+      "order": 0,
+      "sections": [
+        {
+          "title": "1 секция",
+          "order": 1,
+          "questions": [
+            { "questionText": "1 вопрос", "inputType": "0", "order": 0 }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Модуль 1",
+      "order": 0,
+      "sections": [
+        {
+          "title": "1 секция",
+          "order": 1,
+          "questions": [
+            { "questionText": "1 вопрос", "inputType": "0", "order": 0 }
+          ]
+        }
+      ]
+    }
+  ],
+  "tables": []
 }
+
+# {"id":"","title":"report title","questionnaires":[{"title":"Модуль 1","order":0,"sections":[{"title":"1 секция","order":1,"questions":[{"questionText":"1 вопрос","inputType":"1","order":0},{"questionText":"Новый вопрос 2","inputType":"2","order":1},{"questionText":"Новый вопрос 3","inputType":"3","order":2},{"questionText":"Новый вопрос","inputType":"5","order":3}]}]},{"title":"Модуль 1","order":0,"sections":[{"title":"1 секция","order":1,"questions":[{"questionText":"1 вопрос","inputType":"1","order":0},{"questionText":"Новый вопрос 2","inputType":"2","order":1},{"questionText":"Новый вопрос 3","inputType":"3","order":2},{"questionText":"Новый вопрос","inputType":"5","order":3}]}]},{"title":"Модуль 1","order":0,"sections":[{"title":"1 секция","order":1,"questions":[{"questionText":"1 вопрос","inputType":"1","order":0},{"questionText":"Новый вопрос 2","inputType":"2","order":1},{"questionText":"Новый вопрос 3","inputType":"3","order":2},{"questionText":"Новый вопрос","inputType":"5","order":3}]}]}],"tables":[]}
 
 ###
 
