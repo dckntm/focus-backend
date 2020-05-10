@@ -93,8 +93,6 @@ services:
     image: focus.constructor
     restart: always
     hostname: "constructor"
-    ports:
-      - "5000:5000"
     container_name: constructor
     depends_on:
       - constructor_storage
@@ -107,8 +105,6 @@ services:
     image: focus.scheduler
     restart: always
     hostname: "scheduler"
-    ports:
-      - "5400:5000"
     container_name: scheduler
     depends_on:
       - scheduler_storage
@@ -132,8 +128,6 @@ services:
     image: focus.identity
     restart: always
     hostname: "identity"
-    ports:
-      - "5200:5000"
     container_name: identity
     depends_on: 
       - identity_storage
@@ -146,11 +140,24 @@ services:
     image: focus.processor
     restart: always
     hostname: "processor"
-    ports: 
-      - "5300:5000"
     container_name: processor
     depends_on: 
       - processor_storage
     environment: 
       - ASPNETCORE_ENVIRONMENT=dev
+      - ASPNETCORE_URLS=http://*:5000
+
+  gateway: 
+    build: ./Focus.Service.Gateway/
+    image: focus.gateway
+    restart: always
+    ports:
+      - "5000:5000"
+    container_name: gateway
+    depends_on: 
+      - constructor
+      - scheduler
+      - processor
+      - identity
+    environment: 
       - ASPNETCORE_URLS=http://*:5000
