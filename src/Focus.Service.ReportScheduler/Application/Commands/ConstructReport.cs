@@ -8,6 +8,7 @@ using System;
 using Focus.Application.Common.Services.Client;
 using Focus.Application.Common.Messages.Commands;
 using Focus.Application.Common.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Focus.Service.ReportScheduler.Application.Commands
 {
@@ -24,11 +25,12 @@ namespace Focus.Service.ReportScheduler.Application.Commands
         : IRequestHandler<ConstructReport, Result>
     {
         private readonly IServiceClient _service;
-
+        private readonly ILogger<ConstructReportHandler> _logger;
         public ConstructReportHandler(
-                IServiceClient service)
+                IServiceClient service, ILogger<ConstructReportHandler> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         public async Task<Result> Handle(ConstructReport request, CancellationToken cancellationToken)
@@ -58,8 +60,8 @@ namespace Focus.Service.ReportScheduler.Application.Commands
             }
             catch (Exception e)
             {
+                _logger.LogError(e.StackTrace);
                 return Result.Fail(e);
-
             }
         }
     }
