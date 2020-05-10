@@ -17,6 +17,7 @@ open System.IO
 open Giraffe
 open System
 open Focus.Api.Common.HelperHandlers
+open Focus.Api.Common.Configuration
 
 module Program =
     let exitCode = 0
@@ -26,21 +27,7 @@ module Program =
         WebHostBuilder()
             .UseKestrel()
             .UseContentRoot(Directory.GetCurrentDirectory())
-            .ConfigureAppConfiguration(
-                fun context config ->
-                    let env = context.HostingEnvironment
-                    
-                    config.AddJsonFile("appsettings.json", true, true)
-                          .AddJsonFile((sprintf "appsettings.%s.json" env.EnvironmentName), true, true) |> ignore
-
-                    if env.IsDevelopment() then
-                        let appAssembly = Assembly.GetExecutingAssembly()
-
-                        if isNotNull appAssembly then config.AddUserSecrets(appAssembly, true) |> ignore
-
-                    config.AddEnvironmentVariables() |> ignore
-
-                    if isNotNull args then config.AddCommandLine(args) |> ignore)
+            .ConfigureAppConfiguration(setup(args))
             .ConfigureServices(
                 fun context services ->
                     let config = context.Configuration

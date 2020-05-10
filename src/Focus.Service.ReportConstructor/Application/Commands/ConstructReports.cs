@@ -11,6 +11,7 @@ using Focus.Application.Common.Abstract;
 using Focus.Application.Common.Messages.Commands;
 using Focus.Core.Common.Entities.Template;
 using Focus.Service.ReportConstructor.Core.Entities.Questionnaire;
+using Microsoft.Extensions.Logging;
 
 namespace Focus.Service.ReportConstructor.Application.Commands
 {
@@ -18,13 +19,15 @@ namespace Focus.Service.ReportConstructor.Application.Commands
     {
         public readonly IServiceClient _service;
         public readonly IReportTemplateRepository _repository;
+        private readonly ILogger<ConstructReportsHandler> _logger;
 
         public ConstructReportsHandler(
             IReportTemplateRepository repository,
-            IServiceClient service)
+            IServiceClient service, ILogger<ConstructReportsHandler> logger)
         {
             _repository = repository;
             _service = service;
+            _logger = logger;
         }
 
         public async Task<Result> Handle(ConstructReports request, CancellationToken cancellationToken)
@@ -96,6 +99,7 @@ namespace Focus.Service.ReportConstructor.Application.Commands
             }
             catch (Exception e)
             {
+                _logger.LogError(e.StackTrace);
                 return Result.Fail(e);
             }
 

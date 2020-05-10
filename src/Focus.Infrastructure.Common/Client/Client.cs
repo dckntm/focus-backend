@@ -28,7 +28,7 @@ namespace Focus.Infrastructure.Common.Client
                 requestUri: route
             );
 
-            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri.AbsolutePath}");
+            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri}");
 
             var response = await client.SendAsync(request);
 
@@ -50,7 +50,7 @@ namespace Focus.Infrastructure.Common.Client
             };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri.AbsolutePath}");
+            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri}");
 
             var response = await client.SendAsync(request);
 
@@ -68,7 +68,7 @@ namespace Focus.Infrastructure.Common.Client
                 requestUri: route
             );
 
-            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri.AbsolutePath}");
+            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri}");
 
             var response = await client.SendAsync(request);
 
@@ -98,7 +98,7 @@ namespace Focus.Infrastructure.Common.Client
             };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri.AbsolutePath}");
+            _logger.LogInformation($"Requesting command to AbsolutePath: {request.RequestUri}");
 
             var response = await client.SendAsync(request);
 

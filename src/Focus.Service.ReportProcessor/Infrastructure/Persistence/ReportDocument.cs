@@ -13,6 +13,7 @@ namespace Focus.Service.ReportProcessor.Infrastructure.Persistence
     {
         [BsonId]
         public ObjectId Id { get; set; }
+        public string Title { get; set; }
         public string ReportTemplateId { get; set; }
         public string AssignedOrganizationId { get; set; }
         public ReportStatus Status { get; set; }
@@ -30,6 +31,7 @@ namespace Focus.Service.ReportProcessor.Infrastructure.Persistence
             return new Report()
             {
                 Id = doc.Id.ToString(),
+                Title = doc.Title,
                 ReportTemplateId = doc.ReportTemplateId,
                 AssignedOrganizationId = doc.AssignedOrganizationId,
                 Status = doc.Status,
@@ -44,6 +46,7 @@ namespace Focus.Service.ReportProcessor.Infrastructure.Persistence
             return new ReportDocument()
             {
                 Id = string.IsNullOrEmpty(ent.Id) ? ObjectId.GenerateNewId() : new ObjectId(ent.Id),
+                Title = ent.Title,
                 ReportTemplateId = ent.ReportTemplateId,
                 AssignedOrganizationId = ent.AssignedOrganizationId,
                 Status = ent.Status,
