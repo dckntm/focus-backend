@@ -1,5 +1,4 @@
 using Focus.Service.ReportProcessor.Application.Services;
-using Focus.Service.ReportProcessor.Application.Dto;
 using Focus.Service.ReportProcessor.Entities;
 using Focus.Application.Common.Abstract;
 using System.Threading.Tasks;
@@ -36,12 +35,7 @@ namespace Focus.Service.ReportProcessor.Application.Queries
                 if (report is null)
                     throw new Exception($"APPLICATION No report with {request.ReportId} id");
 
-                return Result.Success(new ReportUpdateDto()
-                    {
-                        Id = report.Id,
-                        QuestionnaireAnswers = report.QuestionnaireAnswers,
-                        TableAnswers = report.TableAnswers
-                    });
+                return Result.Success(report);
             }
             catch (Exception e)
             {

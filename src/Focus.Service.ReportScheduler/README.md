@@ -106,9 +106,9 @@ Returns an array of report schedule dto info objects
 
 ---
 
-## Deploy
+## Docker
 
-Application is deployed with Docker based on `focus_common` image which should be build first.
+Application is deployed with Docker based on `focus.common` image which should be build first.
 
 ### Building common image
 
@@ -120,7 +120,7 @@ docker build -t focus.common .
 
 being in `src` folder of repository
 
-### Building Focus Report Scheduler Service image
+### Building Focus Report Template Service image
 
 From service directory (`src/Focus.Service.ReportScheduler/` in our case) run
 
@@ -128,41 +128,8 @@ From service directory (`src/Focus.Service.ReportScheduler/` in our case) run
 docker build -t focus.scheduler .
 ```
 
-### Local build
-
-> This kind of build is for backend developers
-
-When building locally it's considered that we run this service individually & no other services were deployed on the same machine at the same time. To deploy locally we run
+Also this can be done via general production `docker-compose` file in `src` directory. Type following command
 
 ```sh
-docker-compose up
+docker-compose build scheduler
 ```
-
-from service folder (`src/Focus.Service.ReportScheduler/` in our case).
-
-| Container Name    | Host              | Port        | Description                                                       |
-| ----------------- | ----------------- | ----------- | ----------------------------------------------------------------- |
-| `rss_storage`     | `rss_storage`     | 27017:27017 | MongoDB database where data is stored                             |
-| `rss_storage_gui` | `rss_storage_gui` | 8081:8081   | MongoDB GUI interface that allows us to observe MongoDB databases |
-
-In this case we run our service on our own via `dotnet run`
-
-### Development build
-
-> This kind of build is for frontend developers
-
-When building for development we also consider that services are ran individually. Go to the service folder & run
-
-```sh
-docker-compose up
-```
-
-| Container Name    | Host              | Port        | Description                                                       |
-| ----------------- | ----------------- | ----------- | ----------------------------------------------------------------- |
-| `rss_storage`     | `rss_storage`     | 27017:27017 | MongoDB database where data is stored                             |
-| `rss_storage_gui` | `rss_storage_gui` | 8081:8081   | MongoDB GUI interface that allows us to observe MongoDB databases |
-| `rss`             | `localhost`       | 5000:5000   | Report Scheduler Service instance                                 |
-
-### Production build
-
-> TODO: add production build & description
