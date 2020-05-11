@@ -42,6 +42,12 @@ namespace Focus.Service.Gateway
                 var request = ctx.Request;
                 Console.WriteLine($"\nMethod: {request.Method}\nPath: {request.Path}\nPathBase: {request.PathBase}\nHost: {request.Host}\nContentType: {request.ContentType}\n");
 
+                if (request.Method == "OPTIONS")
+                {
+                    ctx.Response.StatusCode = 200;
+                    return;
+                }
+
                 var service = _microservices
                     .FirstOrDefault(
                         s => s.Routes
