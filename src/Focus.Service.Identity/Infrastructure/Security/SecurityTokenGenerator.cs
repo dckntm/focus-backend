@@ -13,8 +13,8 @@ namespace Focus.Service.Identity.Infrastructure.Security
         public string Generate(string username, UserRole role, string orgId)
         {
             var claims = new[] {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, role.Value()),
+                new Claim("name", username),
+                new Claim("role", role.Value()),
                 new Claim("org", orgId)
             };
 

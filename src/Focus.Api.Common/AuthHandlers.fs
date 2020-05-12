@@ -14,4 +14,4 @@ module AuthHandlers =
         requiresAuthentication (challenge JwtBearerDefaults.AuthenticationScheme)
 
     let mustBeAdmin: HttpFunc -> HttpContext -> HttpFuncResult =
-        authorize >=> authorizeUser (fun u -> u.HasClaim(ClaimTypes.Role, "HOA")) accessDenied
+        authorize >=> authorizeUser (fun u -> u.HasClaim("role", "HOA")) accessDenied
