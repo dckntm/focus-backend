@@ -73,7 +73,7 @@ module Router =
 
                 let! result = mediator.Send(GetActualReports())
 
-                return! handleResult result next ctx 
+                return! handleResult result next ctx
             }
 
     let passOrgId (f: string -> HttpHandler): HttpHandler =
@@ -89,12 +89,15 @@ module Router =
             [ POST
               >=> choose
                       [ route "/api/report/save"
+                        >=> authorize
                         >=> bindJson<ReportUpdateDto> saveReport
                         route "/api/report/pass"
+                        >=> authorize
                         >=> bindJson<ReportUpdateDto> passReport
                         route "/api/cs/report/publish"
                         >=> bindJson<PublishReports> publishReports ]
               GET
+              >=> authorize
               >=> choose
                       [ route "/api/report/org"
                         >=> passOrgId getOrganizationReports

@@ -11,6 +11,7 @@ open Giraffe.ModelBinding
 open Giraffe.Routing
 open Giraffe.Core
 open MediatR
+open Focus.Api.Common.AuthHandlers
 
 module Router =
 
@@ -55,7 +56,7 @@ module Router =
             }
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
-        choose
+        mustBeAdmin >=> choose
             [ POST
               >=> choose
                       [ route "/api/report/schedule"

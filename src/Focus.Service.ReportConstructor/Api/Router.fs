@@ -57,7 +57,7 @@ module Router =
             }
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
-        choose
+        mustBeAdmin >=> choose
             [ POST
               >=> choose
                       [ route "/api/report/template"

@@ -9,6 +9,7 @@ open Microsoft.AspNetCore.Http
 open MediatR
 open Giraffe
 open Focus.Api.Common.HelperHandlers
+open Focus.Api.Common.AuthHandlers
 
 module Router =
 
@@ -90,12 +91,15 @@ module Router =
             [ POST
               >=> choose
                       [ route "/api/identity/create"
+                        >=> mustBeAdmin
                         >=> bindJson<NewUserDto> createUserHandler
                         route "/api/identity/login"
                         >=> bindJson<User> loginUser
                         route "/api/org/create"
+                        >=> mustBeAdmin
                         >=> bindJson<Organization> createOrganization ]
               GET
+              >=> mustBeAdmin
               >=> choose
                       [ route "/api/org/info" >=> getOrganizationInfos
                         route "/api/identity/info" >=> getUsers
