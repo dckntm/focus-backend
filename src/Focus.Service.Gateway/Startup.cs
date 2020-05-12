@@ -40,7 +40,7 @@ namespace Focus.Service.Gateway
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors("CORS");
-            
+
             var _microservices = new List<ServiceConfiguration>();
             _configuration.Bind("services", _microservices);
 
@@ -68,6 +68,8 @@ namespace Focus.Service.Gateway
 
                 if (service is null)
                 {
+                    Console.WriteLine("\nService is null => gateway not found error");
+
                     ctx.Response.StatusCode = 404;
                     await ctx.Response.WriteAsync("Not found");
                     return;
@@ -98,6 +100,8 @@ namespace Focus.Service.Gateway
                 {
                     var response = await client.SendAsync(message);
 
+                    Console.WriteLine($"\n{service.Service} responded with {(int)response.StatusCode} status code");
+                    
                     ctx.Response.StatusCode = (int)response.StatusCode;
                     await ctx.Response.WriteAsync(await response.Content.ReadAsStringAsync());
                     return;
