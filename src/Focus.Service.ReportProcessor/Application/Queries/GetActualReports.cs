@@ -32,6 +32,7 @@ namespace Focus.Service.ReportProcessor.Application.Queries
                         .Where(r => DateTime.Compare(r.Deadline, DateTime.Now.ToUniversalTime()) >= 0)
                         .Select(r => new ReportInfoDto()
                         {
+                            Title = r.Title,
                             Id = r.Id,
                             AssignedOrganizationId = r.AssignedOrganizationId,
                             ReportStatus = r.Status switch {
@@ -40,7 +41,7 @@ namespace Focus.Service.ReportProcessor.Application.Queries
                                 ReportStatus.Passed => "Passed",
                                 _ => ""
                             },
-                            Deadline = r.Deadline.ToLocalTime().ToString()
+                            Deadline = r.Deadline.ToLocalTime().ToString("dd.MM.yyyy")
                         })
                         .AsEnumerable());
             }

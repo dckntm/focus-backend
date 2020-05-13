@@ -39,6 +39,7 @@ namespace Focus.Service.ReportProcessor.Application.Queries
                         .AsEnumerable()
                         .Select(x => new ReportInfoDto()
                         {
+                            Title = x.Title,
                             Id = x.Id,
                             AssignedOrganizationId = x.AssignedOrganizationId,
                             ReportStatus = x.Status switch
@@ -48,7 +49,7 @@ namespace Focus.Service.ReportProcessor.Application.Queries
                                 ReportStatus.Passed => "Passed",
                                 _ => ""
                             },
-                            Deadline = x.Deadline.ToLocalTime().ToString()
+                            Deadline = x.Deadline.ToLocalTime().ToString("dd.MM.yyyy")
                         })
                         .AsEnumerable());
             }
