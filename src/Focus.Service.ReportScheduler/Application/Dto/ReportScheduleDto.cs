@@ -11,11 +11,11 @@ namespace Focus.Service.ReportScheduler.Application.Dto
     {
         public string Id { get; set; }
         public string ReportTemplate { get; set; }
-        public Assignment[] Organizations { get; set; }
+        public string[] Organizations { get; set; }
         // string in D.M.Y format
-        public string DeadlinePeriod { get; set; }
+        public Period DeadlinePeriod { get; set; }
         // string in D.M.Y format
-        public string EmissionPeriod { get; set; }
+        public Period EmissionPeriod { get; set; }
         // string with DateTime format dd.MM.yyyy (considering time is local)
         public string EmissionStart { get; set; }
         // string with DateTime format dd.MM.yyyy (considering time is local)
@@ -50,8 +50,8 @@ namespace Focus.Service.ReportScheduler.Application.Dto
                 dto.Id,
                 dto.ReportTemplate,
                 dto.Organizations.ToList(),
-                dto.DeadlinePeriod.AsPeriod(),
-                dto.EmissionPeriod.AsPeriod(),
+                dto.DeadlinePeriod,
+                dto.EmissionPeriod,
                 emissionStart.ToUniversalTime(),
                 emissionEnd.ToUniversalTime()
             );
@@ -62,9 +62,9 @@ namespace Focus.Service.ReportScheduler.Application.Dto
             {
                 Id = entity.Id,
                 ReportTemplate = entity.ReportTemplate,
-                Organizations = entity.Organizations.ToArray(),
-                DeadlinePeriod = entity.DeadlinePeriod.ToString(),
-                EmissionPeriod = entity.EmissionPeriod.ToString(),
+                Organizations = entity.AssignedOrganizations.ToArray(),
+                DeadlinePeriod = entity.DeadlinePeriod,
+                EmissionPeriod = entity.EmissionPeriod,
                 EmissionStart = entity.EmissionStart.ToLocalTime().ToString("dd.MM.yyyy"),
                 EmissionEnd = entity.EmissionEnd.ToLocalTime().ToString("dd.MM.yyyy")
             };

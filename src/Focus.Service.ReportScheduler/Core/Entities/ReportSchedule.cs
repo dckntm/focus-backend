@@ -9,19 +9,19 @@ namespace Focus.Service.ReportScheduler.Core.Entities
         public ReportSchedule(
             string id,
             string reportTemplate,
-            IList<Assignment> organizations,
+            IList<string> assignedOrganizations,
             Period deadlinePeriod,
             Period emissionPeriod,
             DateTime emissionStart,
             DateTime emissionEnd)
         {
-            if (organizations is null || organizations.Count < 0)
+            if (assignedOrganizations is null || assignedOrganizations.Count < 0)
                 throw new ArgumentException(
                     "DOMAIN EXCEPTION: Can't instantiate Report Schedule with null or empty assignments");
 
             Id = id;
             ReportTemplate = reportTemplate;
-            Organizations = organizations;
+            AssignedOrganizations = assignedOrganizations;
             DeadlinePeriod = deadlinePeriod;
             EmissionPeriod = emissionPeriod;
             EmissionStart = emissionStart;
@@ -30,7 +30,7 @@ namespace Focus.Service.ReportScheduler.Core.Entities
 
         public string Id { get; set; }
         public string ReportTemplate { get; set; }
-        public IList<Assignment> Organizations { get; set; }
+        public IList<string> AssignedOrganizations { get; set; }
         public Period DeadlinePeriod { get; set; }
         public Period EmissionPeriod { get; set; }
         public DateTime EmissionStart { get; set; }
@@ -41,7 +41,7 @@ namespace Focus.Service.ReportScheduler.Core.Entities
             yield return Id;
             yield return ReportTemplate;
 
-            foreach (var org in Organizations)
+            foreach (var org in AssignedOrganizations)
                 yield return org;
 
             yield return DeadlinePeriod;

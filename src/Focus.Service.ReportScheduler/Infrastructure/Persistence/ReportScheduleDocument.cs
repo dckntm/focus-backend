@@ -12,7 +12,7 @@ namespace Focus.Service.ReportScheduler.Infrastructure.Persistence
         [BsonId]
         public ObjectId Id { get; set; }
         public string ReportTemplate { get; set; }
-        public ICollection<Assignment> Organizations { get; set; }
+        public ICollection<string> Organizations { get; set; }
         public Period DeadlinePeriod { get; set; }
         public Period EmissionPeriod { get; set; }
 
@@ -42,7 +42,7 @@ namespace Focus.Service.ReportScheduler.Infrastructure.Persistence
             {
                 Id = string.IsNullOrEmpty(entity.Id) ? ObjectId.GenerateNewId() : new ObjectId(entity.Id),
                 ReportTemplate = entity.ReportTemplate,
-                Organizations = entity.Organizations,
+                Organizations = entity.AssignedOrganizations,
                 DeadlinePeriod = entity.DeadlinePeriod,
                 EmissionPeriod = entity.EmissionPeriod,
                 EmissionStart = entity.EmissionStart,

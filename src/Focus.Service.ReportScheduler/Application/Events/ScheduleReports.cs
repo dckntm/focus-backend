@@ -41,9 +41,7 @@ namespace Focus.Service.ReportScheduler.Application.Events
                     .Select(x => new ReportConstructionDescriptor()
                     {
                         ReportTemplateId = x.ReportTemplate,
-                        AssignedOrganizationIds = x.Organizations
-                            .Select(o => o.Organization)
-                            .ToList(),
+                        AssignedOrganizationIds = x.AssignedOrganizations,
                         DeadlineDate = today + x.DeadlinePeriod
                     })
                     .ToList();

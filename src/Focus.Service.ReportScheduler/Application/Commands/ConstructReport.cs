@@ -46,9 +46,7 @@ namespace Focus.Service.ReportScheduler.Application.Commands
                     new ReportConstructionDescriptor()
                     {
                         ReportTemplateId = schedule.ReportTemplate,
-                        AssignedOrganizationIds = schedule.Organizations
-                            .Select(x => x.Organization)
-                            .ToList(),
+                        AssignedOrganizationIds = schedule.AssignedOrganizations,
                         DeadlineDate = DateTime.Now.ToUniversalTime() + schedule.DeadlinePeriod
                     }
                 }
