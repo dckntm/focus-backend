@@ -35,7 +35,7 @@ namespace Focus.Infrastructure.Common.Client
         private static string GenerateToken()
         {
             var claims = new[] {
-                new Claim(ClaimTypes.Name, "service"),
+                new Claim(ClaimTypes.Role, "service"),
             };
 
             var securityKey = new SymmetricSecurityKey(
@@ -49,7 +49,11 @@ namespace Focus.Infrastructure.Common.Client
                 signingCredentials: signingCredentials
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var s_token = new JwtSecurityTokenHandler().WriteToken(token);
+
+            Console.WriteLine(s_token); 
+
+            return s_token;
         }
     }
 }
