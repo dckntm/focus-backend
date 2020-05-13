@@ -42,14 +42,10 @@ module Program =
                         |> ignore)
             .Configure(
                 fun app -> 
-                    app
+                    (app |> Cors.UseCors)
+                        .UseAuthentication()
                         .UseGiraffeErrorHandler(errorHandler)
-                        .UseGiraffe Router.webApp
-
-                    app 
-                        |> AuthAppBuilderExtensions.UseAuthentication 
-                        |> UseCors 
-                        |> ignore   )
+                        .UseGiraffe Router.webApp)
             .ConfigureLogging(Action<ILoggingBuilder> Log.ConfigureLogging)
             .Build()
             .Run()

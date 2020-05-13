@@ -86,6 +86,11 @@ module Router =
                 return! handleResult result next ctx
             }
 
+    let getClaims: HttpHandler =
+        fun next ctx -> 
+            let claims = ctx.User.Claims |> Seq.map (fun claim -> (claim.Type, claim.Value, claim.ValueType, ctx.User.HasClaim("role", "HOA")))
+            json claims next ctx
+
     let wepApp: HttpFunc -> HttpContext -> HttpFuncResult =
         choose
             [ POST
@@ -101,7 +106,9 @@ module Router =
               GET
               >=> mustBeAdmin
               >=> choose
-                      [ route "/api/org/info" >=> getOrganizationInfos
+                      [ route "/api/identity/claims"
+                        >=> getClaims
+                        route "/api/org/info" >=> getOrganizationInfos
                         route "/api/identity/info" >=> getUsers
                         routef "/api/identity/%s" getUser
                         routef "/api/org/%s" getOrganization ]

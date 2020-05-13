@@ -97,9 +97,10 @@ module Router =
                         route "/api/cs/report/publish"
                         >=> bindJson<PublishReports> publishReports ]
               GET
-              >=> authorize
+              >=> authorize 
               >=> choose
                       [ route "/api/report/org"
                         >=> passOrgId getOrganizationReports
                         routef "/api/report/get/%s" getReport
-                        route "/api/report/info" >=> getActualReports ] ]
+                        route "/api/report/info" 
+                        >=> getActualReports ] ]

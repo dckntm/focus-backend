@@ -57,16 +57,21 @@ module Router =
             }
 
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
-        mustBeAdmin >=> choose
+        choose
             [ POST
               >=> choose
-                      [ route "/api/report/template"
-                        >=> bindJson<ReportTemplateDto> createReportTemplateHandler
-                        route "/api/cs/report/construct"
-                        >=> bindJson<ConstructReports> constructReports ]
+                      [ route "/api/cs/report/construct"
+                        >=> bindJson<ConstructReports> constructReports
+                        mustBeAdmin
+                        >=> route "/api/report/template"
+                        >=> bindJson<ReportTemplateDto> createReportTemplateHandler ]
+
               GET
               >=> choose
-                      [ route "/api/report/template/info"
+                      [ mustBeAdmin
+                        >=> route "/api/report/template/info"
                         >=> getReportTemplateInfosHandler
-                        routef "/api/report/template/%s" getReportTemplateHandler ]
+                        mustBeAdmin
+                        >=> routef "/api/report/template/%s" getReportTemplateHandler ]
+
               setStatusCode 404 >=> text "Not found" ]
