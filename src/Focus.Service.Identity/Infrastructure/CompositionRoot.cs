@@ -41,9 +41,7 @@ namespace Focus.Service.Identity.Infrastructure
                 {
                     Title = "Head Organization",
                     IsHead = true,
-                    Members = new List<string>(new[] {
-                    username
-                })
+                    Members = new List<string>()
                 });
 
                 await repository.CreateNewUserAsync(
