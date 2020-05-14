@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Focus.Service.Identity.Application.Commands
 {
-    public class CreateNewUser : IRequest<RequestResult<(string Username, string Password)>>
+    public class CreateNewUser : IRequest<Result>
     {
         public CreateNewUser(NewUserDto newUserData)
         {
@@ -19,7 +19,7 @@ namespace Focus.Service.Identity.Application.Commands
         public NewUserDto NewUserData { get; private set; }
     }
 
-    public class CreateNewUserHandler : IRequestHandler<CreateNewUser, RequestResult<(string Username, string Password)>>
+    public class CreateNewUserHandler : IRequestHandler<CreateNewUser, Result>
     {
         private readonly IIdentityRepository _repository;
         private readonly IPasswordGenerator _password;
@@ -31,7 +31,7 @@ namespace Focus.Service.Identity.Application.Commands
             _repository = repository;
         }
 
-        public async Task<RequestResult<(string Username, string Password)>> Handle(CreateNewUser request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateNewUser request, CancellationToken cancellationToken)
         {
             try
             {
@@ -68,19 +68,16 @@ namespace Focus.Service.Identity.Application.Commands
                         password,
                         user.UserRole,
                         user.OrganizationId))
-                        return RequestResult<(string, string)>
-                            .Failed()
-                            .WithMessage($"APPLICATION Can't create user with username: {username}. Try again");
+
+                        return Result
+                            .Fail(message: $"APPLICATION Can't create user with username: {username}. Try again");
                 }
 
-                return RequestResult
-                        .Successfull((username, password));
+                return Result.Success((username, password));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return RequestResult<(string, string)>
-                    .Failed()
-                    .WithException(ex);
+                return Result.Fail(e);
             }
         }
 

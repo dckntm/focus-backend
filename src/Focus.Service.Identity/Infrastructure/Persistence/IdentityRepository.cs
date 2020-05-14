@@ -57,12 +57,16 @@ namespace Focus.Service.Identity.Infrastructure.Persistence
 
             var id = ObjectId.GenerateNewId();
 
+            // TODO move to extension method to static class w\ extensions
+
             var document = new OrganizationDocument()
             {
                 Id = id,
-                Title = organization.TItle,
+                Title = organization.Title,
                 IsHead = organization.IsHead,
-                Members = organization.Members
+                Members = organization.Members,
+                Address = organization.Address,
+                PhoneNumber = organization.PhoneNumber
             };
 
             await Organizations.InsertOneAsync(document);

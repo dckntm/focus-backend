@@ -36,14 +36,63 @@ services:
     container_name: processor_storage
     restart: always
 
+# mongo-express
+
+  identity_storage_gui:
+    image: mongo-express
+    container_name: identity_storage_gui
+    restart: always
+    ports:
+      - "8281:8081"
+    depends_on:
+      - identity_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=identity_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+
+  constructor_storage_gui:
+    image: mongo-express
+    container_name: constructor_storage_gui
+    restart: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - constructor_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=constructor_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+
+  scheduler_storage_gui:
+    image: mongo-express
+    container_name: scheduler_storage_gui
+    restart: always
+    ports:
+      - "8481:8081"
+    depends_on:
+      - scheduler_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=scheduler_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+
+  processor_storage_gui:
+    image: mongo-express
+    container_name: processor_storage_gui
+    restart: always
+    ports:
+      - "8381:8081"
+    depends_on:
+      - processor_storage
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=processor_storage
+      - ME_CONFIG_MONGODB_PORT=27017
+
 # services
 
   constructor:
-    image: focus.constructor:latest
+    build: ./Focus.Service.ReportConstructor/
+    image: focus.constructor
     restart: always
     hostname: "constructor"
-    ports:
-      - "5000:5000"
     container_name: constructor
     depends_on:
       - constructor_storage
@@ -52,11 +101,10 @@ services:
       - ASPNETCORE_URLS=http://*:5000
 
   scheduler:
-    image: focus.scheduler:latest
+    build: ./Focus.Service.ReportScheduler/
+    image: focus.scheduler
     restart: always
     hostname: "scheduler"
-    ports:
-      - "5100:5000"
     container_name: scheduler
     depends_on:
       - scheduler_storage
@@ -66,7 +114,8 @@ services:
       - ASPNETCORE_URLS=http://*:5000
 
   automator:
-    image: focus.automator:latest
+    build: ./Focus.Service.Automator/
+    image: focus.automator
     container_name: automator
     restart: always
     depends_on: 
@@ -75,11 +124,10 @@ services:
       - DOTNET_ENVIRONMENT=dev
 
   identity:
-    image: focus.identity:latest
+    build: ./Focus.Service.Identity/
+    image: focus.identity
     restart: always
     hostname: "identity"
-    ports:
-      - "5200:5000"
     container_name: identity
     depends_on: 
       - identity_storage
@@ -88,14 +136,28 @@ services:
       - ASPNETCORE_URLS=http://*:5000
 
   processor:
-    image: focus.processor:latest
+    build: ./Focus.Service.ReportProcessor/
+    image: focus.processor
     restart: always
     hostname: "processor"
-    ports: 
-      - "5300:5000"
     container_name: processor
     depends_on: 
       - processor_storage
     environment: 
       - ASPNETCORE_ENVIRONMENT=dev
+      - ASPNETCORE_URLS=http://*:5000
+
+  gateway: 
+    build: ./Focus.Service.Gateway/
+    image: focus.gateway
+    restart: always
+    ports:
+      - "5000:5000"
+    container_name: gateway
+    depends_on: 
+      - constructor
+      - scheduler
+      - processor
+      - identity
+    environment: 
       - ASPNETCORE_URLS=http://*:5000

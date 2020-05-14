@@ -6,11 +6,13 @@ using System.Linq;
 using MediatR;
 using System;
 using Focus.Application.Common.Services.Client;
-using Focus.Core.Common.Messages.Commands;
+using Focus.Application.Common.Messages.Commands;
+using Focus.Application.Common.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Focus.Service.ReportScheduler.Application.Commands
 {
-    public class ConstructReport : IRequest
+    public class ConstructReport : IRequest<Result>
     {
         public ConstructReport(ReportScheduleDto schedule)
         {
@@ -20,38 +22,45 @@ namespace Focus.Service.ReportScheduler.Application.Commands
     }
 
     public class ConstructReportHandler
-        : IRequestHandler<ConstructReport>
+        : IRequestHandler<ConstructReport, Result>
     {
         private readonly IServiceClient _service;
-
+        private readonly ILogger<ConstructReportHandler> _logger;
         public ConstructReportHandler(
-                IServiceClient service)
+                IServiceClient service, ILogger<ConstructReportHandler> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
-        public async Task<Unit> Handle(ConstructReport request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(ConstructReport request, CancellationToken cancellationToken)
         {
-            var schedule = request.Schedule.AsEntity();
-
-            var command = new ConstructReports()
+            try
             {
-                ReportDescriptors = new List<ReportConstructionDescriptor>()
+                var schedule = request.Schedule.AsEntity();
+
+                var command = new ConstructReports()
+                {
+                    ReportDescriptors = new List<ReportConstructionDescriptor>()
                 {
                     new ReportConstructionDescriptor()
                     {
                         ReportTemplateId = schedule.ReportTemplate,
-                        AssignedOrganizationIds = schedule.Organizations
-                            .Select(x => x.Organization)
-                            .ToList(),
+                        AssignedOrganizationIds = schedule.AssignedOrganizations,
                         DeadlineDate = DateTime.Now.ToUniversalTime() + schedule.DeadlinePeriod
                     }
                 }
-            };
+                };
 
-            await _service.CommandAsync(command, "constructor", "api/cs/report/construct");
+                await _service.CommandAsync(command, "constructor", "api/cs/report/construct");
 
-            return Unit.Value;
+                return Result.Success();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.StackTrace);
+                return Result.Fail(e);
+            }
         }
     }
 }

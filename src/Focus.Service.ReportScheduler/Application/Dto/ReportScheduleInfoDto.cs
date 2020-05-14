@@ -13,10 +13,7 @@ namespace Focus.Service.ReportScheduler.Application.Dto
         // string of format
         // DD.MM.YYYY-DD.MM.YYYY
         public string EmissionPeriod { get; set; }
-        // string of format
-        // D.M.Y 
-        // where D M Y - positive integers
-        public string DeadlinePeriod { get; set; }
+        public Period DeadlinePeriod { get; set; }
     }
 
     public static class ReportScheduleInfoDtoExtensions
@@ -26,12 +23,10 @@ namespace Focus.Service.ReportScheduler.Application.Dto
             {
                 Id = entity.Id,
                 ReportTemplate = entity.ReportTemplate,
-                Organizations = entity.Organizations
-                    .Select(o => o.Organization)
-                    .ToList(),
+                Organizations = entity.AssignedOrganizations,
                 EmissionPeriod =
                     $"{entity.EmissionStart.ToLocalTime():dd.MM.yyyy}-{entity.EmissionEnd.ToLocalTime():dd.MM.yyyy}",
-                DeadlinePeriod = entity.DeadlinePeriod.ToString()
+                DeadlinePeriod = entity.DeadlinePeriod
             };
     }
 }

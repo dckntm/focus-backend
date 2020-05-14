@@ -16,6 +16,8 @@ open Focus.Api.Common
 open System.IO
 open Giraffe
 open System
+open Focus.Api.Common.HelperHandlers
+open Focus.Api.Common.Configuration
 
 module Program =
     let exitCode = 0
@@ -25,21 +27,7 @@ module Program =
         WebHostBuilder()
             .UseKestrel()
             .UseContentRoot(Directory.GetCurrentDirectory())
-            .ConfigureAppConfiguration(
-                fun context config ->
-                    let env = context.HostingEnvironment
-                    
-                    config.AddJsonFile("appsettings.json", true, true)
-                          .AddJsonFile((sprintf "appsettings.%s.json" env.EnvironmentName), true, true) |> ignore
-
-                    if env.IsDevelopment() then
-                        let appAssembly = Assembly.GetExecutingAssembly()
-
-                        if isNotNull appAssembly then config.AddUserSecrets(appAssembly, true) |> ignore
-
-                    config.AddEnvironmentVariables() |> ignore
-
-                    if isNotNull args then config.AddCommandLine(args) |> ignore)
+            .ConfigureAppConfiguration(setup(args))
             .ConfigureServices(
                 fun context services ->
                     let config = context.Configuration
@@ -48,19 +36,16 @@ module Program =
                         AddCors)
                         .AddGiraffe()
                         .AddMongoDB(config)
-                        .AddServiceClient(config)
                         .AddApplication()
                         .AddInfrastructure()
                         |> Jwt.AddBearerSecurity 
                         |> ignore)
             .Configure(
                 fun app -> 
-                    app.UseGiraffe Router.webApp
-
-                    app 
-                        |> AuthAppBuilderExtensions.UseAuthentication 
-                        |> UseCors 
-                        |> ignore   )
+                    (app |> Cors.UseCors)
+                        .UseAuthentication()
+                        .UseGiraffeErrorHandler(errorHandler)
+                        .UseGiraffe Router.webApp)
             .ConfigureLogging(Action<ILoggingBuilder> Log.ConfigureLogging)
             .Build()
             .Run()

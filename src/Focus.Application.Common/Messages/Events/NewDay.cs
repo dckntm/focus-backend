@@ -1,7 +1,7 @@
 using System;
 using MediatR;
 
-namespace Focus.Core.Common.Messages.Events
+namespace Focus.Application.Common.Messages.Events
 {
     public class NewDay : INotification
     {

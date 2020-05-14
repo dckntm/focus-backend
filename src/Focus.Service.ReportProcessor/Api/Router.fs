@@ -11,7 +11,8 @@ open Giraffe.ModelBinding
 open Giraffe.Routing
 open Giraffe.Core
 open MediatR
-open Focus.Core.Common.Messages.Commands
+open Focus.Application.Common.Messages.Commands
+open Focus.Api.Common.HelperHandlers
 
 module Router =
 
@@ -20,9 +21,9 @@ module Router =
             task {
                 let mediator = ctx.GetService<IMediator>()
 
-                let! _ = mediator.Send(UpdateReport(dto, false))
+                let! result = mediator.Send(UpdateReport(dto, false))
 
-                return! setStatusCode 200 next ctx
+                return! handleResult result next ctx
             }
 
     let passReport (dto: ReportUpdateDto): HttpHandler =
@@ -30,9 +31,9 @@ module Router =
             task {
                 let mediator = ctx.GetService<IMediator>()
 
-                let! _ = mediator.Send(UpdateReport(dto, true))
+                let! result = mediator.Send(UpdateReport(dto, true))
 
-                return! setStatusCode 200 next ctx
+                return! handleResult result next ctx
             }
 
     let getOrganizationReports (id: string): HttpHandler =
@@ -42,11 +43,7 @@ module Router =
 
                 let! result = mediator.Send(GetOrganizationReports(id))
 
-                match result with
-                | success when result.IsSuccessfull -> return! json success.Result next ctx
-                | fail ->
-                    ctx.SetStatusCode 500
-                    return! setBodyFromString fail.ErrorMessage next ctx
+                return! handleResult result next ctx
             }
 
     let getReport (id: string): HttpHandler =
@@ -56,11 +53,7 @@ module Router =
 
                 let! result = mediator.Send(GetReport(id))
 
-                match result with
-                | success when result.IsSuccessfull -> return! json success.Result next ctx
-                | fail ->
-                    ctx.SetStatusCode 500
-                    return! setBodyFromString fail.ErrorMessage next ctx
+                return! handleResult result next ctx
             }
 
     let publishReports (command: PublishReports): HttpHandler =
@@ -68,9 +61,9 @@ module Router =
             task {
                 let mediator = ctx.GetService<IMediator>()
 
-                let! _ = mediator.Send(command)
+                let! result = mediator.Send(command)
 
-                return! setStatusCode 200 next ctx
+                return! handleResult result next ctx
             }
 
     let getActualReports: HttpHandler =
@@ -80,11 +73,7 @@ module Router =
 
                 let! result = mediator.Send(GetActualReports())
 
-                match result with
-                | success when result.IsSuccessfull -> return! json success.Result next ctx
-                | fail ->
-                    ctx.SetStatusCode 500
-                    return! setBodyFromString fail.ErrorMessage next ctx
+                return! handleResult result next ctx
             }
 
     let passOrgId (f: string -> HttpHandler): HttpHandler =
@@ -100,16 +89,18 @@ module Router =
             [ POST
               >=> choose
                       [ route "/api/report/save"
+                        >=> authorize
                         >=> bindJson<ReportUpdateDto> saveReport
-                        >=> text "Successfully, saved"
                         route "/api/report/pass"
+                        >=> authorize
                         >=> bindJson<ReportUpdateDto> passReport
-                        >=> text "Successfully, passed"
                         route "/api/cs/report/publish"
                         >=> bindJson<PublishReports> publishReports ]
               GET
+              >=> authorize 
               >=> choose
                       [ route "/api/report/org"
                         >=> passOrgId getOrganizationReports
                         routef "/api/report/get/%s" getReport
-                        route "/api/report/info" >=> getActualReports ] ]
+                        route "/api/report/info" 
+                        >=> getActualReports ] ]

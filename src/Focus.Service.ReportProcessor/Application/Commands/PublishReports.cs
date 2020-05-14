@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Focus.Core.Common.Messages.Commands;
+using Focus.Application.Common.Abstract;
+using Focus.Application.Common.Messages.Commands;
 using Focus.Service.ReportProcessor.Application.Services;
 using Focus.Service.ReportProcessor.Entities;
 using Focus.Service.ReportProcessor.Entities.Questionnaire;
@@ -13,7 +14,7 @@ using MediatR;
 
 namespace Focus.Service.ReportProcessor.Application.Commands
 {
-    public class PublishReportsHandler : IRequestHandler<PublishReports>
+    public class PublishReportsHandler : IRequestHandler<PublishReports, Result>
     {
         private readonly IReportRepository _repository;
         public PublishReportsHandler(
@@ -22,16 +23,24 @@ namespace Focus.Service.ReportProcessor.Application.Commands
             _repository = repository;
         }
 
-        public async Task<Unit> Handle(PublishReports request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(PublishReports request, CancellationToken cancellationToken)
         {
-            var reports = request.ReportDescriptors
-                .SelectMany(d => BuildReports(d));
+            try
+            {
+                var reports = request.ReportDescriptors
+                    .SelectMany(d => BuildReports(d));
 
-            await _repository.CreateReportsAsync(reports);
+                await _repository.CreateReportsAsync(reports);
 
-            return Unit.Value;
+                return Result.Success();
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e);
+            }
         }
 
+        // TODO replace with extensions
         private IEnumerable<Report> BuildReports(ReportPublishDescriptor descriptor)
         {
             return descriptor.ConstructionDescriptor.AssignedOrganizationIds

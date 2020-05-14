@@ -123,7 +123,7 @@ Returns `User` data including password (as this endpoint is accessible only by t
 ```
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-GET /api/org/info
+GET /api/identity/info
 Authorization: Bearer <token>
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -155,7 +155,7 @@ Returns full information about all `User`s.
 ```
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-GET /api/identity/info
+GET /api/org/info
 Authorization: Bearer <token>
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -168,76 +168,36 @@ Content-Type: application/json
         "isHead"        : bool
     }
 ]
-
 ```
 
 Returns short information about all `Organization`s registered in the service.
 
 ---
 
-## Deploy
+## Docker
 
-Application is deployed with Docker based on `focus_common` image which should be build first.
-
-> If you already build latest version of `focus_common` image (which is required after each pull request as it's functionality is changing rapidly).
+Application is deployed with Docker based on `focus.common` image which should be build first.
 
 ### Building common image
 
 Build common image by running
 
 ```sh
-docker build -t focus_common .
+docker build -t focus.common .
 ```
 
-being in `src` folder of repository.
+being in `src` folder of repository
 
-### Building Identity Service image
-
-> Currently unavailable
+### Building Focus Report Template Service image
 
 From service directory (`src/Focus.Service.Identity/` in our case) run
 
 ```sh
-docker build -t focus_identity .
+docker build -t focus.identity .
 ```
 
-### Local build
-
-> This kind of build is for backend developers.
-
-When building locally it's considered that we run this service individually & no other services were deployed on the same machine at the same time. To deploy locally we run
+Also this can be done via general production `docker-compose` file in `src` directory. Type following command
 
 ```sh
-docker-compose -f docker-compose.local.yml up
+docker-compose build identity
 ```
-
-from service folder (`src/Focus.Service.Identity/` in our case).
-
-| Container Name   | Host             | Port        | Description                                                       |
-| ---------------- | ---------------- | ----------- | ----------------------------------------------------------------- |
-| `is_storage`     | `is_storage`     | 27017:27017 | MongoDB database where data is stored                             |
-| `is_storage_gui` | `is_storage_gui` | 8081:8081   | MongoDB GUI interface that allows us to observe MongoDB databases |
-
-In this case we run our service on our own via `dotnet run`.
-
-### Development build
-
-> Currently unavailable
-
-> This kind of build is for frontend developers
-
-When building for development we also consider that services are ran individually. Go to the service folder & run
-
-```sh
-docker-compose -f docker-compose.dev.yml up
-```
-
-| Container Name    | Host              | Port        | Description                                                       |
-| ----------------- | ----------------- | ----------- | ----------------------------------------------------------------- |
-| `is_storage`     | `is_storage`     | 27017:27017 | MongoDB database where data is stored                             |
-| `is_storage_gui` | `is_storage_gui` | 8081:8081   | MongoDB GUI interface that allows us to observe MongoDB databases |
-| `is`             | `localhost`       | 5000:5000   | Identity Service instance                                 |
-
-### Production build
-
-> TODO: add production build & description

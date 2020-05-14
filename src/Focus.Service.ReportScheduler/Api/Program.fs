@@ -19,6 +19,7 @@ open Focus.Api.Common
 open Giraffe.Common
 open System.IO
 open System
+open Focus.Api.Common.HelperHandlers
 
 module Program =
     let exitCode = 0
@@ -53,7 +54,6 @@ module Program =
                         .AddMongoDB(config)
                         .AddServiceClient(config)
                         .AddApplication()
-                        // RabbitMQ DI always goes after Application as it needs IMediator to be injected
                         .AddRabbitMQConsumers(config)
                         .AddInfrastructure()
                         |> Jwt.AddBearerSecurity 
@@ -62,7 +62,8 @@ module Program =
                 fun app -> 
                     (app 
                         |> UseCors 
-                        |> AuthAppBuilderExtensions.UseAuthentication) 
+                        |> AuthAppBuilderExtensions.UseAuthentication)
+                        .UseGiraffeErrorHandler(errorHandler) 
                         .UseGiraffe Router.webApp)
             .ConfigureLogging(Action<ILoggingBuilder> ConfigureLogging)
             .Build()

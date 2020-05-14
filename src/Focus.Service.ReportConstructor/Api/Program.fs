@@ -18,6 +18,7 @@ open Focus.Api.Common
 open System.IO
 open Giraffe
 open System
+open Focus.Api.Common.HelperHandlers
 
 module Program =
     let exitCode = 0
@@ -51,18 +52,15 @@ module Program =
                         .AddMongoDB(config)
                         .AddApplication()
                         .AddServiceClient(config)
-                        // .AddRabbitMQConsumers(config)
-                        // .AddRabbitMQPublisher(config, false)
                         .AddInfrastructure()
                         |> Jwt.AddBearerSecurity
                         |> ignore)
             .Configure(
                 fun app -> 
-                    (app 
-                        |> Cors.UseCors
-                        |> AuthAppBuilderExtensions.UseAuthentication)
-                        .UseGiraffe Router.webApp
-                    )
+                    app.UseGiraffeErrorHandler(errorHandler) |> ignore
+                    app |> AuthAppBuilderExtensions.UseAuthentication |> ignore
+                    app |> Cors.UseCors |> ignore
+                    app.UseGiraffe Router.webApp)
             .ConfigureLogging(Action<ILoggingBuilder> ConfigureLogging)
             .Build()
             .Run()

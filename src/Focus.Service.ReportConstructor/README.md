@@ -127,16 +127,16 @@ Returns an array of `Report Template` short infos
 
 ---
 
-## Deploy
+## Docker
 
-Application is deployed with Docker based on `focus_common` image which should be build first.
+Application is deployed with Docker based on `focus.common` image which should be build first.
 
 ### Building common image
 
 Build common image by running
 
 ```sh
-docker build -t focus_common .
+docker build -t focus.common .
 ```
 
 being in `src` folder of repository
@@ -146,44 +146,11 @@ being in `src` folder of repository
 From service directory (`src/Focus.Service.ReportConstructor/` in our case) run
 
 ```sh
-docker build -t focus_constructor .
+docker build -t focus.constructor .
 ```
 
-### Local build
-
-> This kind of build is for backend developers
-
-When building locally it's considered that we run this service individually & no other services were deployed on the same machine at the same time. To deploy locally we run
+Also this can be done via general production `docker-compose` file in `src` directory. Type following command
 
 ```sh
-docker-compose -f docker-compose.local.yml up
+docker-compose build constructor
 ```
-
-from service folder (`src/Focus.Service.ReportConstructor/` in our case).
-
-| Container Name    | Host              | Port        | Description                                                       |
-| ----------------- | ----------------- | ----------- | ----------------------------------------------------------------- |
-| `rcs_storage`     | `rcs_storage`     | 27017:27017 | MongoDB database where data is stored                             |
-| `rcs_storage_gui` | `rcs_storage_gui` | 8081:8081   | MongoDB GUI interface that allows us to observe MongoDB databases |
-
-In this case we run our service on our own via `dotnet run`
-
-### Development build
-
-> This kind of build is for frontend developers
-
-When building for development we also consider that services are ran individually. Go to the service folder & run
-
-```sh
-docker-compose -f docker-compose.dev.yml up
-```
-
-| Container Name    | Host              | Port        | Description                                                       |
-| ----------------- | ----------------- | ----------- | ----------------------------------------------------------------- |
-| `rcs_storage`     | `rcs_storage`     | 27017:27017 | MongoDB database where data is stored                             |
-| `rcs_storage_gui` | `rcs_storage_gui` | 8081:8081   | MongoDB GUI interface that allows us to observe MongoDB databases |
-| `rcs`             | `localhost`       | 5000:5000   | Report Constructor Service instance                               |
-
-### Production build
-
-> TODO: add production build & description

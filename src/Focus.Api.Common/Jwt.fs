@@ -37,5 +37,5 @@ module Jwt =
 
     let AddBearerSecurity (services : IServiceCollection) =
         services
-            .AddAuthentication(authenticationOptions)
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(Action<JwtBearerOptions> jwtBearerOptions)

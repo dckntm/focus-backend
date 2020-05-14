@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Focus.Service.Identity.Application.Commands
 {
-    public class CreateNewOrganization : IRequest<RequestResult<string>>
+    public class CreateNewOrganization : IRequest<Result>
     {
         public Organization Organization { get; private set; }
 
@@ -18,7 +18,7 @@ namespace Focus.Service.Identity.Application.Commands
         }
     }
 
-    public class CreateNewOrganizationHandler : IRequestHandler<CreateNewOrganization, RequestResult<string>>
+    public class CreateNewOrganizationHandler : IRequestHandler<CreateNewOrganization, Result>
     {
         private readonly IIdentityRepository _repository;
 
@@ -27,7 +27,7 @@ namespace Focus.Service.Identity.Application.Commands
             _repository = repository;
         }
 
-        public async Task<RequestResult<string>> Handle(CreateNewOrganization request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateNewOrganization request, CancellationToken cancellationToken)
         {
             try
             {
@@ -36,13 +36,11 @@ namespace Focus.Service.Identity.Application.Commands
 
                 var id = await _repository.CreateNewOrganizationAsync(request.Organization);
 
-                return RequestResult
-                    .Successfull(id);
+                return Result.Success(id);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return RequestResult<string>
-                    .Failed(ex);
+                return Result.Fail(e);
             }
         }
     }

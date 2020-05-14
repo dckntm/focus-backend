@@ -12,6 +12,10 @@ open Focus.Service.Identity.Application
 open Focus.Service.Identity.Api.Router
 open Focus.Api.Common
 open Focus.Infrastructure.Common.MongoDB
+open Focus.Api.Common.HelperHandlers
+open Microsoft.Extensions.Logging
+open Focus.Api.Common.Log
+open System
 
 module Program =
     let exitCode = 0
@@ -52,9 +56,11 @@ module Program =
                 fun app -> 
                     (app |> Cors.UseCors)
                         .UseAuthentication()
+                        .UseGiraffeErrorHandler(errorHandler)
                         .UseGiraffe Router.wepApp
-
+                    // TODO inject admin username & password from ENV variables 
                     app.SeedAdministrator("admin", "password") |> ignore)
+            .ConfigureLogging(Action<ILoggingBuilder> ConfigureLogging)
             .Build()
             .Run()
 

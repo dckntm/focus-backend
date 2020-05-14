@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Focus.Application.Common.Services.Client;
-using Focus.Core.Common.Messages.Commands;
-using Focus.Core.Common.Messages.Events;
+using Focus.Application.Common.Messages.Commands;
+using Focus.Application.Common.Messages.Events;
 using Focus.Service.ReportScheduler.Application.Services;
 using Focus.Service.ReportScheduler.Core.Entities;
 using MediatR;
@@ -41,9 +41,7 @@ namespace Focus.Service.ReportScheduler.Application.Events
                     .Select(x => new ReportConstructionDescriptor()
                     {
                         ReportTemplateId = x.ReportTemplate,
-                        AssignedOrganizationIds = x.Organizations
-                            .Select(o => o.Organization)
-                            .ToList(),
+                        AssignedOrganizationIds = x.AssignedOrganizations,
                         DeadlineDate = today + x.DeadlinePeriod
                     })
                     .ToList();

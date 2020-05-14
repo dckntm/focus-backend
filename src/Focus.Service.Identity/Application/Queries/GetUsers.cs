@@ -1,6 +1,4 @@
 using Focus.Application.Common.Abstract;
-using Focus.Service.Identity.Core.Entities;
-using System.Collections.Generic;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
@@ -9,13 +7,10 @@ using System;
 
 namespace Focus.Service.Identity.Application.Queries
 {
-    public class GetUsers : IRequest<RequestResult<IEnumerable<User>>>
-    {
-
-    }
+    public class GetUsers : IRequest<Result> { }
 
     public class GetUsersHandler :
-        IRequestHandler<GetUsers, RequestResult<IEnumerable<User>>>
+        IRequestHandler<GetUsers, Result>
     {
         private readonly IIdentityRepository _repository;
 
@@ -24,17 +19,15 @@ namespace Focus.Service.Identity.Application.Queries
             _repository = repository;
         }
 
-        public async Task<RequestResult<IEnumerable<User>>> Handle(GetUsers request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetUsers request, CancellationToken cancellationToken)
         {
             try
             {
-                return RequestResult
-                    .Successfull(await _repository.GetUsersAsync());
+                return Result.Success(await _repository.GetUsersAsync());
             }
             catch (Exception ex)
             {
-                return RequestResult<IEnumerable<User>>
-                    .Failed(ex);
+                return Result.Fail(ex);
             }
         }
     }

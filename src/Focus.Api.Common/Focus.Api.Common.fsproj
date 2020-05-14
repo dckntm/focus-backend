@@ -3,11 +3,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Focus.Application.Common\Focus.Application.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="AuthHandlers.fs" />
     <Compile Include="HelperHandlers.fs" />
     <Compile Include="Cors.fs" />
     <Compile Include="Jwt.fs" />
     <Compile Include="Log.fs" />
+    <Compile Include="Configuration.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Giraffe" Version="4.1.0" />
