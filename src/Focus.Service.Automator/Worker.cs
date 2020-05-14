@@ -11,11 +11,13 @@ namespace Focus.Service.Automator
     {
         private readonly ILogger<Worker> _logger;
         private readonly IPublisher _publisher;
+        private DateTime _today;
 
         public Worker(
             ILogger<Worker> logger,
             IPublisher publisher)
         {
+            _today = DateTime.Now.ToLocalTime().Date;
             _logger = logger;
             _publisher = publisher;
         }
@@ -25,15 +27,19 @@ namespace Focus.Service.Automator
             // TODO make it publish event only once per day at night
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("[NO] Published New Day Event at: {time}", DateTimeOffset.Now);
+                if (DateTime.Now.ToLocalTime().Date > _today.Date)
+                {
+                    _logger.LogInformation("[NO] Published New Day Event at: {time}", DateTimeOffset.Now);
+                    _today = DateTime.Now.ToLocalTime().Date;
+                    
+                    _publisher.Publish(
+                        message: new NewDay(),
+                        exchangeName: "focus",
+                        exchangeType: "topic",
+                        routeKey: "focus.events.newday.schedule");
+                }
 
-                // _publisher.Publish(
-                //     message: new NewDay(),
-                //     exchangeName: "focus",
-                //     exchangeType: "topic",
-                //     routeKey: "focus.events.newday.schedule");
-
-                await Task.Delay(3000, stoppingToken);
+                await Task.Delay(60 * 60 * 1000, stoppingToken);
             }
         }
     }
