@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Focus.Application.Common.Messages.Events;
+using Focus.Application.Common.Services.Messaging;
 
 namespace Focus.Service.Automator
 {
