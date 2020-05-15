@@ -37,7 +37,7 @@ namespace Focus.Service.Automator
                         message: new NewDay(),
                         exchangeName: "focus",
                         exchangeType: "topic",
-                        routeKey: "focus.events.newday.*");
+                        routeKey: "focus.events.newday");
                 }
 
                 await Task.Delay(60 * 60 * 1000, stoppingToken);

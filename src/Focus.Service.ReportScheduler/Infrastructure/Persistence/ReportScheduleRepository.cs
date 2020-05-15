@@ -39,8 +39,11 @@ namespace Focus.Service.ReportScheduler.Infrastructure.Persistence
 
         public Task DeleteSchedulesAsync(IQueryable<string> outdated)
         {
+            var outdatedIds = outdated.Select(o => new ObjectId(o));
+
             return ReportSchedules
-                .DeleteManyAsync(s => outdated.Contains(s.Id.ToString()));
+                .DeleteManyAsync(
+                    Builders<ReportScheduleDocument>.Filter.In(r => r.Id, outdatedIds));
         }
 
         public async Task<ReportSchedule> GetReportScheduleAsync(string scheduleId)
