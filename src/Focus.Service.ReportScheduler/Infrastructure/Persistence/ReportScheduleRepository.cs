@@ -29,12 +29,18 @@ namespace Focus.Service.ReportScheduler.Infrastructure.Persistence
         {
             // when we convert entity -> document we guarantee the Id property is properly created
             var document = schedule.AsDocument();
-            
+
             var id = document.Id;
 
             await ReportSchedules.InsertOneAsync(document);
 
             return id.ToString();
+        }
+
+        public Task DeleteSchedulesAsync(IQueryable<string> outdated)
+        {
+            return ReportSchedules
+                .DeleteManyAsync(s => outdated.Contains(s.Id.ToString()));
         }
 
         public async Task<ReportSchedule> GetReportScheduleAsync(string scheduleId)
