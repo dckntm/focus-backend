@@ -91,5 +91,13 @@ namespace Focus.Service.ReportProcessor.Infrastructure.Persistence
                 .Project(x => x.AsEntity())
                 .ToListAsync();
         }
+
+        public Task ChangeReportsStatusAsync(IEnumerable<string> overdueReports, ReportStatus overdue)
+        {
+            return Reports
+                .UpdateManyAsync(
+                    r => overdueReports.Contains(r.Id.ToString()), 
+                    Builders<ReportDocument>.Update.Set(r => r.Status, overdue));
+        }
     }
 }

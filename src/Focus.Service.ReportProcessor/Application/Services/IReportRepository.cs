@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Focus.Service.ReportProcessor.Application.Dto;
 using Focus.Service.ReportProcessor.Entities;
+using Focus.Service.ReportProcessor.Enums;
 
 namespace Focus.Service.ReportProcessor.Application.Services
 {
@@ -13,5 +14,6 @@ namespace Focus.Service.ReportProcessor.Application.Services
         Task SaveReport(ReportUpdateDto report);
         Task PassReport(ReportUpdateDto report);
         Task<IEnumerable<Report>> GetReportsAsync();
+        Task ChangeReportsStatusAsync(IEnumerable<string> reports, ReportStatus overdue);
     }
 }
