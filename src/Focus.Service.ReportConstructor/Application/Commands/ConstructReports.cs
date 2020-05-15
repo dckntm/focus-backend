@@ -32,6 +32,7 @@ namespace Focus.Service.ReportConstructor.Application.Commands
 
         public async Task<Result> Handle(ConstructReports request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Started constructing reports");
             try
             {
                 var command = new PublishReports()
@@ -48,6 +49,8 @@ namespace Focus.Service.ReportConstructor.Application.Commands
                     if (template is null)
                         throw new Exception(
                                 $"APPLICATION Can't find report template with id: {descriptor.ReportTemplateId}");
+
+                    _logger.LogInformation($"Constructing report for template: {template.Title}");
 
                     command.ReportDescriptors.Add(new ReportPublishDescriptor()
                     {
@@ -99,7 +102,7 @@ namespace Focus.Service.ReportConstructor.Application.Commands
             }
             catch (Exception e)
             {
-                _logger.LogError(e.StackTrace);
+                _logger.LogError(e, e.Message);
                 return Result.Fail(e);
             }
 

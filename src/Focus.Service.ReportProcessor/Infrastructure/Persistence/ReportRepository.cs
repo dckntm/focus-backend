@@ -94,9 +94,11 @@ namespace Focus.Service.ReportProcessor.Infrastructure.Persistence
 
         public Task ChangeReportsStatusAsync(IEnumerable<string> overdueReports, ReportStatus overdue)
         {
+            var overdueReportIds = overdueReports.Select(r => new ObjectId(r));
+
             return Reports
                 .UpdateManyAsync(
-                    r => overdueReports.Contains(r.Id.ToString()), 
+                    Builders<ReportDocument>.Filter.In(r => r.Id, overdueReportIds), 
                     Builders<ReportDocument>.Update.Set(r => r.Status, overdue));
         }
     }

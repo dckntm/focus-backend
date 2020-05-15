@@ -46,6 +46,9 @@ namespace Focus.Service.ReportScheduler.Application.Events
                     })
                     .ToList();
 
+                if (reportConstructConfigurations is null || reportConstructConfigurations.Count() == 0)
+                    return;
+
                 var command = new ConstructReports()
                 {
                     ReportDescriptors = reportConstructConfigurations
