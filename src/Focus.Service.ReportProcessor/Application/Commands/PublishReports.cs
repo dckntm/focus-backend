@@ -11,31 +11,39 @@ using Focus.Service.ReportProcessor.Entities.Questionnaire;
 using Focus.Service.ReportProcessor.Entities.Table;
 using Focus.Service.ReportProcessor.Enums;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Focus.Service.ReportProcessor.Application.Commands
 {
     public class PublishReportsHandler : IRequestHandler<PublishReports, Result>
     {
         private readonly IReportRepository _repository;
+        private readonly ILogger<PublishReportsHandler> _logger;
         public PublishReportsHandler(
-            IReportRepository repository)
+            IReportRepository repository, ILogger<PublishReportsHandler> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<Result> Handle(PublishReports request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Started Publishing Reports");
             try
             {
                 var reports = request.ReportDescriptors
                     .SelectMany(d => BuildReports(d));
 
-                await _repository.CreateReportsAsync(reports);
+                _logger.LogInformation($"Publishing total {reports.Count()} reports");
+
+                if (reports != null && reports.Count() > 0)
+                    await _repository.CreateReportsAsync(reports);
 
                 return Result.Success();
             }
             catch (Exception e)
             {
+                _logger.LogError(e, e.Message);
                 return Result.Fail(e);
             }
         }

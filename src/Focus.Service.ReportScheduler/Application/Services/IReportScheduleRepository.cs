@@ -9,5 +9,6 @@ namespace Focus.Service.ReportScheduler.Application.Services
         Task<string> CreateReportScheduleAsync(ReportSchedule schedule);
         Task<IQueryable<ReportSchedule>> GetReportSchedulesAsync();
         Task<ReportSchedule> GetReportScheduleAsync(string scheduleId);
+        Task DeleteSchedulesAsync(IQueryable<string> outdated);
     }
 }

@@ -4,20 +4,17 @@ open Focus.Service.ReportProcessor.Infrastructure
 open Focus.Service.ReportProcessor.Application
 open Focus.Service.ReportProcessor.Api.Router
 open Focus.Infrastructure.Common.MongoDB
-open Focus.Infrastructure.Common.Client
-open Microsoft.Extensions.Configuration
+open Focus.Infrastructure.Common.Messaging
+open Focus.Api.Common.HelperHandlers
+open Focus.Api.Common.Configuration
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Builder
-open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Focus.Api.Common.Cors
-open System.Reflection
 open Focus.Api.Common
 open System.IO
 open Giraffe
 open System
-open Focus.Api.Common.HelperHandlers
-open Focus.Api.Common.Configuration
 
 module Program =
     let exitCode = 0
@@ -37,12 +34,13 @@ module Program =
                         .AddGiraffe()
                         .AddMongoDB(config)
                         .AddApplication()
+                        .AddRabbitMQConsumers(config)
                         .AddInfrastructure()
                         |> Jwt.AddBearerSecurity 
                         |> ignore)
             .Configure(
                 fun app -> 
-                    (app |> Cors.UseCors)
+                    (app |> UseCors)
                         .UseAuthentication()
                         .UseGiraffeErrorHandler(errorHandler)
                         .UseGiraffe Router.webApp)
