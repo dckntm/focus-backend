@@ -55,6 +55,16 @@ module Router =
                 return! handleResult result next ctx
             }
 
+    let getStatistics : HttpHandler = 
+        fun next ctx -> 
+            task {
+                let mediator = ctx.GetService<IMediator>()
+
+                let! result = mediator.Send(GetStatistics())
+
+                return! handleResult result next ctx
+            }
+
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
         mustBeAdmin >=> choose
             [ POST
@@ -67,5 +77,6 @@ module Router =
               >=> choose
                       [ route "/api/report/schedule/info"
                         >=> getReportScheduleInfo
-                        routef "/api/report/schedule/%s" getReportSchedule ]
+                        route "/api/report/schedule/stats" >=> getStatistics
+                        routef "/api/report/schedule/%s" getReportSchedule]
               setStatusCode 404 >=> text "Not Found" ]
