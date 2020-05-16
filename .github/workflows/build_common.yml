@@ -11,13 +11,13 @@ jobs:
 
     steps: 
       - uses: actions/checkout@v1
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.200
-    - name: Build with dotnet
-      run: 
-        dotnet build src/Focus.Api.Common/ --configuration Release
-        dotnet build src/Focus.Core.Common/ --configuration Release
-        dotnet build src/Focus.Application.Common/ --configuration Release
-        dotnet build src/Focus.Infrastructure.Common/ --configuration Release
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.200
+      - name: Build with dotnet
+        run: 
+          dotnet build src/Focus.Api.Common/ --configuration Release
+          dotnet build src/Focus.Core.Common/ --configuration Release
+          dotnet build src/Focus.Application.Common/ --configuration Release
+          dotnet build src/Focus.Infrastructure.Common/ --configuration Release
