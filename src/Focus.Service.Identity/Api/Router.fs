@@ -91,6 +91,16 @@ module Router =
             let claims = ctx.User.Claims |> Seq.map (fun claim -> (claim.Type, claim.Value, claim.ValueType, ctx.User.HasClaim("role", "HOA")))
             json claims next ctx
 
+    let getStatistics: HttpHandler = 
+        fun next ctx -> 
+            task {
+                let mediator = ctx.GetService<IMediator>()
+
+                let! result = mediator.Send(GetStatistics())
+
+                return! handleResult result next ctx
+            }
+
     let wepApp: HttpFunc -> HttpContext -> HttpFuncResult =
         choose
             [ POST
@@ -108,6 +118,8 @@ module Router =
               >=> choose
                       [ route "/api/identity/claims"
                         >=> getClaims
+                        route "/api/identity/stats"
+                        >=> getStatistics
                         route "/api/org/info" >=> getOrganizationInfos
                         route "/api/identity/info" >=> getUsers
                         routef "/api/identity/%s" getUser
