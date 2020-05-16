@@ -127,6 +127,24 @@ Returns an array of `Report Template` short infos
 
 ---
 
+```
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+GET: /api/report/template/stats
+Authorization: Bearer <token>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Content-Type: application/json
+{
+    "totalTemplates"    : int,
+}
+```
+
+Returns basic statistics about `Report Templates`s stored in service
+
+---
+
 ## Docker
 
 Application is deployed with Docker based on `focus.common` image which should be build first.

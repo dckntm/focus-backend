@@ -106,6 +106,27 @@ Returns an array of report schedule dto info objects
 
 ---
 
+```
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+GET: /api/report/schedule/stats
+Authorization: Bearer <token>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Content-Type: application/json
+{
+    "totalSchedules"        : int,
+    "executingSchedules"    : int,
+    "outdatedSchedules"     : int,
+    "futureSchedules"       : int
+}
+```
+
+Returns basic statistics about `Report Schedule`s stored in service
+
+---
+
 ## Docker
 
 Application is deployed with Docker based on `focus.common` image which should be build first.

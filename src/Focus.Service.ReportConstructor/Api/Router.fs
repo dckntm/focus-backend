@@ -56,6 +56,16 @@ module Router =
                 return! handleResult result next ctx
             }
 
+    let getStatistics : HttpHandler = 
+        fun next ctx -> 
+            task {
+                let mediator = ctx.GetService<IMediator>()
+
+                let! result = mediator.Send(GetStatistics())
+
+                return! handleResult result next ctx
+            }
+
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
         choose
             [ POST
@@ -70,6 +80,9 @@ module Router =
               >=> choose
                       [ mustBeAdmin
                         >=> route "/api/report/template/info"
+                        mustBeAdmin
+                        >=> route "/api/report/template/stats"
+                        >=> getStatistics
                         >=> getReportTemplateInfosHandler
                         mustBeAdmin
                         >=> routef "/api/report/template/%s" getReportTemplateHandler ]
