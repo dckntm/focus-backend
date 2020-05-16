@@ -120,6 +120,7 @@ Content-Type: application/json
 
 [
     {
+        title                   : string
         id                      : string
         assignedOrganizationId  : string
         reportStatus            : string
@@ -205,6 +206,7 @@ Content-Type: application/json
 
 [
     {
+        title                   : string
         id                      : string
         assignedOrganizationId  : string
         reportStatus            : string
@@ -227,13 +229,51 @@ Authorization: Bearer <token>
 
 Content-Type: application/json
 {
-    "inProgressReports"     : int,
-    "overdueReports"        : int,
+    "inProgressReports"     : int
+    "overdueReports"        : int
     "passedReports"         : int
 }
 ```
 
 Returns basic statistics about `Report`s stored in service based on their status
+
+---
+
+```
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /api/report/query
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "forOrganizations"    : string[]
+  "forTemplates"        : string[]
+  "queryIndex"          : int          //  skip 20 * queryIndex
+  "deadlineFrom"        : string
+  "deadlineTill"        : string
+  "forStatuses"         : ReportStatus[] ~ int[]
+                          {
+                              1 = Overdue
+                              2 = InProgress,
+                              3 = Passed
+                          }
+}
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Content-Type: application/json
+
+[
+    {
+        title                   : string
+        id                      : string
+        assignedOrganizationId  : string
+        reportStatus            : string
+        deadline                : string    // stringed datetime object
+    }
+]
+```
+
+Returns queried `Report`s
 
 ---
 

@@ -94,6 +94,16 @@ module Router =
                 return! handleResult result next ctx
             }
 
+    let getQueriedReportsHandler(query:GetQueriedReports) : HttpHandler = 
+        fun next ctx -> 
+            task {
+                let mediator = ctx.GetService<IMediator>()
+
+                let! result = mediator.Send(query)
+
+                return! handleResult result next ctx
+            }
+
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
         choose
             [ POST
@@ -105,7 +115,10 @@ module Router =
                         >=> authorize
                         >=> bindJson<ReportUpdateDto> passReport
                         route "/api/cs/report/publish"
-                        >=> bindJson<PublishReports> publishReports ]
+                        >=> bindJson<PublishReports> publishReports
+                        route "/api/report/query"
+                        >=> authorize
+                        >=> bindJson<GetQueriedReports> getQueriedReportsHandler ]
               GET
               >=> authorize
               >=> choose
