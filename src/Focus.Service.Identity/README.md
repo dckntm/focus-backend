@@ -174,6 +174,25 @@ Returns short information about all `Organization`s registered in the service.
 
 ---
 
+```
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+GET: /api/identity/stats
+Authorization: Bearer <token>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Content-Type: application/json
+{
+    "totalOrganizations"        : int,
+    "totalUsers"                : int
+}
+```
+
+Returns basic statistics about `User`s and `Organization`s stored in service
+
+---
+
 ## Docker
 
 Application is deployed with Docker based on `focus.common` image which should be build first.

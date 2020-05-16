@@ -217,6 +217,26 @@ Returns some short info about all the reports
 
 ---
 
+```
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REQUEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+GET: /api/report/stats
+Authorization: Bearer <token>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< RESPONSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Content-Type: application/json
+{
+    "inProgressReports"     : int,
+    "overdueReports"        : int,
+    "passedReports"         : int
+}
+```
+
+Returns basic statistics about `Report`s stored in service based on their status
+
+---
+
 ## Docker
 
 Application is deployed with Docker based on `focus.common` image which should be build first.
