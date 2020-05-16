@@ -84,6 +84,16 @@ module Router =
 
             f orgId.Value next ctx
 
+    let getStatistics: HttpHandler =
+        fun next ctx ->
+            task {
+                let mediator = ctx.GetService<IMediator>()
+
+                let! result = mediator.Send(GetStatistics())
+
+                return! handleResult result next ctx
+            }
+
     let webApp: HttpFunc -> HttpContext -> HttpFuncResult =
         choose
             [ POST
@@ -97,10 +107,12 @@ module Router =
                         route "/api/cs/report/publish"
                         >=> bindJson<PublishReports> publishReports ]
               GET
-              >=> authorize 
+              >=> authorize
               >=> choose
-                      [ route "/api/report/org"
+                      [ mustBeAdmin
+                        >=> route "/api/report/stats"
+                        >=> getStatistics
+                        route "/api/report/org"
                         >=> passOrgId getOrganizationReports
                         routef "/api/report/get/%s" getReport
-                        route "/api/report/info" 
-                        >=> getActualReports ] ]
+                        route "/api/report/info" >=> getActualReports ] ]
