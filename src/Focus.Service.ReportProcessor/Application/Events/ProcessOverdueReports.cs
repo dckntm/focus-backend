@@ -24,7 +24,7 @@ namespace Focus.Service.ReportProcessor.Application.Events
                 var reports = await _repository.GetReportsAsync();
 
                 var expired = reports
-                    .Where(r => r.Deadline.Date >= DateTime.Today.Date)
+                    .Where(r => r.Deadline.Date < DateTime.Today.Date)
                     .Select(r => r.Id);
 
                 await _repository.ChangeReportsStatusAsync(expired, ReportStatus.Overdue);
