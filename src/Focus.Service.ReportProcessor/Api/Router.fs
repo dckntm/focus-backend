@@ -122,8 +122,8 @@ module Router =
               GET
               >=> authorize
               >=> choose
-                      [ mustBeAdmin
-                        >=> route "/api/report/stats"
+                      [ route "/api/report/stats"
+                        >=> mustBeAdmin
                         >=> getStatistics
                         route "/api/report/org"
                         >=> passOrgId getOrganizationReports
