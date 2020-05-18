@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Focus.Infrastructure.Common.Messaging.Configuration;
@@ -79,7 +80,7 @@ namespace Focus.Infrastructure.Common.Messaging.Consuming
 
             consumer.Received += (s, e) =>
             {
-                var content = System.Text.Encoding.UTF8.GetString(e.Body);
+                var content = Encoding.UTF8.GetString(e.Body.Span);
 
                 var notification = JsonConvert.DeserializeObject(content, typeof(T));
 
