@@ -75,7 +75,6 @@ namespace Focus.Service.ReportProcessor.Infrastructure.Persistence
             if (doc is null)
                 throw new Exception($"INFRASTRUCTURE: Can't save report with {report.Id} id");
 
-            doc.Status = ReportStatus.InProgress;
             doc.QuestionnaireAnswers = report.QuestionnaireAnswers;
             doc.TableAnswers = report.TableAnswers;
 
