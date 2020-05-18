@@ -1,6 +1,9 @@
 name: .NET Build Scheduler
 
 on:
+  push:
+    branches: 
+      - master
   pull_request:
     branches:
       - master
