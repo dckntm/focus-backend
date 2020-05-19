@@ -72,19 +72,19 @@ module Router =
               >=> choose
                       [ route "/api/cs/report/construct"
                         >=> bindJson<ConstructReports> constructReports
+                        route "/api/report/template">=> 
                         mustBeAdmin
-                        >=> route "/api/report/template"
                         >=> bindJson<ReportTemplateDto> createReportTemplateHandler ]
 
               GET
               >=> choose
-                      [ mustBeAdmin
-                        >=> route "/api/report/template/info"
-                        mustBeAdmin
-                        >=> route "/api/report/template/stats"
-                        >=> getStatistics
+                      [ 
+                        route "/api/report/template/info"
+                        >=> mustBeAdmin 
                         >=> getReportTemplateInfosHandler
-                        mustBeAdmin
-                        >=> routef "/api/report/template/%s" getReportTemplateHandler ]
+                        route "/api/report/template/stats"
+                        >=> mustBeAdmin
+                        >=> getStatistics
+                        routef "/api/report/template/%s" getReportTemplateHandler ]
 
               setStatusCode 404 >=> text "Not found" ]
