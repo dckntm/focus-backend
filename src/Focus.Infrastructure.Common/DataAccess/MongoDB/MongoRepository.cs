@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Focus.Core.Common;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -55,8 +56,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
         /// <param name="entity">Inserted entity with empty id</param>
         public void Add(TEntity entity)
         {
-            if (entity.Id != ObjectId.Empty)
-                entity.Id = ObjectId.Empty;
+            if (!string.IsNullOrEmpty(entity.Id))
+                entity.Id = ObjectId.GenerateNewId().ToString();
 
             Entities.InsertOne(entity);
         }
@@ -68,8 +69,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
         /// <param name="entity">Inserted entity with empty id</param>
         public Task AddAsync(TEntity entity)
         {
-            if (entity.Id != ObjectId.Empty)
-                entity.Id = ObjectId.Empty;
+            if (!string.IsNullOrEmpty(entity.Id))
+                entity.Id = ObjectId.GenerateNewId().ToString();
 
             return Entities.InsertOneAsync(entity);
         }
@@ -82,8 +83,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
         {
             foreach (var entity in entities)
             {
-                if (entity.Id != ObjectId.Empty)
-                    entity.Id = ObjectId.Empty;
+                if (!string.IsNullOrEmpty(entity.Id))
+                    entity.Id = ObjectId.GenerateNewId().ToString(); ;
             }
 
             Entities.InsertMany(entities);
@@ -100,8 +101,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
             foreach (var entity in entities)
                 idValidationTasks.Add(Task.Run(() =>
                 {
-                    if (entity.Id != ObjectId.Empty)
-                        entity.Id = ObjectId.Empty;
+                    if (!string.IsNullOrEmpty(entity.Id))
+                        entity.Id = ObjectId.GenerateNewId().ToString();
                 }));
 
             await Task.WhenAll(idValidationTasks);
@@ -153,10 +154,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
         /// <param name="ids"></param>
         public void DeleteRange(IEnumerable<string> ids)
         {
-            var objectIds = ids.Select(id => new ObjectId(id));
-
             Entities.DeleteMany(
-                Builders<TEntity>.Filter.In(e => e.Id, objectIds));
+                Builders<TEntity>.Filter.In(e => e.Id, ids));
         }
 
         /// <summary>
@@ -166,11 +165,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
         /// <returns></returns>
         public Task DeleteRangeAsync(IEnumerable<string> ids)
         {
-            var objectIds = ids.Select(id => new ObjectId(id));
-
             return Entities.DeleteManyAsync(
-                Builders<TEntity>.Filter.In(e => e.Id, objectIds));
-
+                Builders<TEntity>.Filter.In(e => e.Id, ids));
         }
 
         /// <summary>
@@ -204,10 +200,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
         /// <returns></returns>
         public TEntity Get(string id)
         {
-            var objectId = new ObjectId(id);
-
             return Entities
-                .Find(e => e.Id == objectId)
+                .Find(e => e.Id == id)
                 .FirstOrDefault();
         }
 
@@ -240,10 +234,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
         /// <returns></returns>
         public Task<TEntity> GetAsync(string id)
         {
-            var objectId = new ObjectId(id);
-
             return Entities
-                .Find(e => e.Id == objectId)
+                .Find(e => e.Id == id)
                 .FirstOrDefaultAsync();
         }
 
