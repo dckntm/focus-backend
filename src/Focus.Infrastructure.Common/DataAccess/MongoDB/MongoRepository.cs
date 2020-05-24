@@ -15,7 +15,7 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TSource"></typeparam>
-    public class MongoRepository<TEntity, TSource> : IRepository<TEntity>, IAsyncRepository<TEntity> where TEntity : IIdentifiable
+    public class MongoRepository<TEntity> : IRepository<TEntity>, IAsyncRepository<TEntity> where TEntity : IIdentifiable
     {
         /// <summary>
         /// 
