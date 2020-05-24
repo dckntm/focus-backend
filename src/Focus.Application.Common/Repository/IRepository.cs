@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Focus.Core.Common;
 
-namespace Focus.Infrastructure.Common.DataAccess
+namespace Focus.Application.Common.Repository
 {
     /// <summary>
     /// 
