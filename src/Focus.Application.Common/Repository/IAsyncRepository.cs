@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Focus.Core.Common;
 
-namespace Focus.Application.Common.Repository
+namespace Focus.Application.Common.DataAccess
 {
     /// <summary>
     /// 

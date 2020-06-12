@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Focus.Application.Common.Repository;
+using Focus.Application.Common.DataAccess;
 using Focus.Core.Common;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -15,7 +15,7 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TSource"></typeparam>
-    public class MongoRepository<TEntity> : IRepository<TEntity>, IAsyncRepository<TEntity> where TEntity : IIdentifiable
+    public class MongoRepository<TEntity, TId> : IAsyncRepository<TEntity, TId> where TEntity : IIdentifiable<TId>
     {
         /// <summary>
         /// 
@@ -30,13 +30,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
         /// <summary>
         /// 
         /// </summary>
-        protected readonly string _entityName;
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
-        protected IMongoCollection<TEntity> Entities => _database.GetCollection<TEntity>(_entityName);
+        protected IMongoCollection<TEntity> Collection { get; }
 
         /// <summary>
         /// Establishes connection to the MongoDB database
@@ -47,20 +42,8 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
             _configuration = configuration;
             var client = new MongoClient(_configuration.ConnectionString);
             _database = client.GetDatabase(_configuration.Database);
-            _entityName = typeof(TEntity).Name;
-        }
 
-        /// <summary>
-        /// Inserts one entity into collection based on the name of the entity
-        /// If inserted entity has non-empty id than it will be forcefully set to empty
-        /// </summary>
-        /// <param name="entity">Inserted entity with empty id</param>
-        public void Add(TEntity entity)
-        {
-            if (!string.IsNullOrEmpty(entity.Id))
-                entity.Id = ObjectId.GenerateNewId().ToString();
-
-            Entities.InsertOne(entity);
+            Collection = _database.GetCollection<TEntity>(typeof(TEntity).Name);
         }
 
         /// <summary>
@@ -68,229 +51,57 @@ namespace Focus.Infrastructure.Common.DataAccess.MongoDB
         /// If inserted entity has non-empty id than it will be forcefully set to empty
         /// </summary>
         /// <param name="entity">Inserted entity with empty id</param>
-        public Task AddAsync(TEntity entity)
-        {
-            if (!string.IsNullOrEmpty(entity.Id))
-                entity.Id = ObjectId.GenerateNewId().ToString();
-
-            return Entities.InsertOneAsync(entity);
-        }
+        public async Task AddAsync(TEntity entity)
+            => await Collection.InsertOneAsync(entity);
 
         /// <summary>
-        /// Inserts range of entities into the database. Each entity is validated on empty id value
+        /// Asynchronously searches for entity with specified Id
         /// </summary>
-        /// <param name="entities">Array of entities to be inserted with empty id value</param>
-        public void AddRange(IEnumerable<TEntity> entities)
-        {
-            foreach (var entity in entities)
-            {
-                if (!string.IsNullOrEmpty(entity.Id))
-                    entity.Id = ObjectId.GenerateNewId().ToString(); ;
-            }
-
-            Entities.InsertMany(entities);
-        }
+        /// <param name="id">Id seed for executing search</param>
+        /// <returns>Entity if it was found successfully. Null if search failed</returns>
+        public async Task<TEntity> GetAsync(TId id)
+            => await Collection.Find(x => x.Id.Equals(id)).FirstOrDefaultAsync();
 
         /// <summary>
-        /// Asynchronously inserts range of entities into the database. Each entity is validated on empty id value 
-        /// </summary>
-        /// <param name="entities">Array of entities to be inserted with empty id value</param>
-        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
-        {
-            var idValidationTasks = new List<Task>();
-
-            foreach (var entity in entities)
-                idValidationTasks.Add(Task.Run(() =>
-                {
-                    if (!string.IsNullOrEmpty(entity.Id))
-                        entity.Id = ObjectId.GenerateNewId().ToString();
-                }));
-
-            await Task.WhenAll(idValidationTasks);
-
-            await Entities.InsertManyAsync(entities);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        public void Delete(TEntity entity)
-        {
-            Entities.FindOneAndDelete(e => e.Id == entity.Id);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public Task DeleteAsync(TEntity entity)
-        {
-            return Entities.FindOneAndDeleteAsync(e => e.Id == entity.Id);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filter"></param>
-        public void DeleteBy(Expression<Func<TEntity, bool>> filter)
-        {
-            Entities.DeleteMany(filter);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public Task DeleteByAsync(Expression<Func<TEntity, bool>> filter)
-        {
-            return Entities.DeleteManyAsync(filter);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ids"></param>
-        public void DeleteRange(IEnumerable<string> ids)
-        {
-            Entities.DeleteMany(
-                Builders<TEntity>.Filter.In(e => e.Id, ids));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
-        public Task DeleteRangeAsync(IEnumerable<string> ids)
-        {
-            return Entities.DeleteManyAsync(
-                Builders<TEntity>.Filter.In(e => e.Id, ids));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> filter)
-        {
-            return Entities
-                .Find(filter)
-                .ToEnumerable();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> filter)
-        {
-            return await Entities
-                .Find(filter)
-                .ToListAsync();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public TEntity Get(string id)
-        {
-            return Entities
-                .Find(e => e.Id == id)
-                .FirstOrDefault();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<TEntity> GetAll()
-        {
-            return Entities
-                .Find(_ => true)
-                .ToEnumerable();
-        }
-
-        /// <summary>
-        /// 
+        /// Returns all elements in collection and returns them as list. Not for using in large collections, better use and cache cursors
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<TEntity>> GetAllAsync()
+            => await Collection.Find(_ => true).ToListAsync();
+
+        public Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await Entities
-                .Find(_ => true)
-                .ToListAsync();
+            throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Task<TEntity> GetAsync(string id)
+        public Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
-            return Entities
-                .Find(e => e.Id == id)
-                .FirstOrDefaultAsync();
+            throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        public void Update(TEntity entity)
+        public Task DeleteAsync(TEntity entity)
         {
-            Entities.FindOneAndReplace(
-                Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id),
-                entity);
+            throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
+        public Task DeleteRangeAsync(IEnumerable<TId> ids)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteByAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task UpdateAsync(TEntity entity)
         {
-            return Entities.FindOneAndReplaceAsync(
-                Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id),
-                entity);
+            throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entities"></param>
-        public void UpdateRange(IEnumerable<TEntity> entities)
-        {
-            foreach (var entity in entities)
-                Entities.FindOneAndReplace(
-                    Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id),
-                    entity);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
         public Task UpdateRangeAsync(IEnumerable<TEntity> entities)
         {
-            var updateTasks = new List<Task>();
-
-            foreach (var entity in entities)
-                updateTasks.Add(
-                    Entities.FindOneAndReplaceAsync(
-                        Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id),
-                        entity));
-
-            return Task.WhenAll(updateTasks);
+            throw new NotImplementedException();
         }
     }
 }
